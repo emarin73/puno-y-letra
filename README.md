@@ -57,6 +57,48 @@ What works:
   and each translation carries a label naming it a machine translation of the transcription,
   with the original one click away.
 
+### Quoting a passage
+
+Select any text in a letter's transcription and a **Quote in a reply** button appears; the
+quotation is carried into the compose sheet with its attribution, and several replies may quote
+the same words. Passages quoted more than once are painted more strongly, so a letter's most
+contested sentences stand out — a heat map of contention rather than a like count. Clicking a
+highlighted passage lists the replies that quote it.
+
+**How it is anchored, and why not an overlay.** The tempting design — a positioned overlay
+holding rectangles that reference the rendered text — breaks immediately here, because this page
+re-renders constantly: the manuscript/transcription wipe, translation swapping the whole body,
+and the author correcting the OCR. Pixel rectangles also die on reflow, resize, and font
+loading.
+
+So a quote is an **annotation against the canonical text**, following the W3C Web Annotation
+model:
+
+- `start`/`end` character offsets into an **immutable revision** of the transcription
+  (TextPositionSelector) — fast to index and query.
+- the `exact` quoted string plus ~24 characters of `prefix`/`suffix`
+  (TextQuoteSelector) — the repair kit. If the offsets no longer hold those words, the quote
+  re-anchors by searching for context+exact, then for exact alone; failing both it is orphaned
+  and the reply still displays what it quoted. Nothing silently points at the wrong sentence.
+- Immutable revisions mean an OCR correction creates `rev+1` rather than moving existing quotes.
+
+Rendering uses the **CSS Custom Highlight API** (`CSS.highlights` + `Highlight` ranges): offsets
+become Ranges at paint time and the browser paints them, so the transcription markup is never
+wrapped or mutated, and overlapping quotes cost nothing. Overlaps are resolved into segments —
+breakpoints at every anchor edge, depth counted per segment — and depth maps to three intensity
+levels. Where the API is unavailable the quote records and their lists still work; only the
+tint is missing.
+
+The only genuinely pixel-positioned things are transient: the floating quote button and the
+passage popover, both recomputed from `getClientRects()` on each use.
+
+Anchors are offsets into the *original-language* transcription, so highlights and selection are
+offered only in that view; in a translation the reply still shows its quotation, labelled. The
+natural next step is anchoring onto the manuscript image itself — OCR returns word bounding
+boxes, so a character range maps to a polygon over the handwriting.
+
+Schema: `transcription_revisions` and `quotes` in `supabase/schema.sql`.
+
 ### Delivery by email
 
 Two rules, both on by default:

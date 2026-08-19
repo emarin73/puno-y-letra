@@ -52,3 +52,44 @@ create table if not exists mail_log (
   sent_at      timestamptz not null default now(),
   unique (letter_id, recipient_id, kind)       -- the idempotency guard
 );
+
+-- ---------------------------------------------------------------------------
+-- Quoting
+--
+-- A quote is an annotation, not a DOM range. It anchors to an IMMUTABLE
+-- revision of the transcription, so correcting the OCR can never silently
+-- move somebody else's quotation.
+--
+-- Anchors follow the W3C Web Annotation model: position for fast lookup,
+-- exact text + surrounding context for repair when the position drifts.
+-- Many replies may carry identical or overlapping anchors — that is the point.
+
+create table if not exists transcription_revisions (
+  letter_id   uuid not null references letters(id) on delete cascade,
+  rev         int  not null,
+  text        text not null,               -- canonical plain text; paragraphs joined by \n\n
+  created_at  timestamptz not null default now(),
+  primary key (letter_id, rev)
+);
+
+create table if not exists quotes (
+  id           uuid primary key default gen_random_uuid(),
+  -- the reply that carries the quotation
+  reply_id     uuid not null references letters(id) on delete cascade,
+  -- the letter and exact revision being quoted
+  letter_id    uuid not null references letters(id) on delete cascade,
+  rev          int  not null,
+  -- TextPositionSelector
+  start_offset int  not null check (start_offset >= 0),
+  end_offset   int  not null,
+  -- TextQuoteSelector (the repair kit, and what a reader sees if anchoring fails)
+  exact        text not null,
+  prefix       text not null default '',
+  suffix       text not null default '',
+  created_at   timestamptz not null default now(),
+  check (end_offset > start_offset),
+  foreign key (letter_id, rev) references transcription_revisions(letter_id, rev)
+);
+
+create index if not exists quotes_letter_span_idx on quotes(letter_id, rev, start_offset, end_offset);
+create index if not exists quotes_reply_idx on quotes(reply_id);

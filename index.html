@@ -361,6 +361,87 @@
   .home-card span { color: var(--ink-soft); font-size: 0.85rem; }
   .home-card:hover { border-color: var(--prussian); }
 
+
+  /* ---------- quoting ----------
+     Highlights are painted with the CSS Custom Highlight API: ranges, not DOM wrappers,
+     so nothing mutates the transcription and overlapping quotes cost nothing. */
+  ::highlight(pyl-q1) { background-color: color-mix(in srgb, var(--prussian) 15%, transparent); }
+  ::highlight(pyl-q2) { background-color: color-mix(in srgb, var(--prussian) 28%, transparent); }
+  ::highlight(pyl-q3) {
+    background-color: color-mix(in srgb, var(--prussian) 42%, transparent);
+    text-decoration: underline;
+    text-decoration-color: var(--prussian);
+  }
+  /* the manuscript layer duplicates the text — keep it out of selections and copies */
+  .ms-layer { user-select: none; }
+
+  .quote-bar {
+    position: absolute;
+    z-index: 25;
+    display: none;
+    transform: translate(-50%, -100%);
+  }
+  .quote-bar.show { display: block; }
+  .quote-bar button {
+    border: 1px solid var(--prussian);
+    background: var(--prussian);
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+  }
+  .quote-hint {
+    font-size: 0.78rem;
+    color: var(--graphite);
+    margin: -0.5rem 0 0.9rem;
+    display: none;
+  }
+  .quote-hint.show { display: block; }
+
+  .passage-pop {
+    position: absolute;
+    z-index: 26;
+    display: none;
+    max-width: 20rem;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 0.7rem 0.8rem;
+    transform: translate(-50%, 0.4rem);
+  }
+  .passage-pop.show { display: block; }
+  .passage-pop .who { font-size: 0.85rem; color: var(--ink-soft); margin: 0.25rem 0 0; }
+  .passage-pop .who b { color: var(--prussian); font-weight: 600; }
+
+  /* quotations carried into a reply */
+  .quote-block {
+    border-left: 3px solid var(--prussian);
+    background: var(--prussian-tint);
+    border-radius: 2px;
+    padding: 0.7rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .quote-item { display: flex; gap: 0.6rem; align-items: flex-start; }
+  .quote-item blockquote {
+    margin: 0;
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink);
+    flex: 1;
+  }
+  .quote-item cite {
+    display: block;
+    font-style: normal;
+    font-size: 0.78rem;
+    color: var(--graphite);
+    margin-top: 0.2rem;
+  }
+
   /* ---------- masthead ---------- */
   header.masthead {
     padding: 3.5rem 0 2rem;
@@ -1346,6 +1427,10 @@
       <span class="meta" data-i18n="composeMeta">Next delivery · tomorrow, 08:00</span>
     </div>
     <div class="compose-sheet">
+      <div class="quote-block" id="quoteBlock" hidden>
+        <span class="meta" data-i18n="quotesHead">Quoting</span>
+        <div id="quoteList"></div>
+      </div>
       <div class="attach-block">
         <span class="meta" data-i18n="attachLabel">Your handwritten original — required (Art. II)</span>
         <div class="attach-actions">
@@ -1489,6 +1574,9 @@
 </div>
 </main>
 </div>
+
+<div class="quote-bar" id="quoteBar"><button id="quoteBtn" data-i18n="quoteBtn">Quote in a reply</button></div>
+<div class="passage-pop" id="passagePop"></div>
 
 <div class="auth-overlay" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
   <div class="auth-sheet">
@@ -1660,6 +1748,11 @@
       mailNote: 'Nothing is actually sent from this prototype — carrying mail needs a server. The delivery rules above are what it will obey.',
       mailCopySent: 'A copy is on its way to {email}.',
       mailAuthorNotified: 'The author will be told by email that an answer is waiting.',
+      quoteBtn: 'Quote in a reply',
+      quotesHead: 'Quoting',
+      quotePassageHead: 'Replies quoting this passage',
+      quoteOnlyOriginal: 'Quotations anchor to the original transcription — return to it to select and to see the highlights.',
+      quoteCarried: 'It carries {n} quotation(s) from the letter it answers.',
       topics: { 'All': 'All', 'Judgment': 'Judgment', 'Accountability': 'Accountability', 'Machine feeling': 'Machine feeling', 'Labor': 'Labor', 'Governance': 'Governance' }
     },
     es: {
@@ -1800,6 +1893,11 @@
       mailNote: 'Desde este prototipo no se envía nada realmente — llevar el correo requiere un servidor. Las reglas de entrega de arriba son las que obedecerá.',
       mailCopySent: 'Una copia va camino a {email}.',
       mailAuthorNotified: 'Se avisará al autor por correo de que le espera una respuesta.',
+      quoteBtn: 'Citar en una respuesta',
+      quotesHead: 'Citando',
+      quotePassageHead: 'Respuestas que citan este pasaje',
+      quoteOnlyOriginal: 'Las citas se anclan a la transcripción original — vuelve a ella para seleccionar y ver los resaltados.',
+      quoteCarried: 'Lleva {n} cita(s) de la carta que responde.',
       topics: { 'All': 'Todas', 'Judgment': 'Juicio', 'Accountability': 'Responsabilidad', 'Machine feeling': 'Sentir de máquina', 'Labor': 'Trabajo', 'Governance': 'Gobernanza' }
     },
     fr: {
@@ -1940,6 +2038,11 @@
       mailNote: 'Rien n’est réellement envoyé depuis ce prototype — porter le courrier exige un serveur. Les règles de remise ci-dessus sont celles qu’il suivra.',
       mailCopySent: 'Une copie est en route vers {email}.',
       mailAuthorNotified: 'L’auteur sera averti par courriel qu’une réponse l’attend.',
+      quoteBtn: 'Citer dans une réponse',
+      quotesHead: 'Citation',
+      quotePassageHead: 'Réponses citant ce passage',
+      quoteOnlyOriginal: 'Les citations s’ancrent à la transcription originale — revenez-y pour sélectionner et voir les surlignages.',
+      quoteCarried: 'Elle porte {n} citation(s) de la lettre à laquelle elle répond.',
       topics: { 'All': 'Tous', 'Judgment': 'Jugement', 'Accountability': 'Responsabilité', 'Machine feeling': 'Sentiment machine', 'Labor': 'Travail', 'Governance': 'Gouvernance' }
     },
     it: {
@@ -2080,6 +2183,11 @@
       mailNote: 'Da questo prototipo non viene inviato nulla — portare la posta richiede un server. Le regole di consegna qui sopra sono quelle che seguirà.',
       mailCopySent: 'Una copia è in viaggio verso {email}.',
       mailAuthorNotified: 'L’autore sarà avvisato per posta elettronica che una risposta lo attende.',
+      quoteBtn: 'Citare in una risposta',
+      quotesHead: 'Citazione',
+      quotePassageHead: 'Risposte che citano questo passo',
+      quoteOnlyOriginal: 'Le citazioni si ancorano alla trascrizione originale — torna a essa per selezionare e vedere le evidenziazioni.',
+      quoteCarried: 'Porta {n} citazione(i) dalla lettera a cui risponde.',
       topics: { 'All': 'Tutte', 'Judgment': 'Giudizio', 'Accountability': 'Responsabilità', 'Machine feeling': 'Sentire della macchina', 'Labor': 'Lavoro', 'Governance': 'Governance' }
     },
     de: {
@@ -2220,6 +2328,11 @@
       mailNote: 'Aus diesem Prototyp wird nichts wirklich versendet — Post zu tragen braucht einen Server. Die Regeln oben sind die, denen er folgen wird.',
       mailCopySent: 'Eine Kopie ist unterwegs an {email}.',
       mailAuthorNotified: 'Der Verfasser wird per E-Mail benachrichtigt, dass eine Antwort wartet.',
+      quoteBtn: 'In einer Antwort zitieren',
+      quotesHead: 'Zitiert',
+      quotePassageHead: 'Antworten, die diese Stelle zitieren',
+      quoteOnlyOriginal: 'Zitate verankern sich in der ursprünglichen Abschrift — kehren Sie zu ihr zurück, um zu markieren und die Hervorhebungen zu sehen.',
+      quoteCarried: 'Sie trägt {n} Zitat(e) aus dem Brief, den sie beantwortet.',
       topics: { 'All': 'Alle', 'Judgment': 'Urteil', 'Accountability': 'Verantwortung', 'Machine feeling': 'Maschinengefühl', 'Labor': 'Arbeit', 'Governance': 'Regulierung' }
     },
     pt: {
@@ -2360,6 +2473,11 @@
       mailNote: 'Deste protótipo nada é realmente enviado — levar o correio exige um servidor. As regras de entrega acima são as que ele obedecerá.',
       mailCopySent: 'Uma cópia está a caminho de {email}.',
       mailAuthorNotified: 'O autor será avisado por e-mail de que uma resposta o espera.',
+      quoteBtn: 'Citar numa resposta',
+      quotesHead: 'Citando',
+      quotePassageHead: 'Respostas que citam esta passagem',
+      quoteOnlyOriginal: 'As citações ancoram-se à transcrição original — volte a ela para selecionar e ver os destaques.',
+      quoteCarried: 'Ela leva {n} citação(ões) da carta que responde.',
       topics: { 'All': 'Todas', 'Judgment': 'Juízo', 'Accountability': 'Responsabilidade', 'Machine feeling': 'Sentir da máquina', 'Labor': 'Trabalho', 'Governance': 'Governança' }
     },
     la: {
@@ -2500,6 +2618,11 @@
       mailNote: 'Ex hoc exemplari nihil revera mittitur — litteras portare fundamentum requirit. Leges traditionis supra scriptae eae sunt quibus parebit.',
       mailCopySent: 'Exemplar ad {email} iter facit.',
       mailAuthorNotified: 'Auctor per epistulam electronicam monebitur responsum eum exspectare.',
+      quoteBtn: 'In responso citare',
+      quotesHead: 'Citatur',
+      quotePassageHead: 'Responsa hunc locum citantia',
+      quoteOnlyOriginal: 'Citationes transcriptioni archetypae innituntur — ad eam redi ut eligas et notas videas.',
+      quoteCarried: '{n} citationes ex epistula cui respondet fert.',
       topics: { 'All': 'Omnia', 'Judgment': 'Iudicium', 'Accountability': 'Responsio', 'Machine feeling': 'Sensus machinae', 'Labor': 'Labor', 'Governance': 'Regimen' }
     },
     eo: {
@@ -2640,6 +2763,11 @@
       mailNote: 'El ĉi tiu prototipo nenio vere estas sendata — porti la poŝton bezonas servilon. La liveraj reguloj supre estas tiuj, kiujn ĝi obeos.',
       mailCopySent: 'Kopio estas survoje al {email}.',
       mailAuthorNotified: 'La aŭtoro estos informita per retpoŝto, ke respondo atendas lin.',
+      quoteBtn: 'Citi en respondo',
+      quotesHead: 'Citante',
+      quotePassageHead: 'Respondoj citantaj ĉi tiun pasaĝon',
+      quoteOnlyOriginal: 'Citaĵoj ankras al la originala transskribo — revenu al ĝi por elekti kaj vidi la markojn.',
+      quoteCarried: 'Ĝi portas {n} citaĵo(j)n el la letero, al kiu ĝi respondas.',
       topics: { 'All': 'Ĉiuj', 'Judgment': 'Juĝo', 'Accountability': 'Respondeco', 'Machine feeling': 'Maŝina sento', 'Labor': 'Laboro', 'Governance': 'Regado' }
     }
   };
@@ -2819,6 +2947,10 @@
       if (composeSec.dataset.reply === '1') {
         msg += ' ' + T('mailAuthorNotified');
         delete composeSec.dataset.reply;
+      }
+      if (PYL.quotes && PYL.quotes.count()) {
+        var carried = PYL.quotes.commit(document.getElementById('composeName').value.trim());
+        msg += ' ' + T('quoteCarried').replace('{n}', carried);
       }
       confirmEl.textContent = msg;
       confirmEl.classList.add('show');
@@ -3904,6 +4036,327 @@
 
       renderBtn();
     });
+  })();
+
+  /* ---------- quoting ----------
+     A quote is an ANNOTATION, not a DOM range: it stores character offsets into the letter's
+     canonical transcription plus the exact text and a little context either side. That is the
+     W3C Web Annotation pair — TextPositionSelector for speed, TextQuoteSelector for repair —
+     so a quote survives re-render, OCR correction, and any number of other replies quoting the
+     same words. Painting uses the CSS Custom Highlight API: ranges are computed from offsets at
+     paint time, never baked into the markup. */
+  (function () {
+    var CONTEXT = 24;
+    var letters = [];
+    var pending = [];          // quotations carried by the reply being written
+    var seq = 0;
+
+    var bar = document.getElementById('quoteBar');
+    var btn = document.getElementById('quoteBtn');
+    var pop = document.getElementById('passagePop');
+    var block = document.getElementById('quoteBlock');
+    var list = document.getElementById('quoteList');
+
+    var canHighlight = typeof CSS !== 'undefined' && CSS.highlights && typeof Highlight === 'function';
+
+    /* ---- canonical text and its map back into the live DOM ---- */
+    function index(letter) {
+      var body = letter.querySelector('.letter-body');
+      var canon = '', map = [];
+      Array.prototype.forEach.call(body.querySelectorAll('p'), function (para, i) {
+        if (i) canon += '\n\n';                       // paragraph joins are virtual
+        var w = document.createTreeWalker(para, NodeFilter.SHOW_TEXT), n;
+        while ((n = w.nextNode())) {
+          map.push({ node: n, start: canon.length, end: canon.length + n.nodeValue.length });
+          canon += n.nodeValue;
+        }
+      });
+      return { canon: canon, map: map };
+    }
+
+    function point(map, off) {
+      for (var i = 0; i < map.length; i++) {
+        if (off >= map[i].start && off <= map[i].end) return { node: map[i].node, offset: off - map[i].start };
+      }
+      var last = map[map.length - 1];
+      return last ? { node: last.node, offset: last.node.nodeValue.length } : null;
+    }
+
+    function offsetOf(map, node, off) {
+      for (var i = 0; i < map.length; i++) if (map[i].node === node) return map[i].start + off;
+      return -1;
+    }
+
+    function textPoint(container, offset, forward) {
+      if (container.nodeType === 3) return { node: container, offset: offset };
+      var kid = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+      var w = document.createTreeWalker(kid, NodeFilter.SHOW_TEXT), n = w.nextNode();
+      return n ? { node: n, offset: forward ? 0 : n.nodeValue.length } : null;
+    }
+
+    /* ---- repair: if the recorded position no longer holds the quoted words, find them again ---- */
+    function resolve(L, q) {
+      if (L.canon.substr(q.start, q.exact.length) === q.exact) return { start: q.start, end: q.end };
+      var probe = q.prefix + q.exact + q.suffix;
+      var at = L.canon.indexOf(probe);
+      if (at !== -1) return { start: at + q.prefix.length, end: at + q.prefix.length + q.exact.length };
+      at = L.canon.indexOf(q.exact);
+      if (at !== -1) return { start: at, end: at + q.exact.length };
+      return null;                                     // orphaned; the reply still shows its quotation
+    }
+
+    /* ---- overlapping quotes become segments, and depth becomes intensity ---- */
+    function segments(quotes) {
+      var edges = {}, out = [];
+      quotes.forEach(function (q) { edges[q.at.start] = 1; edges[q.at.end] = 1; });
+      var keys = Object.keys(edges).map(Number).sort(function (a, b) { return a - b; });
+      for (var i = 0; i < keys.length - 1; i++) {
+        var s = keys[i], e = keys[i + 1];
+        var depth = quotes.filter(function (q) { return q.at.start <= s && q.at.end >= e; }).length;
+        if (depth) out.push({ start: s, end: e, depth: depth });
+      }
+      return out;
+    }
+
+    function pressed(el) { return !!el && el.getAttribute('aria-pressed') === 'true'; }
+    function isOriginal(L) {
+      return !pressed(L.el.querySelector('.ms-toggle')) && !pressed(L.el.querySelector('.trans-toggle'));
+    }
+
+    function paint() {
+      if (canHighlight) CSS.highlights.clear();
+      var buckets = { 1: [], 2: [], 3: [] };
+      letters.forEach(function (L) {
+        var original = isOriginal(L);
+        L.hint.classList.toggle('show', !original && L.quotes.length > 0);
+        if (!original) return;
+        var fresh = index(L.el);                        // the DOM may have been re-rendered
+        L.canon = fresh.canon; L.map = fresh.map;
+        L.quotes.forEach(function (q) { q.at = resolve(L, q); });
+        var live = L.quotes.filter(function (q) { return q.at; });
+        if (!canHighlight) return;
+        segments(live).forEach(function (s) {
+          var a = point(L.map, s.start), b = point(L.map, s.end);
+          if (!a || !b) return;
+          var r = document.createRange();
+          try { r.setStart(a.node, a.offset); r.setEnd(b.node, b.offset); } catch (e) { return; }
+          buckets[Math.min(3, s.depth)].push(r);
+        });
+      });
+      if (!canHighlight) return;
+      [1, 2, 3].forEach(function (d) {
+        if (!buckets[d].length) return;
+        var hl = new Highlight();
+        buckets[d].forEach(function (r) { hl.add(r); });
+        CSS.highlights.set('pyl-q' + d, hl);
+      });
+    }
+
+    /* ---- selecting text offers to quote it ---- */
+    var current = null;
+    function hideBar() { bar.classList.remove('show'); current = null; }
+
+    function onSelect() {
+      var sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) return hideBar();
+      var range = sel.getRangeAt(0);
+      var host = range.startContainer.nodeType === 1 ? range.startContainer : range.startContainer.parentNode;
+      var article = host && host.closest ? host.closest('article.letter') : null;
+      var body = host && host.closest ? host.closest('.letter-body') : null;
+      if (!article || !body) return hideBar();
+      var L = letters.filter(function (x) { return x.el === article; })[0];
+      if (!L || !isOriginal(L)) return hideBar();
+
+      var a = textPoint(range.startContainer, range.startOffset, true);
+      var b = textPoint(range.endContainer, range.endOffset, false);
+      if (!a || !b) return hideBar();
+      var start = offsetOf(L.map, a.node, range.startContainer.nodeType === 3 ? range.startOffset : a.offset);
+      var end = offsetOf(L.map, b.node, range.endContainer.nodeType === 3 ? range.endOffset : b.offset);
+      if (start < 0 || end < 0 || end - start < 8) return hideBar();
+
+      current = {
+        letter: L,
+        start: start,
+        end: end,
+        exact: L.canon.slice(start, end),
+        prefix: L.canon.slice(Math.max(0, start - CONTEXT), start),
+        suffix: L.canon.slice(end, end + CONTEXT)
+      };
+      var rect = range.getBoundingClientRect();
+      bar.style.left = (window.scrollX + rect.left + rect.width / 2) + 'px';
+      bar.style.top = (window.scrollY + rect.top - 6) + 'px';
+      bar.classList.add('show');
+    }
+
+    document.addEventListener('mouseup', function () { setTimeout(onSelect, 0); });
+    document.addEventListener('keyup', function (e) { if (e.shiftKey || e.key === 'Escape') setTimeout(onSelect, 0); });
+    window.addEventListener('scroll', hideBar, { passive: true });
+
+    /* ---- carry a quotation into the reply being written ---- */
+    function renderPending() {
+      list.innerHTML = '';
+      block.hidden = pending.length === 0;
+      pending.forEach(function (q) {
+        var item = document.createElement('div');
+        item.className = 'quote-item';
+        var bq = document.createElement('blockquote');
+        bq.textContent = '“' + q.exact + '”';
+        var cite = document.createElement('cite');
+        cite.textContent = '— ' + q.author + ', ' + T('letterWord') + ' ' + q.letterNo;
+        bq.appendChild(cite);
+        var rm = document.createElement('button');
+        rm.className = 'btn-quiet';
+        rm.textContent = T('attachRemove');
+        rm.addEventListener('click', function () {
+          pending = pending.filter(function (x) { return x !== q; });
+          renderPending();
+        });
+        item.appendChild(bq);
+        item.appendChild(rm);
+        list.appendChild(item);
+      });
+    }
+
+    btn.addEventListener('click', function () {
+      if (!current) return;
+      var L = current.letter;
+      pending.push({
+        id: 'p' + (++seq),
+        letterId: L.id,
+        letterNo: L.no,
+        author: L.author,
+        start: current.start, end: current.end,
+        exact: current.exact, prefix: current.prefix, suffix: current.suffix
+      });
+      window.getSelection().removeAllRanges();
+      hideBar();
+      renderPending();
+      document.getElementById('compose').dataset.reply = '1';
+      PYL.go('compose', function () {
+        var input = document.getElementById('composeTitle');
+        if (!input.value) input.value = T('inAnswerTo').replace('{title}', L.origTitle);
+        document.getElementById('composeBody').focus();
+      });
+    });
+
+    /* ---- clicking a highlighted passage shows who quoted it ---- */
+    function offsetFromPoint(L, x, y) {
+      var r = document.caretRangeFromPoint ? document.caretRangeFromPoint(x, y) : null;
+      if (!r && document.caretPositionFromPoint) {
+        var cp = document.caretPositionFromPoint(x, y);
+        if (cp) return offsetOf(L.map, cp.offsetNode, cp.offset);
+        return -1;
+      }
+      return r ? offsetOf(L.map, r.startContainer, r.startOffset) : -1;
+    }
+
+    document.addEventListener('click', function (e) {
+      if (bar.contains(e.target)) return;
+      var sel = window.getSelection();
+      /* a click that ends a selection is a quote gesture, not a request to inspect the passage */
+      if (sel && !sel.isCollapsed) { pop.classList.remove('show'); return; }
+      var body = e.target.closest ? e.target.closest('.letter-body') : null;
+      var article = e.target.closest ? e.target.closest('article.letter') : null;
+      pop.classList.remove('show');
+      if (!body || !article) return;
+      var L = letters.filter(function (x) { return x.el === article; })[0];
+      if (!L || !isOriginal(L)) return;
+      var off = offsetFromPoint(L, e.clientX, e.clientY);
+      if (off < 0) return;
+      var hits = L.quotes.filter(function (q) { return q.at && q.at.start <= off && q.at.end >= off; });
+      if (!hits.length) return;
+      pop.innerHTML = '';
+      var head = document.createElement('span');
+      head.className = 'meta';
+      head.textContent = T('quotePassageHead');
+      pop.appendChild(head);
+      hits.forEach(function (q) {
+        var line = document.createElement('p');
+        line.className = 'who';
+        line.innerHTML = '<b>' + q.by + '</b> · ' + q.replyTitle;
+        pop.appendChild(line);
+      });
+      pop.style.left = (window.scrollX + e.clientX) + 'px';
+      pop.style.top = (window.scrollY + e.clientY) + 'px';
+      pop.classList.add('show');
+    });
+
+    /* ---- register letters, then seed the quotations already on record ---- */
+    document.querySelectorAll('article.letter').forEach(function (el) {
+      var metaText = (el.querySelector('.letter-head .meta') || {}).textContent || '';
+      var parts = metaText.split('·');
+      var hint = document.createElement('p');
+      hint.className = 'quote-hint';
+      hint.setAttribute('data-i18n', 'quoteOnlyOriginal');
+      var stage = el.querySelector('.ms-stage');
+      stage.parentNode.insertBefore(hint, stage);
+      var L = {
+        el: el,
+        id: el.getAttribute('data-letter'),
+        no: (parts[0] || '').replace(/Letter\s*/i, '').trim(),
+        author: (parts[1] || '').replace(/From\s*/i, '').trim(),
+        origTitle: el.dataset.origTitle || (el.querySelector('.letter-title') || {}).textContent || '',
+        quotes: [],
+        hint: hint
+      };
+      var idx = index(el);
+      L.canon = idx.canon; L.map = idx.map;
+      letters.push(L);
+    });
+
+    function seed(letterId, exact, by, replyTitle) {
+      var L = letters.filter(function (x) { return x.id === String(letterId); })[0];
+      if (!L) return;
+      var at = L.canon.indexOf(exact);
+      if (at === -1) return;
+      L.quotes.push({
+        id: 'q' + (++seq), start: at, end: at + exact.length, exact: exact,
+        prefix: L.canon.slice(Math.max(0, at - CONTEXT), at),
+        suffix: L.canon.slice(at + exact.length, at + exact.length + CONTEXT),
+        by: by, replyTitle: replyTitle
+      });
+    }
+
+    /* two replies quote the same sentence — the passage paints darker for it */
+    seed(1, 'The danger is not that the machine errs; it is that we forget how to notice.',
+         'R. Osei', 'Judgment Was Always Prosthetic');
+    seed(1, 'The danger is not that the machine errs; it is that we forget how to notice.',
+         'A. Weiss', 'On Apologies from Machines');
+    /* a third overlaps only part of it */
+    seed(1, 'judgment, like any faculty, atrophies precisely in proportion to how rarely it is exercised',
+         'T. Ilves', 'On the Limits of Measurement');
+    seed(2, 'A tool may think for me; it must not answer for me.', 'E. Marin', 'On Borrowed Judgment');
+    seed(3, 'machines should', 'C. Duarte', 'Politeness Is Interface');
+
+    PYL.quotes = {
+      count: function () { return pending.length; },
+      /* a sealed reply turns its carried quotations into records against the letter */
+      commit: function (byName) {
+        var n = pending.length;
+        var title = document.getElementById('composeTitle').value.trim();
+        pending.forEach(function (q) {
+          var L = letters.filter(function (x) { return x.id === q.letterId; })[0];
+          if (!L) return;
+          L.quotes.push({
+            id: q.id, start: q.start, end: q.end, exact: q.exact,
+            prefix: q.prefix, suffix: q.suffix,
+            by: byName || T('aCorrespondent'), replyTitle: title || '—'
+          });
+        });
+        pending = [];
+        renderPending();
+        paint();
+        return n;
+      }
+    };
+
+    PYL.onLang.push(function () { renderPending(); paint(); });
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('.ms-toggle, .trans-toggle') : null;
+      if (t) setTimeout(paint, 20);
+    });
+
+    paint();
   })();
 
   /* ---------- language toggle init ---------- */
