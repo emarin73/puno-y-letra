@@ -283,6 +283,17 @@
     resize: vertical;
     line-height: 1.6;
   }
+  .prof-block input[type="email"] {
+    width: 100%;
+    max-width: 22rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.6rem;
+  }
   .prof-count { font-size: 0.78rem; color: var(--graphite); font-variant-numeric: tabular-nums; align-self: flex-end; }
   .prof-count.over { color: var(--wax); }
 
@@ -1434,6 +1445,17 @@
     </div>
 
     <div class="prof-block">
+      <h3 class="display" data-i18n="mailHead">Delivery by email</h3>
+      <p class="prof-note" data-i18n="mailLede"></p>
+      <span class="meta" data-i18n="mailAddr">Where we write to you</span>
+      <input type="email" id="mailAddr" autocomplete="email" />
+      <label class="check-row"><input type="checkbox" id="mailOwn" checked /><span data-i18n="mailOwn"></span></label>
+      <label class="check-row"><input type="checkbox" id="mailReplies" checked /><span data-i18n="mailReplies"></span></label>
+      <label class="check-row"><input type="checkbox" id="mailDigest" /><span data-i18n="mailDigest"></span></label>
+      <p class="prof-note quiet" data-i18n="mailNote"></p>
+    </div>
+
+    <div class="prof-block">
       <h3 class="display" data-i18n="profVerifyHead">How we check this is you</h3>
       <p class="prof-note" data-i18n="profVerifyLede"></p>
       <div class="verify-list">
@@ -1628,6 +1650,16 @@
       authNeedEmail: 'Enter a valid email address.',
       phAuthName: 'Your full name (Art. II)',
       phAuthEmail: 'Email',
+      mailHead: 'Delivery by email',
+      mailLede: 'The Republic keeps a paper habit but posts by wire. Every letter you seal is mailed back to you as your own record, and every reply to your letters arrives in your inbox with the daily post.',
+      mailAddr: 'Where we write to you',
+      phMailAddr: 'you@example.com',
+      mailOwn: 'Mail me a copy of every letter I seal',
+      mailReplies: 'Mail me every reply to my letters',
+      mailDigest: 'Mail me the daily post, all letters together',
+      mailNote: 'Nothing is actually sent from this prototype — carrying mail needs a server. The delivery rules above are what it will obey.',
+      mailCopySent: 'A copy is on its way to {email}.',
+      mailAuthorNotified: 'The author will be told by email that an answer is waiting.',
       topics: { 'All': 'All', 'Judgment': 'Judgment', 'Accountability': 'Accountability', 'Machine feeling': 'Machine feeling', 'Labor': 'Labor', 'Governance': 'Governance' }
     },
     es: {
@@ -1758,6 +1790,16 @@
       authNeedEmail: 'Escribe un correo válido.',
       phAuthName: 'Tu nombre completo (Art. II)',
       phAuthEmail: 'Correo electrónico',
+      mailHead: 'Entrega por correo electrónico',
+      mailLede: 'La República conserva la costumbre del papel pero despacha por cable. Cada carta que sellas se te envía de vuelta como tu propio registro, y cada respuesta a tus cartas llega a tu bandeja con el correo diario.',
+      mailAddr: 'Dónde te escribimos',
+      phMailAddr: 'tu@ejemplo.com',
+      mailOwn: 'Enviarme copia de cada carta que sello',
+      mailReplies: 'Enviarme cada respuesta a mis cartas',
+      mailDigest: 'Enviarme el correo diario, todas las cartas juntas',
+      mailNote: 'Desde este prototipo no se envía nada realmente — llevar el correo requiere un servidor. Las reglas de entrega de arriba son las que obedecerá.',
+      mailCopySent: 'Una copia va camino a {email}.',
+      mailAuthorNotified: 'Se avisará al autor por correo de que le espera una respuesta.',
       topics: { 'All': 'Todas', 'Judgment': 'Juicio', 'Accountability': 'Responsabilidad', 'Machine feeling': 'Sentir de máquina', 'Labor': 'Trabajo', 'Governance': 'Gobernanza' }
     },
     fr: {
@@ -1888,6 +1930,16 @@
       authNeedEmail: 'Saisissez une adresse de courriel valide.',
       phAuthName: 'Votre nom complet (Art. II)',
       phAuthEmail: 'Courriel',
+      mailHead: 'Remise par courriel',
+      mailLede: 'La République garde l’habitude du papier mais expédie par câble. Chaque lettre que vous scellez vous est renvoyée comme votre propre registre, et chaque réponse à vos lettres arrive dans votre boîte avec le courrier du jour.',
+      mailAddr: 'Où nous vous écrivons',
+      phMailAddr: 'vous@exemple.com',
+      mailOwn: 'M’envoyer une copie de chaque lettre que je scelle',
+      mailReplies: 'M’envoyer chaque réponse à mes lettres',
+      mailDigest: 'M’envoyer le courrier du jour, toutes lettres ensemble',
+      mailNote: 'Rien n’est réellement envoyé depuis ce prototype — porter le courrier exige un serveur. Les règles de remise ci-dessus sont celles qu’il suivra.',
+      mailCopySent: 'Une copie est en route vers {email}.',
+      mailAuthorNotified: 'L’auteur sera averti par courriel qu’une réponse l’attend.',
       topics: { 'All': 'Tous', 'Judgment': 'Jugement', 'Accountability': 'Responsabilité', 'Machine feeling': 'Sentiment machine', 'Labor': 'Travail', 'Governance': 'Gouvernance' }
     },
     it: {
@@ -2018,6 +2070,16 @@
       authNeedEmail: 'Inserisci un indirizzo email valido.',
       phAuthName: 'Il tuo nome completo (Art. II)',
       phAuthEmail: 'Email',
+      mailHead: 'Consegna per posta elettronica',
+      mailLede: 'La Repubblica conserva l’abitudine della carta ma spedisce per cavo. Ogni lettera che sigilli ti viene rispedita come tuo registro, e ogni risposta alle tue lettere arriva nella tua casella con la posta del giorno.',
+      mailAddr: 'Dove ti scriviamo',
+      phMailAddr: 'tu@esempio.com',
+      mailOwn: 'Inviarmi una copia di ogni lettera che sigillo',
+      mailReplies: 'Inviarmi ogni risposta alle mie lettere',
+      mailDigest: 'Inviarmi la posta del giorno, tutte le lettere insieme',
+      mailNote: 'Da questo prototipo non viene inviato nulla — portare la posta richiede un server. Le regole di consegna qui sopra sono quelle che seguirà.',
+      mailCopySent: 'Una copia è in viaggio verso {email}.',
+      mailAuthorNotified: 'L’autore sarà avvisato per posta elettronica che una risposta lo attende.',
       topics: { 'All': 'Tutte', 'Judgment': 'Giudizio', 'Accountability': 'Responsabilità', 'Machine feeling': 'Sentire della macchina', 'Labor': 'Lavoro', 'Governance': 'Governance' }
     },
     de: {
@@ -2148,6 +2210,16 @@
       authNeedEmail: 'Geben Sie eine gültige E-Mail-Adresse ein.',
       phAuthName: 'Ihr vollständiger Name (Art. II)',
       phAuthEmail: 'E-Mail',
+      mailHead: 'Zustellung per E-Mail',
+      mailLede: 'Die Republik behält die Papiergewohnheit, versendet aber per Draht. Jeder Brief, den Sie siegeln, wird Ihnen als eigener Nachweis zurückgeschickt, und jede Antwort auf Ihre Briefe erreicht Ihr Postfach mit der Tagespost.',
+      mailAddr: 'Wohin wir Ihnen schreiben',
+      phMailAddr: 'sie@beispiel.de',
+      mailOwn: 'Mir eine Kopie jedes Briefes senden, den ich siegle',
+      mailReplies: 'Mir jede Antwort auf meine Briefe senden',
+      mailDigest: 'Mir die Tagespost senden, alle Briefe zusammen',
+      mailNote: 'Aus diesem Prototyp wird nichts wirklich versendet — Post zu tragen braucht einen Server. Die Regeln oben sind die, denen er folgen wird.',
+      mailCopySent: 'Eine Kopie ist unterwegs an {email}.',
+      mailAuthorNotified: 'Der Verfasser wird per E-Mail benachrichtigt, dass eine Antwort wartet.',
       topics: { 'All': 'Alle', 'Judgment': 'Urteil', 'Accountability': 'Verantwortung', 'Machine feeling': 'Maschinengefühl', 'Labor': 'Arbeit', 'Governance': 'Regulierung' }
     },
     pt: {
@@ -2278,6 +2350,16 @@
       authNeedEmail: 'Digite um e-mail válido.',
       phAuthName: 'Seu nome completo (Art. II)',
       phAuthEmail: 'E-mail',
+      mailHead: 'Entrega por e-mail',
+      mailLede: 'A República mantém o hábito do papel mas despacha por cabo. Cada carta que você sela é enviada de volta a você como seu próprio registro, e cada resposta às suas cartas chega à sua caixa com o correio diário.',
+      mailAddr: 'Para onde escrevemos a você',
+      phMailAddr: 'voce@exemplo.com',
+      mailOwn: 'Enviar-me uma cópia de cada carta que eu selar',
+      mailReplies: 'Enviar-me cada resposta às minhas cartas',
+      mailDigest: 'Enviar-me o correio diário, todas as cartas juntas',
+      mailNote: 'Deste protótipo nada é realmente enviado — levar o correio exige um servidor. As regras de entrega acima são as que ele obedecerá.',
+      mailCopySent: 'Uma cópia está a caminho de {email}.',
+      mailAuthorNotified: 'O autor será avisado por e-mail de que uma resposta o espera.',
       topics: { 'All': 'Todas', 'Judgment': 'Juízo', 'Accountability': 'Responsabilidade', 'Machine feeling': 'Sentir da máquina', 'Labor': 'Trabalho', 'Governance': 'Governança' }
     },
     la: {
@@ -2408,6 +2490,16 @@
       authNeedEmail: 'Inscriptionem electronicam validam scribe.',
       phAuthName: 'Nomen tuum plenum (Art. II)',
       phAuthEmail: 'Epistula electronica',
+      mailHead: 'Traditio per epistulam electronicam',
+      mailLede: 'Res Publica morem chartae servat sed per filum mittit. Omnis epistula quam obsignas ad te remittitur ut tuum monumentum, et omne responsum epistulis tuis in arcam tuam cum tabellario quotidiano venit.',
+      mailAddr: 'Quo tibi scribimus',
+      phMailAddr: 'tu@exemplum.com',
+      mailOwn: 'Exemplar cuiusque epistulae quam obsigno mihi mitte',
+      mailReplies: 'Omne responsum epistulis meis mihi mitte',
+      mailDigest: 'Tabellarium quotidianum mihi mitte, omnes epistulas simul',
+      mailNote: 'Ex hoc exemplari nihil revera mittitur — litteras portare fundamentum requirit. Leges traditionis supra scriptae eae sunt quibus parebit.',
+      mailCopySent: 'Exemplar ad {email} iter facit.',
+      mailAuthorNotified: 'Auctor per epistulam electronicam monebitur responsum eum exspectare.',
       topics: { 'All': 'Omnia', 'Judgment': 'Iudicium', 'Accountability': 'Responsio', 'Machine feeling': 'Sensus machinae', 'Labor': 'Labor', 'Governance': 'Regimen' }
     },
     eo: {
@@ -2538,6 +2630,16 @@
       authNeedEmail: 'Enigu validan retpoŝtadreson.',
       phAuthName: 'Via plena nomo (Art. II)',
       phAuthEmail: 'Retpoŝto',
+      mailHead: 'Livero per retpoŝto',
+      mailLede: 'La Respubliko konservas la paperan kutimon sed sendas per drato. Ĉiu letero, kiun vi sigelas, estas resendita al vi kiel via propra registro, kaj ĉiu respondo al viaj leteroj alvenas en vian keston kun la taga poŝto.',
+      mailAddr: 'Kien ni skribas al vi',
+      phMailAddr: 'vi@ekzemplo.com',
+      mailOwn: 'Sendu al mi kopion de ĉiu letero, kiun mi sigelas',
+      mailReplies: 'Sendu al mi ĉiun respondon al miaj leteroj',
+      mailDigest: 'Sendu al mi la tagan poŝton, ĉiujn leterojn kune',
+      mailNote: 'El ĉi tiu prototipo nenio vere estas sendata — porti la poŝton bezonas servilon. La liveraj reguloj supre estas tiuj, kiujn ĝi obeos.',
+      mailCopySent: 'Kopio estas survoje al {email}.',
+      mailAuthorNotified: 'La aŭtoro estos informita per retpoŝto, ke respondo atendas lin.',
       topics: { 'All': 'Ĉiuj', 'Judgment': 'Juĝo', 'Accountability': 'Respondeco', 'Machine feeling': 'Maŝina sento', 'Labor': 'Laboro', 'Governance': 'Regado' }
     }
   };
@@ -2556,7 +2658,8 @@
     '[data-signer]': 'phSigner',
     '#authName': 'phAuthName',
     '#authEmail': 'phAuthEmail',
-    '#profBio': 'phBio'
+    '#profBio': 'phBio',
+    '#mailAddr': 'phMailAddr'
   };
 
   PYL.applyLang = function (lang) {
@@ -2681,6 +2784,7 @@
       replyBtn.addEventListener('click', function () {
         /* answer the letter by its original title, not by a translation of it */
         var title = letter.dataset.origTitle || letter.querySelector('.letter-title').textContent;
+        document.getElementById('compose').dataset.reply = '1';
         PYL.go('compose', function () {
           var input = document.getElementById('composeTitle');
           if (!input.value) input.value = T('inAnswerTo').replace('{title}', title);
@@ -2707,7 +2811,16 @@
       var vis = postChoice === 'default'
         ? document.querySelector('#segDefault .active').getAttribute('data-v')
         : postChoice;
-      confirmEl.textContent = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
+      var msg = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
+      var composeSec = document.getElementById('compose');
+      if (PYL.mail && PYL.mail.own() && PYL.mail.valid()) {
+        msg += ' ' + T('mailCopySent').replace('{email}', PYL.mail.addr());
+      }
+      if (composeSec.dataset.reply === '1') {
+        msg += ' ' + T('mailAuthorNotified');
+        delete composeSec.dataset.reply;
+      }
+      confirmEl.textContent = msg;
       confirmEl.classList.add('show');
       document.getElementById('composeTitle').value = '';
       body.value = '';
@@ -3470,6 +3583,41 @@
     });
     renderCount();
     setVidStatus();
+  })();
+
+  /* ---------- email delivery preferences ----------
+     The rules live here; a server carries the mail (see supabase/functions/mail-letter). */
+  (function () {
+    var addr = document.getElementById('mailAddr');
+    var own = document.getElementById('mailOwn');
+    var reps = document.getElementById('mailReplies');
+    var dig = document.getElementById('mailDigest');
+    if (!addr) return;
+
+    function save() {
+      try {
+        localStorage.setItem('pyl-mail', JSON.stringify({
+          addr: addr.value.trim(), own: own.checked, reps: reps.checked, dig: dig.checked
+        }));
+      } catch (e) {}
+    }
+    try {
+      var s = JSON.parse(localStorage.getItem('pyl-mail') || '{}');
+      if (s.addr) addr.value = s.addr;
+      /* mailing your own letters and their replies is the default, per the request */
+      own.checked = s.own !== false;
+      reps.checked = s.reps !== false;
+      dig.checked = !!s.dig;
+    } catch (e) {}
+
+    [addr, own, reps, dig].forEach(function (el) { el.addEventListener('change', save); });
+
+    PYL.mail = {
+      addr: function () { return addr.value.trim(); },
+      valid: function () { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addr.value.trim()); },
+      own: function () { return own.checked; },
+      replies: function () { return reps.checked; }
+    };
   })();
 
   /* ---------- collapsible sidebar ---------- */

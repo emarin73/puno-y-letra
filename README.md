@@ -57,6 +57,31 @@ What works:
   and each translation carries a label naming it a machine translation of the transcription,
   with the original one click away.
 
+### Delivery by email
+
+Two rules, both on by default:
+
+1. **Every letter you seal is mailed back to you** — your own record of what went out.
+2. **Every reply to your letters is mailed to you** — an answer reaches your inbox with the
+   daily post, not a notification badge.
+
+A daily digest of the whole post is available and off by default.
+
+The front end owns the *rules* (Profile → Delivery by email); a server carries the mail, since
+a static page cannot send it and an API key in client code would be public. The server side is
+written and reviewable:
+
+- `supabase/schema.sql` — correspondents, mail_prefs, letters, and `mail_log`, whose
+  `unique (letter_id, recipient_id, kind)` constraint is the idempotency guard: a retry cannot
+  mail the same letter twice.
+- `supabase/functions/mail-letter/index.ts` — sends `own_copy` and `reply` mail for one letter.
+  It claims the send in `mail_log` *before* calling the provider and releases the claim if the
+  provider fails, so failures retry and successes never double-send. Includes a plain-text
+  alternative and one-click `List-Unsubscribe` headers (required by Gmail and Yahoo for bulk
+  senders). Secrets: `RESEND_API_KEY`, `MAIL_FROM`, `SITE_URL`, plus the Supabase pair.
+
+Invoke it per letter from the daily delivery job — the post stays slow on purpose (Art. VI).
+
 ### On proving a human made it
 
 There is no reliable detector for AI-generated text, images, or video, and false accusations
