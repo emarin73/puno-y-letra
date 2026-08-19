@@ -49,7 +49,7 @@ What works:
 - Sign-up overlay with Google and email paths
 - Profile page: seal (initials or uploaded photo), bio, and a video introduction with a
   daily passphrase, plus the human-verification panel and the originality attestation
-- **Eight languages** — English, Español, Português, Français, Italiano, Deutsch, Latina,
+- **Eight languages** — English, Español, Português, Français, Italiano, Deutsch, Latin,
   Esperanto — auto-detected, switchable from the profile menu. Latin is not a joke: the
   original Republic of Letters corresponded in it.
 - **Letter translation.** The OCR transcription of every letter can be read in any supported
