@@ -32,6 +32,9 @@ It is also a hard cap on growth, and deliberately so.
 `index.html` is a **working front-end prototype** — a single self-contained file, no build
 step, no dependencies. Open it in a browser.
 
+Published preview (private Claude artifact, same file):
+<https://claude.ai/code/artifact/388910c1-1136-4dda-b24f-f0fc4fa52812>
+
 What works:
 
 - Left sidebar with collapsible icon rail; single-page routing (one section per view)
