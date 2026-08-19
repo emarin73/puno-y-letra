@@ -1,0 +1,2687 @@
+<title>Puño y Letra</title>
+<style>
+  /* ---------- tokens: light (paper) ---------- */
+  :root {
+    --paper: #f3f3ee;
+    --sheet: #fbfbf7;
+    --ink: #212b36;
+    --ink-soft: #3d4a58;
+    --graphite: #5c6670;
+    --rule: #d8d8cf;
+    --rule-soft: #e6e6dd;
+    --prussian: #1f4c74;
+    --prussian-tint: #e6ecf3;
+    --wax: #a8352a;
+    --wax-tint: #f4e5e2;
+    --shadow: 0 1px 2px rgba(33, 43, 54, 0.07), 0 6px 24px -12px rgba(33, 43, 54, 0.18);
+    --focus: #1f4c74;
+  }
+  /* system dark (candlelight), unless viewer forced light */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10151c;
+      --sheet: #171e27;
+      --ink: #e8e6dd;
+      --ink-soft: #c4c4b8;
+      --graphite: #8b93a0;
+      --rule: #2c3542;
+      --rule-soft: #232b36;
+      --prussian: #7fa8cf;
+      --prussian-tint: #1c2a3a;
+      --wax: #d06a5c;
+      --wax-tint: #35201d;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px -12px rgba(0, 0, 0, 0.55);
+      --focus: #7fa8cf;
+    }
+  }
+  /* explicit dark toggle */
+  :root[data-theme="dark"] {
+    --paper: #10151c;
+    --sheet: #171e27;
+    --ink: #e8e6dd;
+    --ink-soft: #c4c4b8;
+    --graphite: #8b93a0;
+    --rule: #2c3542;
+    --rule-soft: #232b36;
+    --prussian: #7fa8cf;
+    --prussian-tint: #1c2a3a;
+    --wax: #d06a5c;
+    --wax-tint: #35201d;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px -12px rgba(0, 0, 0, 0.55);
+    --focus: #7fa8cf;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .display {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  }
+  .meta {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--graphite);
+    font-variant-numeric: tabular-nums;
+  }
+
+  a { color: var(--prussian); }
+  button { font: inherit; cursor: pointer; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 0 1.25rem 6rem;
+  }
+
+  /* ---------- shell + left sidebar ---------- */
+  [hidden] { display: none !important; }
+  .shell { display: flex; align-items: flex-start; min-height: 100vh; }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 15.5rem;
+    flex: none;
+    z-index: 30;
+    background: var(--paper);
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: 1.6rem 1.1rem 1.2rem;
+    /* must not clip: the profile menu overhangs this column */
+    overflow: visible;
+  }
+  .brand {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .brand .rule-word { color: var(--prussian); font-style: italic; }
+  .sidebar-head { display: flex; align-items: center; gap: 0.5rem; }
+  .brand-mark { display: none; }
+  .nav-toggle {
+    margin-left: auto;
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--rule);
+    background: var(--sheet);
+    color: var(--graphite);
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-toggle:hover { color: var(--prussian); border-color: var(--prussian); }
+  .nav-toggle svg { transition: transform 0.2s ease; }
+  /* the nav is the part that scrolls on short windows, so the column itself needn't clip */
+  .sidenav { display: flex; flex-direction: column; gap: 0.15rem; min-height: 0; overflow-y: auto; }
+  .sidenav a {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.4rem 0.7rem;
+    border-radius: 2px;
+    border-left: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .sidenav a svg { flex: none; opacity: 0.7; }
+  .sidenav a.active svg { opacity: 1; }
+  .sidebar { transition: width 0.18s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar { transition: none; }
+    .nav-toggle svg { transition: none; }
+  }
+
+  /* collapsed rail */
+  .shell.nav-collapsed .sidebar { width: 4rem; padding-left: 0.55rem; padding-right: 0.55rem; }
+  .shell.nav-collapsed .sidebar-head { flex-direction: column; gap: 0.7rem; }
+  .shell.nav-collapsed .brand-full { display: none; }
+  .shell.nav-collapsed .brand-mark { display: inline; font-size: 1.15rem; }
+  .shell.nav-collapsed .nav-toggle { margin-left: 0; }
+  .shell.nav-collapsed .nav-toggle svg { transform: rotate(180deg); }
+  .shell.nav-collapsed .sidenav a { justify-content: center; padding: 0.5rem 0; gap: 0; }
+  .shell.nav-collapsed .sidenav .lbl { display: none; }
+  .shell.nav-collapsed .ledger { justify-content: center; padding: 0.35rem; }
+  .shell.nav-collapsed .ledger svg { width: 36px; height: 24px; }
+  .shell.nav-collapsed .ledger-figures { display: none; }
+  .shell.nav-collapsed .profile-name { display: none; }
+  .shell.nav-collapsed .avatar-btn { padding: 0.25rem; justify-content: center; }
+  .shell.nav-collapsed .profile-pop { min-width: 14rem; }
+  .sidenav a:hover { color: var(--prussian); background: var(--rule-soft); }
+  .sidenav a.active {
+    color: var(--prussian);
+    background: var(--prussian-tint);
+    border-left-color: var(--prussian);
+    font-weight: 600;
+  }
+  .sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.7rem; }
+  .sidebar .ledger { padding: 0.45rem 0.6rem; box-shadow: none; gap: 0.5rem; }
+  .sidebar .ledger svg { width: 48px; height: 32px; }
+  .sidebar .ledger-status { font-size: 0.8rem; }
+  .sidebar .avatar-btn { width: 100%; min-width: 0; }
+  .sidebar .profile-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sidebar .profile-pop {
+    top: auto;
+    bottom: calc(100% + 0.5rem);
+    left: 0;
+    right: auto;
+    width: 16.5rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+  .main { flex: 1; min-width: 0; }
+  .main section[data-page] { border-bottom: none; padding: 2.5rem 0 0; }
+  .main header.masthead { border-bottom: none; }
+
+  @media (max-width: 820px) {
+    .shell { flex-direction: column; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: auto;
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.8rem;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 0.5rem 1rem;
+      overflow: visible;
+    }
+    .brand { font-size: 1rem; white-space: nowrap; }
+    .sidenav { flex-direction: row; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+    .sidenav::-webkit-scrollbar { display: none; }
+    .sidenav a {
+      border-left: none;
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+      white-space: nowrap;
+      font-size: 0.85rem;
+    }
+    .sidenav a.active { border-left: none; }
+    .sidebar-foot { margin-top: 0; margin-left: auto; flex-direction: row; align-items: center; }
+    .sidebar .ledger-figures { display: none; }
+    .sidebar .avatar-btn { width: auto; }
+    .sidebar .profile-pop { top: calc(100% + 0.5rem); bottom: auto; right: 0; left: auto; }
+    /* the strip is already compact — the rail state does not apply here */
+    .nav-toggle { display: none; }
+    .shell.nav-collapsed .sidebar { width: 100%; flex-direction: row; padding: 0.5rem 1rem; }
+    .shell.nav-collapsed .sidebar-head { flex-direction: row; }
+    .shell.nav-collapsed .brand-full { display: inline; }
+    .shell.nav-collapsed .brand-mark { display: none; }
+    .shell.nav-collapsed .sidenav a { justify-content: center; padding: 0.3rem 0.6rem; gap: 0.45rem; }
+    .shell.nav-collapsed .sidenav .lbl { display: inline; }
+    .shell.nav-collapsed .avatar-btn { padding: 0.25rem 0.9rem 0.25rem 0.3rem; }
+  }
+
+  /* home page entry cards */
+  .home-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.8rem;
+  }
+  .home-card {
+    border: 1px solid var(--rule);
+    background: var(--sheet);
+    border-radius: 2px;
+    padding: 0.9rem 1rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    box-shadow: var(--shadow);
+  }
+  .home-card strong { color: var(--ink); font-size: 1rem; font-weight: 600; }
+  .home-card span { color: var(--ink-soft); font-size: 0.85rem; }
+  .home-card:hover { border-color: var(--prussian); }
+
+  /* ---------- masthead ---------- */
+  header.masthead {
+    padding: 3.5rem 0 2rem;
+    border-bottom: 1px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-size: clamp(2.1rem, 6vw, 3.1rem);
+    line-height: 1.05;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  h1 .rule-word { color: var(--prussian); font-style: italic; }
+  .epigraph {
+    max-width: 34rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0;
+  }
+  .epigraph cite { font-style: normal; }
+
+  /* ---------- the ledger scale ---------- */
+  .ledger {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow);
+  }
+  .ledger svg { display: block; overflow: visible; }
+  .scale-beam {
+    transform-origin: 30px 14px;
+    transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scale-beam { transition: none; }
+  }
+  .ledger-figures { display: flex; flex-direction: column; gap: 0.1rem; }
+  .ledger-status { font-size: 0.9rem; color: var(--ink-soft); }
+  .ledger-status strong { color: var(--ink); font-weight: 600; }
+  .ledger-status.owing strong { color: var(--wax); }
+
+  /* ---------- profile ---------- */
+  .profile { position: relative; }
+  .avatar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid var(--rule);
+    background: var(--sheet);
+    border-radius: 999px;
+    padding: 0.25rem 0.9rem 0.25rem 0.3rem;
+    box-shadow: var(--shadow);
+  }
+  .avatar {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    background: var(--prussian);
+    color: var(--paper);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    box-shadow: inset 0 0 0 1.5px var(--sheet), 0 0 0 1px var(--prussian);
+    flex: none;
+  }
+  .avatar.big { width: 2.6rem; height: 2.6rem; font-size: 0.95rem; }
+  .profile-name { font-size: 0.9rem; color: var(--ink); }
+  @media (max-width: 560px) { .profile-name { display: none; } }
+  .signin-btn {
+    border: 1px solid var(--prussian);
+    color: var(--prussian);
+    background: transparent;
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    font-size: 0.88rem;
+  }
+  .profile-pop {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    z-index: 20;
+    min-width: 15.5rem;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 0.9rem;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .profile-pop.open { display: flex; }
+  .pop-head { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
+  .pop-head > div { min-width: 0; }
+  .pop-head strong { display: block; font-size: 0.95rem; line-height: 1.25; overflow-wrap: anywhere; }
+  .pop-role { display: block; font-size: 0.78rem; color: var(--graphite); font-style: italic; }
+  .pop-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 0.6rem;
+  }
+  .pop-row .meta { line-height: 1.3; }
+  .pop-row .seg button { padding: 0.18rem 0.7rem; font-size: 0.78rem; }
+  .lang-select {
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.25rem 0.4rem;
+    width: 100%;
+  }
+  .lang-select:hover { border-color: var(--prussian); }
+  .pop-actions { display: flex; flex-direction: column; gap: 0.35rem; border-top: 1px solid var(--rule-soft); padding-top: 0.7rem; }
+  .pop-link {
+    border: none;
+    background: transparent;
+    color: var(--prussian);
+    font-size: 0.88rem;
+    text-align: left;
+    padding: 0.25rem 0;
+    text-decoration: underline;
+  }
+  .pop-link.danger { color: var(--wax); }
+
+  /* ---------- charter ---------- */
+  section.charter { padding: 2.5rem 0; border-bottom: 1px solid var(--rule); }
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin: 0 0 1.2rem;
+    text-wrap: balance;
+  }
+  .charter ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: article;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .charter li {
+    counter-increment: article;
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 1rem;
+  }
+  .charter li::before {
+    content: "Art. " counter(article, upper-roman);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--prussian);
+    padding-top: 0.35rem;
+  }
+  .charter li p { margin: 0; }
+  .charter li strong { font-weight: 600; }
+  @media (max-width: 480px) {
+    .charter li { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+
+  /* ---------- catalogue (gallery) ---------- */
+  section.catalogue { padding: 2.5rem 0; border-bottom: 1px solid var(--rule); }
+  .catalogue-lede { margin: -0.6rem 0 1.4rem; font-size: 0.92rem; color: var(--ink-soft); }
+  .filter-bar { display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.4rem; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+  .chip-row .row-label { margin-right: 0.35rem; }
+  .chip {
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.22rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  .chip.active { border-color: var(--prussian); color: var(--prussian); background: var(--prussian-tint); }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 1.05rem 1.1rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .card .card-meta { display: flex; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .card .excerpt { font-size: 0.88rem; color: var(--ink-soft); margin: 0; }
+  .card .tags { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.1rem; }
+  .card .tag {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--prussian);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.08rem 0.5rem;
+  }
+  .card-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 0.55rem;
+    margin-top: auto;
+  }
+  .counts { font-size: 0.8rem; color: var(--graphite); font-variant-numeric: tabular-nums; display: flex; gap: 0.55rem; }
+  .counts .e { color: var(--prussian); }
+  .counts .c { color: var(--wax); }
+  .fav-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--graphite);
+    padding: 0.1rem 0.25rem;
+  }
+  .fav-btn.active { color: var(--prussian); }
+  .sub-btn {
+    margin-left: auto;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.18rem 0.7rem;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    background: transparent;
+    white-space: nowrap;
+  }
+  .sub-btn.active { border-color: var(--prussian); color: var(--prussian); background: var(--prussian-tint); }
+  .read-link {
+    border: none;
+    background: transparent;
+    color: var(--prussian);
+    font-size: 0.8rem;
+    text-decoration: underline;
+    padding: 0;
+    margin-top: 0.2rem;
+    align-self: flex-start;
+  }
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--graphite);
+    font-style: italic;
+    padding: 2rem 1rem;
+    border: 1px dashed var(--rule);
+    border-radius: 2px;
+  }
+
+  /* ---------- letters ---------- */
+  section.post { padding: 2.5rem 0 0; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  article.letter {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 2rem 2.25rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  article.letter.reply {
+    margin-left: 2.5rem;
+    border-left: 3px solid var(--prussian);
+  }
+  @media (max-width: 560px) {
+    article.letter { padding: 1.4rem 1.2rem 1rem; }
+    article.letter.reply { margin-left: 1rem; }
+  }
+
+  .letter-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .letter-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0.35rem 0 0;
+    text-wrap: balance;
+  }
+  .letter-body p { margin: 0 0 1em; }
+  .letter-body p:last-child { margin-bottom: 0; }
+  .salutation { font-style: italic; }
+  .signature {
+    margin-top: 1.5rem;
+    font-style: italic;
+    text-align: right;
+    color: var(--ink-soft);
+  }
+  .signature .name {
+    display: block;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* manuscript <-> transcription */
+  .ms-toggle {
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.28rem 0.85rem;
+    font-size: 0.8rem;
+    align-self: flex-start;
+    white-space: nowrap;
+  }
+  .ms-toggle.on { border-color: var(--prussian); color: var(--prussian); background: var(--prussian-tint); }
+  .ms-stage { display: grid; position: relative; }
+  .ms-stage > .ms-layer, .ms-stage > .type-layer { grid-area: 1 / 1; }
+  .ms-layer {
+    font-family: "Snell Roundhand", "Apple Chancery", "Segoe Script", "Bradley Hand", "Comic Sans MS", cursive;
+    font-size: 1.18rem;
+    line-height: 2.05;
+    color: var(--ink-soft);
+    padding: 0.4rem 0.9rem 0.6rem;
+    border: 1px solid var(--rule-soft);
+    border-radius: 2px;
+    transform: rotate(-0.35deg);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(2.05em - 1px),
+      var(--rule-soft) calc(2.05em - 1px),
+      var(--rule-soft) 2.05em
+    );
+    background-origin: content-box;
+  }
+  .ms-layer p { margin: 0 0 1em; }
+  .ms-layer p:last-child { margin-bottom: 0; }
+  .type-layer {
+    position: relative;
+    background: var(--sheet);
+    clip-path: inset(-2px -2px -2px -2px);
+    transition: clip-path 1.5s cubic-bezier(0.45, 0.05, 0.35, 0.95);
+  }
+  .ms-stage.to-ms .type-layer { clip-path: inset(calc(100% + 2px) -2px -2px -2px); }
+  .ms-stage.pre-type .type-layer { clip-path: inset(-2px -2px calc(100% + 2px) -2px); }
+  .ms-stage.no-anim .type-layer { transition: none; }
+  .scan {
+    position: absolute;
+    left: -0.6rem;
+    right: -0.6rem;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--prussian) 20%, var(--prussian) 80%, transparent);
+    box-shadow: 0 0 12px 1px var(--prussian);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .scan.run { animation: scanmove 1.5s cubic-bezier(0.45, 0.05, 0.35, 0.95) forwards; }
+  @keyframes scanmove {
+    0% { top: 0; opacity: 1; }
+    92% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .type-layer { transition: none; }
+    .scan { display: none; }
+  }
+
+  /* seal rail */
+  .seal-rail {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--rule-soft);
+    margin-top: 1.75rem;
+    padding-top: 0.9rem;
+  }
+  .seal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    background: transparent;
+    font-size: 0.88rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .seal-btn .dot {
+    width: 0.62rem; height: 0.62rem;
+    border-radius: 50%;
+    flex: none;
+  }
+  .endorse-btn { border: 1px solid var(--prussian); color: var(--prussian); }
+  .endorse-btn .dot { border: 2px solid var(--prussian); }
+  .endorse-btn.active { background: var(--prussian-tint); }
+  .endorse-btn.active .dot { background: var(--prussian); }
+  .challenge-btn { border: 1px solid var(--wax); color: var(--wax); }
+  .challenge-btn .dot { border: 2px solid var(--wax); border-radius: 1px; transform: rotate(45deg); }
+  .challenge-btn.active { background: var(--wax-tint); }
+  .reply-btn {
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    margin-left: auto;
+  }
+  .rail-note {
+    flex-basis: 100%;
+    font-size: 0.85rem;
+    color: var(--wax);
+    margin: 0.15rem 0 0;
+    display: none;
+  }
+  .rail-note.show { display: block; }
+
+  /* marginalia (challenges with reasons) */
+  .marginalia { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .marginalia-item {
+    border-left: 2px solid var(--wax);
+    padding: 0.15rem 0 0.15rem 0.85rem;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .marginalia-item .who { color: var(--wax); font-style: italic; }
+
+  /* challenge form */
+  .challenge-form {
+    display: none;
+    margin-top: 1rem;
+    border: 1px dashed var(--wax);
+    border-radius: 2px;
+    padding: 0.9rem;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: var(--wax-tint);
+  }
+  .challenge-form.open { display: flex; }
+  .challenge-form label { font-size: 0.85rem; color: var(--ink-soft); }
+  .challenge-form textarea, .challenge-form input {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--sheet);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .challenge-form textarea { min-height: 4.2rem; resize: vertical; }
+  .challenge-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary-wax {
+    background: var(--wax);
+    color: var(--sheet);
+    border: 1px solid var(--wax);
+    border-radius: 2px;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+  .btn-quiet {
+    background: transparent;
+    border: none;
+    color: var(--graphite);
+    font-size: 0.9rem;
+    text-decoration: underline;
+    padding: 0.4rem 0.25rem;
+  }
+  .form-hint { font-size: 0.8rem; color: var(--graphite); margin: 0; }
+
+  /* ---------- compose ---------- */
+  section.compose { padding: 1.5rem 0 0; }
+  .compose-sheet {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 2rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+  @media (max-width: 560px) { .compose-sheet { padding: 1.4rem 1.2rem; } }
+  .compose-sheet input, .compose-sheet textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    padding: 0.45rem 0.1rem;
+  }
+  .compose-sheet textarea { min-height: 9rem; resize: vertical; line-height: 1.65; }
+  .compose-sheet input::placeholder, .compose-sheet textarea::placeholder { color: var(--graphite); }
+  .compose-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+  /* handwritten original upload */
+  .attach-block {
+    border: 1px dashed var(--rule);
+    border-radius: 2px;
+    padding: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .attach-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+  .attach-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid var(--prussian);
+    color: var(--prussian);
+    background: transparent;
+    border-radius: 2px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.88rem;
+  }
+  .attach-btn svg { display: block; flex: none; }
+  .attach-hint { font-size: 0.8rem; color: var(--graphite); margin: 0; }
+  .attach-preview { display: none; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .attach-preview.show { display: flex; }
+  .attach-preview img { max-height: 72px; max-width: 120px; border: 1px solid var(--rule); border-radius: 2px; }
+  .attach-name { font-size: 0.85rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .ocr-status { font-size: 0.85rem; color: var(--prussian); margin: 0; display: none; }
+  .ocr-status.show { display: block; }
+
+  /* visibility controls */
+  .vis-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .vis-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    overflow: hidden;
+    width: fit-content;
+  }
+  .seg button {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    padding: 0.28rem 0.85rem;
+    font-size: 0.83rem;
+  }
+  .seg button + button { border-left: 1px solid var(--rule); }
+  .seg button.active { background: var(--prussian); color: var(--paper); }
+  .vis-note { font-size: 0.82rem; color: var(--graphite); margin: 0; }
+  .vis-note.private { color: var(--wax); }
+
+  .btn-post {
+    background: var(--prussian);
+    color: var(--paper);
+    border: 1px solid var(--prussian);
+    border-radius: 2px;
+    padding: 0.55rem 1.4rem;
+    font-size: 0.95rem;
+  }
+  .post-note { font-size: 0.85rem; color: var(--graphite); margin: 0; }
+  .posted-confirm { color: var(--prussian); font-size: 0.9rem; display: none; }
+  .posted-confirm.show { display: inline; }
+
+  /* ---------- auth (signup) ---------- */
+  .auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+  }
+  .auth-overlay.open { display: flex; }
+  .auth-sheet {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 24rem;
+    padding: 2rem 2rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    position: relative;
+  }
+  .auth-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    border: none;
+    background: transparent;
+    color: var(--graphite);
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0.3rem;
+  }
+  .auth-sheet h2 { margin: 0; }
+  .auth-lede { margin: -0.4rem 0 0; font-size: 0.9rem; color: var(--ink-soft); }
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1px solid var(--rule);
+    background: #ffffff;
+    color: #1f1f1f;
+    border-radius: 2px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
+  .google-btn svg { flex: none; }
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--graphite);
+    font-size: 0.8rem;
+  }
+  .auth-divider::before, .auth-divider::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .auth-sheet input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.45rem 0.1rem;
+  }
+  .auth-sheet input::placeholder { color: var(--graphite); }
+  .auth-create {
+    background: var(--prussian);
+    color: var(--paper);
+    border: 1px solid var(--prussian);
+    border-radius: 2px;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
+  }
+  .auth-agree { font-size: 0.78rem; color: var(--graphite); margin: 0; }
+  .auth-status { font-size: 0.85rem; color: var(--prussian); margin: 0; min-height: 1.2em; }
+  .auth-status.err { color: var(--wax); }
+
+  footer.colophon {
+    margin-top: 4rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.85rem;
+    color: var(--graphite);
+  }
+  footer.colophon p { margin: 0 0 0.4rem; }
+</style>
+
+<div class="shell">
+<aside class="sidebar">
+    <div class="sidebar-head">
+      <a class="brand display" href="#top">
+        <span class="brand-full">Puño <span class="rule-word">y</span> Letra</span>
+        <span class="brand-mark">P<span class="rule-word">y</span>L</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="true">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 4 5.5 8l4 4"/></svg>
+      </button>
+    </div>
+    <nav class="sidenav" id="sidenav" aria-label="Sections">
+      <a href="#top">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7 8 2.5 13.5 7"/><path d="M4 7.5V13h8V7.5"/></svg>
+        <span class="lbl" data-i18n="navHome">Home</span>
+      </a>
+      <a href="#charter">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="2" width="9" height="12" rx="1"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg>
+        <span class="lbl" data-i18n="navCharter">Charter</span>
+      </a>
+      <a href="#catalogue">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5"/><rect x="9" y="2.5" width="4.5" height="4.5"/><rect x="2.5" y="9" width="4.5" height="4.5"/><rect x="9" y="9" width="4.5" height="4.5"/></svg>
+        <span class="lbl" data-i18n="navCatalogue">Catalogue</span>
+      </a>
+      <a href="#letters">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg>
+        <span class="lbl" data-i18n="navPost">Today’s Post</span>
+      </a>
+      <a href="#compose">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 2.5 13.5 5 6 12.5 3 13l.5-3z"/></svg>
+        <span class="lbl" data-i18n="navWrite">Write</span>
+      </a>
+      <a href="#desk">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3H7a1.5 1.5 0 0 1 1 2.6V13a1.2 1.2 0 0 0-1.2-1.2H2.5z"/><path d="M13.5 3H9a1.5 1.5 0 0 0-1 2.6V13a1.2 1.2 0 0 1 1.2-1.2h4.3z"/></svg>
+        <span class="lbl" data-i18n="navDesk">Desk</span>
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="ledger" role="status" aria-live="polite">
+        <svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true">
+          <line x1="30" y1="14" x2="30" y2="34" stroke="var(--graphite)" stroke-width="2"/>
+          <line x1="20" y1="36" x2="40" y2="36" stroke="var(--graphite)" stroke-width="2"/>
+          <g class="scale-beam" id="scaleBeam">
+            <line x1="8" y1="14" x2="52" y2="14" stroke="var(--ink)" stroke-width="2"/>
+            <circle cx="30" cy="14" r="2.5" fill="var(--ink)"/>
+            <path d="M 4 22 A 6 6 0 0 0 16 22 L 8 14 Z" fill="none" stroke="var(--prussian)" stroke-width="1.8"/>
+            <path d="M 44 22 A 6 6 0 0 0 56 22 L 52 14 Z" fill="none" stroke="var(--wax)" stroke-width="1.8"/>
+          </g>
+        </svg>
+        <div class="ledger-figures">
+          <span class="meta" data-i18n="ledgerTitle">Your seal ledger</span>
+          <span class="ledger-status" id="ledgerStatus"></span>
+        </div>
+      </div>
+      <div class="profile" id="profile">
+        <button class="avatar-btn" id="avatarBtn" aria-haspopup="true" aria-expanded="false">
+          <span class="avatar" aria-hidden="true">EM</span>
+          <span class="profile-name">Euclides Marin</span>
+        </button>
+        <button class="signin-btn" id="signInBtn" data-i18n="signIn" style="display:none;">Sign in</button>
+        <div class="profile-pop" id="profilePop">
+          <div class="pop-head">
+            <span class="avatar big" aria-hidden="true">EM</span>
+            <div>
+              <strong>Euclides Marin</strong>
+              <span class="pop-role" data-i18n="profileRole">Founding correspondent</span>
+            </div>
+          </div>
+          <div class="pop-row"><span class="meta" data-i18n="popVis">Default visibility</span><span id="popVisVal"></span></div>
+          <div class="pop-row"><span class="meta" data-i18n="shelfLabel">Shelf</span><span id="popShelfVal"></span></div>
+          <div class="pop-row">
+            <span class="meta" data-i18n="popLang">Language</span>
+            <select class="lang-select" id="langSel" aria-label="Language / Idioma / Langue / Lingua / Sprache">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="it">Italiano</option>
+              <option value="de">Deutsch</option>
+            </select>
+          </div>
+          <div class="pop-actions">
+            <button class="pop-link" id="popGoShelf" data-i18n="popGoShelf">Open my shelf</button>
+            <button class="pop-link danger" id="popSignOut" data-i18n="popSignOut">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</aside>
+
+<main class="main">
+<div class="wrap">
+  <header class="masthead" id="top" data-page="top">
+    <div class="masthead-top">
+      <p class="meta" data-i18n="mastMeta">Vol. I · No. 1 — Founded MMXXVI</p>
+    </div>
+    <h1 class="display">Puño <span class="rule-word">y</span> Letra</h1>
+    <p class="epigraph" data-i18n="epigraph"></p>
+    <div class="home-cards">
+      <a class="home-card" href="#letters"><strong data-i18n="navPost">Today’s Post</strong><span data-i18n="homePost"></span></a>
+      <a class="home-card" href="#catalogue"><strong data-i18n="navCatalogue">Catalogue</strong><span data-i18n="homeCat"></span></a>
+      <a class="home-card" href="#compose"><strong data-i18n="navWrite">Write</strong><span data-i18n="homeWrite"></span></a>
+    </div>
+  </header>
+
+  <section class="charter" id="charter" data-page="charter">
+    <h2 class="display" data-i18n="charterTitle">The Charter — Rules of Engagement</h2>
+    <ol>
+      <li><p data-i18n="art1"></p></li>
+      <li><p data-i18n="art2"></p></li>
+      <li><p data-i18n="art3"></p></li>
+      <li><p data-i18n="art4"></p></li>
+      <li><p data-i18n="art5"></p></li>
+      <li><p data-i18n="art6"></p></li>
+      <li><p data-i18n="art7"></p></li>
+      <li><p data-i18n="art8"></p></li>
+    </ol>
+  </section>
+
+  <section class="catalogue" id="catalogue" data-page="catalogue">
+    <div class="section-head">
+      <h2 class="display" data-i18n="catTitle">The Catalogue</h2>
+      <span class="meta" id="catCount"></span>
+    </div>
+    <p class="catalogue-lede" data-i18n="catLede"></p>
+    <div class="filter-bar">
+      <div class="chip-row" id="topicChips">
+        <span class="meta row-label" data-i18n="topicLabel">Topic</span>
+      </div>
+      <div class="chip-row">
+        <span class="meta row-label" data-i18n="shelfLabel">Shelf</span>
+        <button class="chip" id="filterFav" data-i18n="filterFav">★ My shelf</button>
+        <button class="chip" id="filterSub" data-i18n="filterSub">Subscribed</button>
+      </div>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="post" id="letters" data-page="letters">
+    <div class="section-head">
+      <h2 class="display" data-i18n="postTitle">Today’s Post</h2>
+      <span class="meta" data-i18n="postMeta">Delivered 18 August 2026</span>
+    </div>
+
+    <!-- LETTER I -->
+    <article class="letter" data-letter="1">
+      <div class="letter-head">
+        <div>
+          <span class="meta">Letter I · From E. Marin · To the Republic</span>
+          <h3 class="letter-title display">On Borrowed Judgment</h3>
+        </div>
+      </div>
+      <div class="letter-body">
+        <p class="salutation">Esteemed correspondents,</p>
+        <p>We argue endlessly about whether machines will give us wrong answers, and almost never about what their right answers are doing to us. When a counselor is usually correct, deference becomes the rational habit — and judgment, like any faculty, atrophies precisely in proportion to how rarely it is exercised. The danger is not that the machine errs; it is that we forget how to notice.</p>
+        <p>I do not propose abstinence. I propose that we treat delegated judgment the way the old Republic treated a borrowed book: you may keep it a while, but you are expected to return it annotated. Any system worth trusting should show its work in a form that lets us disagree with it — and any institution that adopts one should measure not only its accuracy, but whether its people can still decide without it.</p>
+      </div>
+      <p class="signature">Written in good faith and open to correction,<span class="name">Euclides Marin</span></p>
+      <div class="seal-rail">
+        <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">14</span></button>
+        <button class="seal-btn challenge-btn" data-action="challenge"><span class="dot"></span>Challenge · <span class="count">9</span></button>
+        <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
+        <p class="rail-note" data-note></p>
+      </div>
+      <div class="challenge-form" data-form>
+        <label data-i18n="chLabel"></label>
+        <textarea data-reason></textarea>
+        <input data-signer type="text" />
+        <div class="challenge-actions">
+          <button class="btn-primary-wax" data-action="submit-challenge" data-i18n="chSubmit">Affix challenge seal</button>
+          <button class="btn-quiet" data-action="cancel-challenge" data-i18n="chCancel">Withdraw</button>
+          <p class="form-hint" data-i18n="chHint">Published in the margin under your name.</p>
+        </div>
+      </div>
+      <div class="marginalia" data-marginalia>
+        <p class="meta" style="margin:0.5rem 0 0;">Marginalia · 2</p>
+        <div class="marginalia-item">"Atrophy assumes judgment was ever solitary. We have borrowed it from books, clerks, and committees for centuries — the ledger you should audit is accountability, not self-reliance." <span class="who">— R. Osei</span></div>
+        <div class="marginalia-item">"Show-its-work is a comfort, not a cure: an explanation persuasive enough to check is persuasive enough to stop checking." <span class="who">— A. Weiss</span></div>
+      </div>
+    </article>
+
+    <!-- REPLY -->
+    <article class="letter reply" data-letter="2">
+      <div class="letter-head">
+        <div>
+          <span class="meta">Letter II · From R. Osei · In answer to Letter I</span>
+          <h3 class="letter-title display">Judgment Was Always Prosthetic</h3>
+        </div>
+      </div>
+      <div class="letter-body">
+        <p class="salutation">Dear M. Marin,</p>
+        <p>Your letter's strongest claim — that faculties decay when unexercised, and that institutions should measure the decay — I gladly endorse. Where we part is the nostalgia underneath it. There was no golden age of unaided judgment: the physician deferred to the pharmacopoeia, the judge to precedent, the navigator to tables computed by strangers. Cognition has always been prosthetic; what changed is that the new prosthesis talks back.</p>
+        <p>So the question is not how to keep judgment at home, but how to keep <em>responsibility</em> from emigrating with it. A tool may think for me; it must not answer for me. Let us design our institutions so that a human signature is still required wherever a human would bear the harm — and let the signature mean what yours means at the foot of your letter: I have read this, I can defend this, and you know where to find me.</p>
+      </div>
+      <p class="signature">With respect and a sharpened pen,<span class="name">Rebecca Osei</span></p>
+      <div class="seal-rail">
+        <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">11</span></button>
+        <button class="seal-btn challenge-btn" data-action="challenge"><span class="dot"></span>Challenge · <span class="count">3</span></button>
+        <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
+        <p class="rail-note" data-note></p>
+      </div>
+      <div class="challenge-form" data-form>
+        <label data-i18n="chLabel"></label>
+        <textarea data-reason></textarea>
+        <input data-signer type="text" />
+        <div class="challenge-actions">
+          <button class="btn-primary-wax" data-action="submit-challenge" data-i18n="chSubmit">Affix challenge seal</button>
+          <button class="btn-quiet" data-action="cancel-challenge" data-i18n="chCancel">Withdraw</button>
+          <p class="form-hint" data-i18n="chHint">Published in the margin under your name.</p>
+        </div>
+      </div>
+      <div class="marginalia" data-marginalia>
+        <p class="meta" style="margin:0.5rem 0 0;">Marginalia · 1</p>
+        <div class="marginalia-item">"The signature requirement collapses when the signer cannot audit what they sign. A demand for accountability without capability is theater." <span class="who">— T. Ilves</span></div>
+      </div>
+    </article>
+
+    <!-- LETTER III -->
+    <article class="letter" data-letter="3">
+      <div class="letter-head">
+        <div>
+          <span class="meta">Letter III · From A. Weiss · To the Republic</span>
+          <h3 class="letter-title display">On Apologies from Machines</h3>
+        </div>
+      </div>
+      <div class="letter-body">
+        <p class="salutation">Fellow members,</p>
+        <p>Yesterday a system apologized to me. It was, I confess, a good apology — contrite, specific, better than most I have received from people. And it was worth precisely nothing, because an apology is a promissory note drawn against future conduct, and the machine holds no account from which to pay. It risks nothing by my forgiveness and loses nothing by my anger.</p>
+        <p>I propose a small discipline for our craft: machines should <em>report</em>, not emote. "This answer was wrong; here is what changed" respects me. "I sincerely apologize for the confusion" borrows the costume of remorse to soften my vigilance. The vocabulary of moral feeling should be spent only by those who can be spent by it.</p>
+      </div>
+      <p class="signature">Yours in cheerful suspicion,<span class="name">Anselm Weiss</span></p>
+      <div class="seal-rail">
+        <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">21</span></button>
+        <button class="seal-btn challenge-btn" data-action="challenge"><span class="dot"></span>Challenge · <span class="count">17</span></button>
+        <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
+        <p class="rail-note" data-note></p>
+      </div>
+      <div class="challenge-form" data-form>
+        <label data-i18n="chLabel"></label>
+        <textarea data-reason></textarea>
+        <input data-signer type="text" />
+        <div class="challenge-actions">
+          <button class="btn-primary-wax" data-action="submit-challenge" data-i18n="chSubmit">Affix challenge seal</button>
+          <button class="btn-quiet" data-action="cancel-challenge" data-i18n="chCancel">Withdraw</button>
+          <p class="form-hint" data-i18n="chHint">Published in the margin under your name.</p>
+        </div>
+      </div>
+      <div class="marginalia" data-marginalia>
+        <p class="meta" style="margin:0.5rem 0 0;">Marginalia · 1</p>
+        <div class="marginalia-item">"Politeness is not deception; it is interface. Nobody thinks the door thanks them, yet the sign that says 'thank you' still smooths the exit." <span class="who">— C. Duarte</span></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="compose" id="compose" data-page="compose">
+    <div class="section-head">
+      <h2 class="display" data-i18n="composeHead">Write to the Republic</h2>
+      <span class="meta" data-i18n="composeMeta">Next delivery · tomorrow, 08:00</span>
+    </div>
+    <div class="compose-sheet">
+      <div class="attach-block">
+        <span class="meta" data-i18n="attachLabel">Your handwritten original — required (Art. II)</span>
+        <div class="attach-actions">
+          <button class="attach-btn" id="attachUpload">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5"/><path d="M4.8 5.2 8 2l3.2 3.2"/><path d="M2 10.5v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2.5"/></svg>
+            <span class="lbl" data-i18n="attachUpload">Upload a file</span>
+          </button>
+          <button class="attach-btn" id="attachCamera">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><path d="M5.5 4.5 6.7 2.5h2.6l1.2 2"/><circle cx="8" cy="9" r="2.4"/></svg>
+            <span class="lbl" data-i18n="attachCamera">Take a picture</span>
+          </button>
+          <input type="file" id="attachInput" accept="image/*" hidden />
+        </div>
+        <div class="attach-preview" id="attachPreview">
+          <img id="attachImg" alt="Preview of your handwritten letter" />
+          <span class="attach-name" id="attachName"></span>
+          <button class="btn-quiet" id="attachRemove" data-i18n="attachRemove">Remove</button>
+        </div>
+        <p class="ocr-status" id="ocrStatus" role="status"></p>
+        <p class="attach-hint" data-i18n="attachHint"></p>
+      </div>
+      <input id="composeTitle" type="text" aria-label="Letter title" />
+      <textarea id="composeBody" aria-label="Letter body / transcription"></textarea>
+      <input id="composeName" type="text" aria-label="Your name" />
+      <div class="vis-row">
+        <div class="vis-group">
+          <span class="meta" data-i18n="visGeneral">Your general setting</span>
+          <div class="seg" id="segDefault" role="group" aria-label="Default visibility for your letters">
+            <button data-v="public" class="active" data-i18n="visPublic">Public</button>
+            <button data-v="private" data-i18n="visPrivate">Private</button>
+          </div>
+        </div>
+        <div class="vis-group">
+          <span class="meta" data-i18n="visThis">This letter</span>
+          <div class="seg" id="segPost" role="group" aria-label="Visibility for this letter">
+            <button data-v="default" class="active" data-i18n="visDefault">Use my default</button>
+            <button data-v="public" data-i18n="visPublic">Public</button>
+            <button data-v="private" data-i18n="visPrivate">Private</button>
+          </div>
+        </div>
+      </div>
+      <p class="vis-note" id="visNote"></p>
+      <div class="compose-actions">
+        <button class="btn-post" id="postLetter" data-i18n="postBtn">Seal &amp; post</button>
+        <span class="posted-confirm" id="postedConfirm"></span>
+        <p class="post-note" data-i18n="postNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalogue" id="desk" data-page="desk">
+    <div class="section-head">
+      <h2 class="display" data-i18n="deskTitle">The Writing Desk</h2>
+      <span class="meta" data-i18n="deskMeta">Tools we trust</span>
+    </div>
+    <p class="catalogue-lede" data-i18n="deskLede"></p>
+    <div class="gallery" id="deskGrid"></div>
+    <p class="attach-hint" style="margin-top:1rem;" data-i18n="deskDisclosure"></p>
+  </section>
+
+  <footer class="colophon">
+    <p data-i18n="colophon1"></p>
+    <p data-i18n="colophon2"></p>
+  </footer>
+</div>
+</main>
+</div>
+
+<div class="auth-overlay" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="auth-sheet">
+    <button class="auth-close" id="authClose" aria-label="Close">✕</button>
+    <h2 class="display" id="authTitle" data-i18n="authTitle">Join the Republic</h2>
+    <p class="auth-lede" data-i18n="authLede"></p>
+    <button class="google-btn" id="googleBtn">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      <span data-i18n="authGoogle">Continue with Google</span>
+    </button>
+    <div class="auth-divider" data-i18n="authOr">or with your email</div>
+    <input type="text" id="authName" autocomplete="name" />
+    <input type="email" id="authEmail" autocomplete="email" />
+    <button class="auth-create" id="authCreate" data-i18n="authCreate">Create account</button>
+    <p class="auth-status" id="authStatus"></p>
+    <p class="auth-agree" data-i18n="authAgree"></p>
+  </div>
+</div>
+
+<script>
+  /* ---------- i18n ---------- */
+  var PYL = window.PYL = { lang: 'en', onLang: [], LANGS: ['en', 'es', 'fr', 'it', 'de'] };
+  try {
+    var storedLang = localStorage.getItem('pyl-lang');
+    if (PYL.LANGS.indexOf(storedLang) !== -1) {
+      PYL.lang = storedLang;
+    } else {
+      var nav = (navigator.language || 'en').toLowerCase().slice(0, 2);
+      if (PYL.LANGS.indexOf(nav) !== -1) PYL.lang = nav;
+    }
+  } catch (e) {}
+
+  var I18N = PYL.I18N = {
+    en: {
+      mastMeta: 'Vol. I · No. 1 — Founded MMXXVI',
+      ledgerTitle: 'Your seal ledger',
+      epigraph: 'A slow correspondence on the ethics of artificial intelligence, in the tradition of the Republic of Letters. Everything here arrives <span lang="es">de puño y letra</span> — by its author’s own hand and signature. No feeds, no pile-ons — only letters, sealed, and the obligation to weigh what you praise against what you contest.',
+      charterTitle: 'The Charter — Rules of Engagement',
+      art1: '<strong>Write letters, not comments.</strong> Every contribution is addressed to a person, opens by stating the strongest version of what they argued, and only then dissents. If you cannot restate their case fairly, you are not yet ready to answer it.',
+      art2: '<strong>Every seal is signed — <span lang="es">de puño y letra</span>.</strong> Letters, endorsements, and challenges all carry your name, and every letter is posted as a photograph of your own handwriting before it becomes text. The original Republic ran on reputation staked over decades; anonymity buys candor cheaply and spends trust dearly.',
+      art3: '<strong>Original material only.</strong> Every letter is your own writing. Words borrowed from another — living, dead, or machine — stand inside quotation marks with their author named. A credited borrowing is scholarship; an uncredited one is retracted from the post, and the ledger remembers.',
+      art4: '<strong>The balanced seal.</strong> Praise and dissent are minted in pairs. You may hold at most one unpaid endorsement: to endorse a second letter, you must first challenge one you genuinely contest. Agreement is never free here — it costs you the harder act of saying what you doubt.',
+      art5: '<strong>A challenge is marginalia, not a downvote.</strong> No challenge counts without a written reason, published in the margin under your name. A tally tells an author nothing; a sentence tells them where to aim their next letter.',
+      art6: '<strong>The post is slow.</strong> Letters are delivered once a day, together. Nothing you write can go viral by suppertime, so nothing needs to be written for the crowd.',
+      art7: '<strong>One letter per correspondent per exchange</strong> until the author has replied. The right of response belongs first to the person you addressed.',
+      art8: '<strong>The Republic keeps the door.</strong> We may moderate, withhold, delete, or suspend any publication — and any correspondent — where we judge the content offensive, insensitive, or in breach of this Charter. The judgment is ours to make; where practical we will name the rule that was broken and hear an appeal by letter.',
+      catTitle: 'The Catalogue',
+      catLede: 'All public correspondence, in one gallery. Star a letter (★) to keep it on your shelf; subscribe to a correspondence to receive every reply in that exchange with your daily post.',
+      topicLabel: 'Topic', shelfLabel: 'Shelf',
+      filterFav: '★ My shelf', filterSub: 'Subscribed',
+      postTitle: 'Today’s Post', postMeta: 'Delivered 18 August 2026',
+      chLabel: 'Your marginal note — a challenge must say <em>why</em> (Art. V):',
+      chSubmit: 'Affix challenge seal', chCancel: 'Withdraw',
+      chHint: 'Published in the margin under your name.',
+      composeHead: 'Write to the Republic', composeMeta: 'Next delivery · tomorrow, 08:00',
+      attachLabel: 'Your handwritten original — required (Art. II)',
+      attachUpload: 'Upload a file', attachCamera: 'Take a picture', attachRemove: 'Remove',
+      attachHint: 'The posting house transcribes your hand to editable text — you correct the transcription below before sealing.',
+      visGeneral: 'Your general setting', visThis: 'This letter',
+      visPublic: 'Public', visPrivate: 'Private', visDefault: 'Use my default',
+      postBtn: 'Seal &amp; post',
+      postNote: 'Letters are held for the daily delivery — the post is slow on purpose (Art. VI).',
+      colophon1: 'A working prototype — seals and letters live only in this page for now; a real posting house needs a backend.',
+      colophon2: '<em>Puño y Letra</em> — from <span lang="es">“de su puño y letra”</span>: written and signed by one’s own hand, as a notary would attest. Set in the manner of the correspondence networks of the seventeenth century, in Prussian blue and sealing wax.',
+      phTitle: 'Title — ‘On …’',
+      phBody: 'Digital transcription — appears here after your photograph is read, for you to correct (Art. I: open with the strongest version of the view you answer)…',
+      phName: 'Signed — your name (Art. II)',
+      phReason: 'State the strongest point you contest, and your reason…',
+      phSigner: 'Signed — your name',
+      balanced: 'Balanced', unbalanced: 'Unbalanced', youOwe: 'you owe',
+      endorsementN: 'endorsement', endorsementsN: 'endorsements',
+      challengeN: 'challenge', challengesN: 'challenges',
+      endorse: 'Endorse', challenge: 'Challenge', replyByLetter: 'Reply by letter',
+      noteUnbalanced: 'Your seal is unbalanced (Art. IV) — before endorsing again, challenge a letter you genuinely contest.',
+      noteNeedsReason: 'Art. V — a challenge needs a real reason (a sentence, at least) before the seal will take.',
+      noteChallengeSealed: 'Challenge sealed and published in the margin. Your ledger is credited.',
+      aCorrespondent: 'A correspondent',
+      confirmAttach: 'Art. II — attach a photograph of your handwritten original before sealing.',
+      confirmShort: 'A letter deserves more than a line — the post can wait for your full thought.',
+      confirmPublic: 'Sealed as public. Your letter travels to the whole Republic with tomorrow’s post.',
+      confirmPrivate: 'Sealed as private. Your letter travels only to your invited circle with tomorrow’s post.',
+      ocrReading: 'Reading your hand…',
+      ocrReady: 'Transcription ready — correct it in the letter body below. (OCR is simulated in this prototype; the real posting house extracts your text here.)',
+      visNotePublic: 'This letter will be sealed public{via} — delivered to the whole Republic and listed in the Catalogue.',
+      visNotePrivate: 'This letter will be sealed private{via} — delivered only to your invited circle. Private correspondence is a patron feature in the full posting house.',
+      viaDefault: ' (from your general setting)', viaOverride: ' (overriding your general setting)',
+      catCount: '{n} of {m} letters',
+      emptyShelf: 'Your shelf is bare under these filters — star or subscribe from the cards below to fill it.',
+      emptyTopic: 'No letters under this topic yet — perhaps yours will be the first.',
+      letterWord: 'Letter', ansAbbrev: 'ans.',
+      readInPost: 'Read in today’s post ↓',
+      subscribe: 'Subscribe', subscribed: 'Subscribed ✓',
+      viewManuscript: 'View manuscript', viewTranscription: 'View transcription',
+      profileRole: 'Founding correspondent',
+      popVis: 'Default visibility',
+      popShelfCount: '{f} starred · {s} subscribed',
+      popGoShelf: 'Open my shelf',
+      popSignOut: 'Sign out',
+      signIn: 'Sign in',
+      popLang: 'Language',
+      navCharter: 'Charter', navCatalogue: 'Catalogue', navPost: 'Today’s Post', navWrite: 'Write',
+      navDesk: 'Desk',
+      navHome: 'Home',
+      navCollapse: 'Collapse menu',
+      navExpand: 'Expand menu',
+      homePost: 'The letters delivered today.',
+      homeCat: 'Every public letter, filed.',
+      homeWrite: 'Send one of your own.',
+      inAnswerTo: 'In answer to “{title}”',
+      deskTitle: 'The Writing Desk',
+      deskMeta: 'Tools we trust',
+      deskLede: 'The paper, pens, and seals we actually write with. Every letter in the Republic began on a desk like this one.',
+      deskDisclosure: 'Referral note: these are affiliate links — if you buy through them, the Republic earns a small commission at no extra cost to you. It is one of the ways we keep the posting house open. We only list tools we use ourselves.',
+      deskView: 'View at Amazon ↗',
+      authTitle: 'Join the Republic',
+      authLede: 'One account, one name, one hand. Your letters will carry your signature — de puño y letra.',
+      authGoogle: 'Continue with Google',
+      authOr: 'or with your email',
+      authCreate: 'Create account',
+      authAgree: 'By joining you sign the Charter — your letters carry your real name (Art. II).',
+      authConnecting: 'Connecting to Google…',
+      authNeedName: 'Art. II — the Republic needs your full, real name.',
+      authNeedEmail: 'Enter a valid email address.',
+      phAuthName: 'Your full name (Art. II)',
+      phAuthEmail: 'Email',
+      topics: { 'All': 'All', 'Judgment': 'Judgment', 'Accountability': 'Accountability', 'Machine feeling': 'Machine feeling', 'Labor': 'Labor', 'Governance': 'Governance' }
+    },
+    es: {
+      mastMeta: 'Vol. I · N.º 1 — Fundada MMXXVI',
+      ledgerTitle: 'Tu libro de sellos',
+      epigraph: 'Una correspondencia lenta sobre la ética de la inteligencia artificial, en la tradición de la República de las Letras. Todo aquí llega <span lang="es">de puño y letra</span> — de la mano y firma de su autor. Sin feeds, sin turbas — solo cartas, selladas, y la obligación de sopesar lo que elogias contra lo que cuestionas.',
+      charterTitle: 'La Carta — Reglas del intercambio',
+      art1: '<strong>Escribe cartas, no comentarios.</strong> Toda contribución se dirige a una persona, comienza exponiendo la versión más fuerte de lo que esa persona argumentó, y solo después disiente. Si no puedes reformular su caso con justicia, aún no estás listo para responderlo.',
+      art2: '<strong>Todo sello va firmado — de puño y letra.</strong> Cartas, respaldos y objeciones llevan tu nombre, y cada carta se publica como fotografía de tu propia escritura antes de convertirse en texto. La República original funcionaba con reputación apostada durante décadas; el anonimato compra franqueza barata y gasta confianza cara.',
+      art3: '<strong>Solo material original.</strong> Cada carta es escritura tuya. Las palabras tomadas de otro — vivo, muerto o máquina — van entre comillas con su autor nombrado. Un préstamo acreditado es erudición; uno sin acreditar se retira del correo, y el libro de sellos recuerda.',
+      art4: '<strong>El sello equilibrado.</strong> El elogio y el disenso se acuñan en pares. Puedes tener a lo sumo un respaldo sin pagar: para respaldar una segunda carta, primero debes objetar una que de verdad cuestiones. Aquí el acuerdo nunca es gratis — te cuesta el acto más difícil de decir lo que dudas.',
+      art5: '<strong>Una objeción es una nota al margen, no un voto negativo.</strong> Ninguna objeción cuenta sin una razón escrita, publicada al margen bajo tu nombre. Un conteo no le dice nada al autor; una oración le dice hacia dónde apuntar su próxima carta.',
+      art6: '<strong>El correo es lento.</strong> Las cartas se entregan una vez al día, todas juntas. Nada de lo que escribas puede volverse viral antes de la cena, así que nada necesita escribirse para la multitud.',
+      art7: '<strong>Una carta por corresponsal por intercambio</strong> hasta que el autor haya respondido. El derecho de réplica pertenece primero a la persona a quien te dirigiste.',
+      art8: '<strong>La República guarda la puerta.</strong> Podemos moderar, retener, eliminar o suspender cualquier publicación — y cualquier corresponsal — cuando juzguemos que el contenido es ofensivo, insensible o contrario a esta Carta. La decisión nos corresponde; cuando sea posible nombraremos la regla infringida y escucharemos una apelación por carta.',
+      catTitle: 'El Catálogo',
+      catLede: 'Toda la correspondencia pública, en una sola galería. Marca una carta con una estrella (★) para guardarla en tu estante; suscríbete a una correspondencia para recibir cada respuesta de ese intercambio con tu correo diario.',
+      topicLabel: 'Tema', shelfLabel: 'Estante',
+      filterFav: '★ Mi estante', filterSub: 'Suscritas',
+      postTitle: 'El correo de hoy', postMeta: 'Entregado el 18 de agosto de 2026',
+      chLabel: 'Tu nota al margen — una objeción debe decir <em>por qué</em> (Art. V):',
+      chSubmit: 'Estampar sello de objeción', chCancel: 'Retirar',
+      chHint: 'Se publica al margen bajo tu nombre.',
+      composeHead: 'Escribe a la República', composeMeta: 'Próxima entrega · mañana, 08:00',
+      attachLabel: 'Tu original manuscrito — obligatorio (Art. II)',
+      attachUpload: 'Subir un archivo', attachCamera: 'Tomar una foto', attachRemove: 'Quitar',
+      attachHint: 'La casa de postas transcribe tu mano a texto editable — corriges la transcripción abajo antes de sellar.',
+      visGeneral: 'Tu configuración general', visThis: 'Esta carta',
+      visPublic: 'Pública', visPrivate: 'Privada', visDefault: 'Usar mi configuración',
+      postBtn: 'Sellar y enviar',
+      postNote: 'Las cartas se retienen para la entrega diaria — el correo es lento a propósito (Art. VI).',
+      colophon1: 'Un prototipo en construcción — por ahora los sellos y las cartas viven solo en esta página; una verdadera casa de postas necesita un backend.',
+      colophon2: '<em>Puño y Letra</em> — de «de su puño y letra»: escrito y firmado por la propia mano, como lo atestiguaría un notario. Compuesta a la manera de las redes de correspondencia del siglo XVII, en azul de Prusia y lacre.',
+      phTitle: 'Título — «Sobre…»',
+      phBody: 'Transcripción digital — aparece aquí tras leer tu fotografía, para que la corrijas (Art. I: abre con la versión más fuerte de la postura que respondes)…',
+      phName: 'Firmado — tu nombre (Art. II)',
+      phReason: 'Señala el punto más fuerte que cuestionas, y tu razón…',
+      phSigner: 'Firmado — tu nombre',
+      balanced: 'Equilibrado', unbalanced: 'Desequilibrado', youOwe: 'debes',
+      endorsementN: 'respaldo', endorsementsN: 'respaldos',
+      challengeN: 'objeción', challengesN: 'objeciones',
+      endorse: 'Respaldar', challenge: 'Objetar', replyByLetter: 'Responder con carta',
+      noteUnbalanced: 'Tu sello está desequilibrado (Art. IV) — antes de respaldar de nuevo, objeta una carta que de verdad cuestiones.',
+      noteNeedsReason: 'Art. V — una objeción necesita una razón real (al menos una oración) antes de que el sello prenda.',
+      noteChallengeSealed: 'Objeción sellada y publicada al margen. Tu libro queda acreditado.',
+      aCorrespondent: 'Un corresponsal',
+      confirmAttach: 'Art. II — adjunta una fotografía de tu original manuscrito antes de sellar.',
+      confirmShort: 'Una carta merece más que una línea — el correo puede esperar tu pensamiento completo.',
+      confirmPublic: 'Sellada como pública. Tu carta viaja a toda la República con el correo de mañana.',
+      confirmPrivate: 'Sellada como privada. Tu carta viaja solo a tu círculo invitado con el correo de mañana.',
+      ocrReading: 'Leyendo tu letra…',
+      ocrReady: 'Transcripción lista — corrígela en el cuerpo de la carta. (El OCR es simulado en este prototipo; la casa de postas real extrae aquí tu texto.)',
+      visNotePublic: 'Esta carta se sellará pública{via} — se entrega a toda la República y aparece en el Catálogo.',
+      visNotePrivate: 'Esta carta se sellará privada{via} — se entrega solo a tu círculo invitado. La correspondencia privada es una función de mecenas en la casa de postas completa.',
+      viaDefault: ' (según tu configuración general)', viaOverride: ' (anulando tu configuración general)',
+      catCount: '{n} de {m} cartas',
+      emptyShelf: 'Tu estante está vacío con estos filtros — marca con estrella o suscríbete desde las tarjetas para llenarlo.',
+      emptyTopic: 'Aún no hay cartas bajo este tema — quizá la tuya sea la primera.',
+      letterWord: 'Carta', ansAbbrev: 'resp.',
+      readInPost: 'Leer en el correo de hoy ↓',
+      subscribe: 'Suscribirse', subscribed: 'Suscrita ✓',
+      viewManuscript: 'Ver manuscrito', viewTranscription: 'Ver transcripción',
+      profileRole: 'Corresponsal fundador',
+      popVis: 'Visibilidad predeterminada',
+      popShelfCount: '{f} con estrella · {s} suscritas',
+      popGoShelf: 'Abrir mi estante',
+      popSignOut: 'Cerrar sesión',
+      signIn: 'Iniciar sesión',
+      popLang: 'Idioma',
+      navCharter: 'La Carta', navCatalogue: 'Catálogo', navPost: 'Correo de hoy', navWrite: 'Escribir',
+      navDesk: 'Escritorio',
+      navHome: 'Inicio',
+      navCollapse: 'Contraer menú',
+      navExpand: 'Expandir menú',
+      homePost: 'Las cartas entregadas hoy.',
+      homeCat: 'Toda la correspondencia pública, archivada.',
+      homeWrite: 'Envía una carta tuya.',
+      inAnswerTo: 'En respuesta a «{title}»',
+      deskTitle: 'El Escritorio',
+      deskMeta: 'Herramientas de confianza',
+      deskLede: 'El papel, las plumas y los sellos con los que de verdad escribimos. Cada carta de la República comenzó en un escritorio como este.',
+      deskDisclosure: 'Nota de afiliados: estos son enlaces de referido — si compras a través de ellos, la República gana una pequeña comisión sin costo extra para ti. Es una de las maneras de mantener abierta la casa de postas. Solo listamos herramientas que usamos nosotros mismos.',
+      deskView: 'Ver en Amazon ↗',
+      authTitle: 'Únete a la República',
+      authLede: 'Una cuenta, un nombre, una mano. Tus cartas llevarán tu firma — de puño y letra.',
+      authGoogle: 'Continuar con Google',
+      authOr: 'o con tu correo',
+      authCreate: 'Crear cuenta',
+      authAgree: 'Al unirte firmas la Carta — tus cartas llevan tu nombre real (Art. II).',
+      authConnecting: 'Conectando con Google…',
+      authNeedName: 'Art. II — la República necesita tu nombre completo y real.',
+      authNeedEmail: 'Escribe un correo válido.',
+      phAuthName: 'Tu nombre completo (Art. II)',
+      phAuthEmail: 'Correo electrónico',
+      topics: { 'All': 'Todas', 'Judgment': 'Juicio', 'Accountability': 'Responsabilidad', 'Machine feeling': 'Sentir de máquina', 'Labor': 'Trabajo', 'Governance': 'Gobernanza' }
+    },
+    fr: {
+      mastMeta: 'Vol. I · N° 1 — Fondée MMXXVI',
+      ledgerTitle: 'Votre registre de sceaux',
+      epigraph: 'Une correspondance lente sur l’éthique de l’intelligence artificielle, dans la tradition de la République des Lettres. Tout ici arrive <span lang="es">de puño y letra</span> — de la main et de la signature de son auteur. Pas de fils d’actualité, pas de meutes — seulement des lettres, scellées, et l’obligation de peser ce que vous louez contre ce que vous contestez.',
+      charterTitle: 'La Charte — Règles de l’échange',
+      art1: '<strong>Écrivez des lettres, non des commentaires.</strong> Toute contribution s’adresse à une personne, commence par énoncer la version la plus forte de son argument, et ne conteste qu’ensuite. Si vous ne pouvez reformuler son propos avec justesse, vous n’êtes pas encore prêt à y répondre.',
+      art2: '<strong>Tout sceau est signé — de puño y letra.</strong> Lettres, appuis et objections portent votre nom, et chaque lettre est publiée comme photographie de votre propre écriture avant de devenir texte. La République d’origine reposait sur une réputation engagée durant des décennies ; l’anonymat achète la franchise à bas prix et dépense la confiance à prix fort.',
+      art3: '<strong>Matériel original uniquement.</strong> Chaque lettre est de votre plume. Les mots empruntés à autrui — vivant, mort ou machine — se tiennent entre guillemets, leur auteur nommé. Un emprunt crédité est de l’érudition ; un emprunt non crédité est retiré du courrier, et le registre s’en souvient.',
+      art4: '<strong>Le sceau équilibré.</strong> L’éloge et le dissentiment se frappent par paires. Vous ne pouvez détenir qu’un seul appui impayé : pour appuyer une deuxième lettre, il faut d’abord objecter à une lettre que vous contestez sincèrement. Ici l’accord n’est jamais gratuit — il vous coûte l’acte plus difficile de dire vos doutes.',
+      art5: '<strong>Une objection est une note en marge, non un vote négatif.</strong> Aucune objection ne compte sans raison écrite, publiée en marge sous votre nom. Un décompte n’apprend rien à l’auteur ; une phrase lui indique où viser sa prochaine lettre.',
+      art6: '<strong>Le courrier est lent.</strong> Les lettres sont distribuées une fois par jour, ensemble. Rien de ce que vous écrivez ne peut devenir viral avant le dîner ; rien n’a donc besoin d’être écrit pour la foule.',
+      art7: '<strong>Une lettre par correspondant et par échange</strong> jusqu’à ce que l’auteur ait répondu. Le droit de réponse appartient d’abord à la personne à qui vous vous adressez.',
+      art8: '<strong>La République garde la porte.</strong> Nous pouvons modérer, retenir, supprimer ou suspendre toute publication — et tout correspondant — lorsque nous jugeons le contenu offensant, indélicat ou contraire à cette Charte. La décision appartient à la République ; dans la mesure du possible, nous dirons quelle règle a été enfreinte et entendrons un appel par lettre.',
+      catTitle: 'Le Catalogue',
+      catLede: 'Toute la correspondance publique, en une seule galerie. Marquez une lettre d’une étoile (★) pour la garder sur votre étagère ; abonnez-vous à une correspondance pour recevoir chaque réponse de cet échange avec votre courrier quotidien.',
+      topicLabel: 'Thème', shelfLabel: 'Étagère',
+      filterFav: '★ Mon étagère', filterSub: 'Abonnements',
+      postTitle: 'Le courrier du jour', postMeta: 'Distribué le 18 août 2026',
+      chLabel: 'Votre note en marge — une objection doit dire <em>pourquoi</em> (Art. V) :',
+      chSubmit: 'Apposer le sceau d’objection', chCancel: 'Retirer',
+      chHint: 'Publiée en marge sous votre nom.',
+      composeHead: 'Écrire à la République', composeMeta: 'Prochaine distribution · demain, 08h00',
+      attachLabel: 'Votre original manuscrit — requis (Art. II)',
+      attachUpload: 'Téléverser un fichier', attachCamera: 'Prendre une photo', attachRemove: 'Retirer',
+      attachHint: 'La maison de poste transcrit votre main en texte modifiable — vous corrigez la transcription ci-dessous avant de sceller.',
+      visGeneral: 'Votre réglage général', visThis: 'Cette lettre',
+      visPublic: 'Publique', visPrivate: 'Privée', visDefault: 'Utiliser mon réglage',
+      postBtn: 'Sceller et envoyer',
+      postNote: 'Les lettres attendent la distribution quotidienne — le courrier est lent à dessein (Art. VI).',
+      colophon1: 'Un prototype en cours — pour l’instant les sceaux et les lettres ne vivent que dans cette page ; une véritable maison de poste exige un serveur.',
+      colophon2: '<em>Puño y Letra</em> — de « de su puño y letra » : écrit et signé de sa propre main, comme l’attesterait un notaire. Composé à la manière des réseaux de correspondance du XVII<sup>e</sup> siècle, en bleu de Prusse et cire à cacheter.',
+      phTitle: 'Titre — « Sur… »',
+      phBody: 'Transcription numérique — elle apparaît ici après lecture de votre photographie, pour que vous la corrigiez (Art. I : commencez par la version la plus forte de la thèse à laquelle vous répondez)…',
+      phName: 'Signé — votre nom (Art. II)',
+      phReason: 'Énoncez le point le plus fort que vous contestez, et votre raison…',
+      phSigner: 'Signé — votre nom',
+      balanced: 'Équilibré', unbalanced: 'Déséquilibré', youOwe: 'vous devez',
+      endorsementN: 'appui', endorsementsN: 'appuis',
+      challengeN: 'objection', challengesN: 'objections',
+      endorse: 'Appuyer', challenge: 'Objecter', replyByLetter: 'Répondre par lettre',
+      noteUnbalanced: 'Votre sceau est déséquilibré (Art. IV) — avant d’appuyer de nouveau, objectez à une lettre que vous contestez sincèrement.',
+      noteNeedsReason: 'Art. V — une objection exige une véritable raison (une phrase au moins) avant que le sceau ne prenne.',
+      noteChallengeSealed: 'Objection scellée et publiée en marge. Votre registre est crédité.',
+      aCorrespondent: 'Un correspondant',
+      confirmAttach: 'Art. II — joignez une photographie de votre original manuscrit avant de sceller.',
+      confirmShort: 'Une lettre mérite plus d’une ligne — le courrier peut attendre votre pensée entière.',
+      confirmPublic: 'Scellée comme publique. Votre lettre partira vers toute la République avec le courrier de demain.',
+      confirmPrivate: 'Scellée comme privée. Votre lettre n’ira qu’à votre cercle invité avec le courrier de demain.',
+      ocrReading: 'Lecture de votre main…',
+      ocrReady: 'Transcription prête — corrigez-la dans le corps de la lettre ci-dessous. (L’OCR est simulé dans ce prototype ; la véritable maison de poste extrait ici votre texte.)',
+      visNotePublic: 'Cette lettre sera scellée publique{via} — distribuée à toute la République et inscrite au Catalogue.',
+      visNotePrivate: 'Cette lettre sera scellée privée{via} — distribuée seulement à votre cercle invité. La correspondance privée est une fonction de mécène dans la maison de poste complète.',
+      viaDefault: ' (selon votre réglage général)', viaOverride: ' (outrepassant votre réglage général)',
+      catCount: '{n} sur {m} lettres',
+      emptyShelf: 'Votre étagère est vide sous ces filtres — étoilez ou abonnez-vous depuis les fiches pour la garnir.',
+      emptyTopic: 'Aucune lettre sous ce thème — la vôtre sera peut-être la première.',
+      letterWord: 'Lettre', ansAbbrev: 'rép.',
+      readInPost: 'Lire dans le courrier du jour ↓',
+      subscribe: 'S’abonner', subscribed: 'Abonné ✓',
+      viewManuscript: 'Voir le manuscrit', viewTranscription: 'Voir la transcription',
+      profileRole: 'Correspondant fondateur',
+      popVis: 'Visibilité par défaut',
+      popShelfCount: '{f} étoilées · {s} abonnements',
+      popGoShelf: 'Ouvrir mon étagère',
+      popSignOut: 'Se déconnecter',
+      signIn: 'Se connecter',
+      popLang: 'Langue',
+      navCharter: 'La Charte', navCatalogue: 'Catalogue', navPost: 'Courrier du jour', navWrite: 'Écrire',
+      navDesk: 'Bureau',
+      navHome: 'Accueil',
+      navCollapse: 'Replier le menu',
+      navExpand: 'Déplier le menu',
+      homePost: 'Les lettres distribuées aujourd’hui.',
+      homeCat: 'Toute lettre publique, classée.',
+      homeWrite: 'Envoyez la vôtre.',
+      inAnswerTo: 'En réponse à « {title} »',
+      deskTitle: 'Le Bureau',
+      deskMeta: 'Outils de confiance',
+      deskLede: 'Le papier, les plumes et la cire dont nous nous servons vraiment. Chaque lettre de la République a commencé sur un bureau comme celui-ci.',
+      deskDisclosure: 'Note d’affiliation : ces liens sont affiliés — si vous achetez par leur intermédiaire, la République reçoit une petite commission sans coût supplémentaire pour vous. C’est l’une des façons de tenir la maison de poste ouverte. Nous ne listons que des outils que nous utilisons nous-mêmes.',
+      deskView: 'Voir sur Amazon ↗',
+      authTitle: 'Rejoindre la République',
+      authLede: 'Un compte, un nom, une main. Vos lettres porteront votre signature — de puño y letra.',
+      authGoogle: 'Continuer avec Google',
+      authOr: 'ou avec votre courriel',
+      authCreate: 'Créer un compte',
+      authAgree: 'En vous inscrivant, vous signez la Charte — vos lettres portent votre nom réel (Art. II).',
+      authConnecting: 'Connexion à Google…',
+      authNeedName: 'Art. II — la République exige votre nom complet et réel.',
+      authNeedEmail: 'Saisissez une adresse de courriel valide.',
+      phAuthName: 'Votre nom complet (Art. II)',
+      phAuthEmail: 'Courriel',
+      topics: { 'All': 'Tous', 'Judgment': 'Jugement', 'Accountability': 'Responsabilité', 'Machine feeling': 'Sentiment machine', 'Labor': 'Travail', 'Governance': 'Gouvernance' }
+    },
+    it: {
+      mastMeta: 'Vol. I · N. 1 — Fondata MMXXVI',
+      ledgerTitle: 'Il tuo registro dei sigilli',
+      epigraph: 'Una corrispondenza lenta sull’etica dell’intelligenza artificiale, nella tradizione della Repubblica delle Lettere. Tutto qui arriva <span lang="es">de puño y letra</span> — dalla mano e dalla firma del suo autore. Nessun feed, nessuna gogna — solo lettere, sigillate, e l’obbligo di pesare ciò che elogi contro ciò che contesti.',
+      charterTitle: 'La Carta — Regole dello scambio',
+      art1: '<strong>Scrivi lettere, non commenti.</strong> Ogni contributo è rivolto a una persona, apre enunciando la versione più forte di ciò che ha sostenuto, e solo dopo dissente. Se non sai riformulare la sua tesi con equità, non sei ancora pronto a risponderle.',
+      art2: '<strong>Ogni sigillo è firmato — de puño y letra.</strong> Lettere, sostegni e obiezioni portano il tuo nome, e ogni lettera è pubblicata come fotografia della tua scrittura prima di diventare testo. La Repubblica originaria viveva di reputazione messa in gioco per decenni; l’anonimato compra franchezza a poco prezzo e spende fiducia a caro prezzo.',
+      art3: '<strong>Solo materiale originale.</strong> Ogni lettera è scrittura tua. Le parole prese da altri — vivi, morti o macchine — stanno tra virgolette con il loro autore nominato. Un prestito accreditato è erudizione; uno non accreditato viene ritirato dalla posta, e il registro ricorda.',
+      art4: '<strong>Il sigillo in equilibrio.</strong> Lode e dissenso si coniano in coppia. Puoi tenere al massimo un sostegno non pagato: per sostenere una seconda lettera devi prima obiettare a una che contesti davvero. Qui l’accordo non è mai gratuito — ti costa l’atto più difficile di dire ciò che dubiti.',
+      art5: '<strong>Un’obiezione è una nota a margine, non un voto negativo.</strong> Nessuna obiezione conta senza una ragione scritta, pubblicata a margine sotto il tuo nome. Un conteggio non dice nulla all’autore; una frase gli dice dove puntare la prossima lettera.',
+      art6: '<strong>La posta è lenta.</strong> Le lettere si consegnano una volta al giorno, tutte insieme. Nulla di ciò che scrivi può diventare virale prima di cena, quindi nulla deve essere scritto per la folla.',
+      art7: '<strong>Una lettera per corrispondente per ogni scambio</strong> finché l’autore non ha risposto. Il diritto di replica spetta prima a chi ti sei rivolto.',
+      art8: '<strong>La Repubblica custodisce la porta.</strong> Possiamo moderare, trattenere, cancellare o sospendere qualsiasi pubblicazione — e qualsiasi corrispondente — quando giudichiamo il contenuto offensivo, insensibile o contrario a questa Carta. La decisione spetta alla Repubblica; quando possibile diremo quale regola è stata infranta e ascolteremo un appello per lettera.',
+      catTitle: 'Il Catalogo',
+      catLede: 'Tutta la corrispondenza pubblica, in una sola galleria. Segna una lettera con una stella (★) per tenerla sul tuo scaffale; abbonati a una corrispondenza per ricevere ogni risposta di quello scambio con la posta quotidiana.',
+      topicLabel: 'Tema', shelfLabel: 'Scaffale',
+      filterFav: '★ Il mio scaffale', filterSub: 'Abbonate',
+      postTitle: 'La posta di oggi', postMeta: 'Consegnata il 18 agosto 2026',
+      chLabel: 'La tua nota a margine — un’obiezione deve dire <em>perché</em> (Art. V):',
+      chSubmit: 'Apporre il sigillo di obiezione', chCancel: 'Ritira',
+      chHint: 'Pubblicata a margine sotto il tuo nome.',
+      composeHead: 'Scrivi alla Repubblica', composeMeta: 'Prossima consegna · domani, 08:00',
+      attachLabel: 'Il tuo originale manoscritto — obbligatorio (Art. II)',
+      attachUpload: 'Carica un file', attachCamera: 'Scatta una foto', attachRemove: 'Rimuovi',
+      attachHint: 'La casa di posta trascrive la tua mano in testo modificabile — correggi la trascrizione qui sotto prima di sigillare.',
+      visGeneral: 'La tua impostazione generale', visThis: 'Questa lettera',
+      visPublic: 'Pubblica', visPrivate: 'Privata', visDefault: 'Usa la mia impostazione',
+      postBtn: 'Sigilla e spedisci',
+      postNote: 'Le lettere attendono la consegna quotidiana — la posta è lenta di proposito (Art. VI).',
+      colophon1: 'Un prototipo in lavorazione — per ora sigilli e lettere vivono solo in questa pagina; una vera casa di posta richiede un backend.',
+      colophon2: '<em>Puño y Letra</em> — da «de su puño y letra»: scritto e firmato di propria mano, come attesterebbe un notaio. Composta alla maniera delle reti di corrispondenza del Seicento, in blu di Prussia e ceralacca.',
+      phTitle: 'Titolo — «Su…»',
+      phBody: 'Trascrizione digitale — appare qui dopo la lettura della tua fotografia, perché tu la corregga (Art. I: apri con la versione più forte della tesi a cui rispondi)…',
+      phName: 'Firmato — il tuo nome (Art. II)',
+      phReason: 'Indica il punto più forte che contesti, e la tua ragione…',
+      phSigner: 'Firmato — il tuo nome',
+      balanced: 'In equilibrio', unbalanced: 'In disequilibrio', youOwe: 'devi',
+      endorsementN: 'sostegno', endorsementsN: 'sostegni',
+      challengeN: 'obiezione', challengesN: 'obiezioni',
+      endorse: 'Sostieni', challenge: 'Obietta', replyByLetter: 'Rispondi con una lettera',
+      noteUnbalanced: 'Il tuo sigillo è in disequilibrio (Art. IV) — prima di sostenere di nuovo, obietta a una lettera che contesti davvero.',
+      noteNeedsReason: 'Art. V — un’obiezione richiede una ragione vera (almeno una frase) prima che il sigillo prenda.',
+      noteChallengeSealed: 'Obiezione sigillata e pubblicata a margine. Il tuo registro è accreditato.',
+      aCorrespondent: 'Un corrispondente',
+      confirmAttach: 'Art. II — allega una fotografia del tuo originale manoscritto prima di sigillare.',
+      confirmShort: 'Una lettera merita più di una riga — la posta può attendere il tuo pensiero intero.',
+      confirmPublic: 'Sigillata come pubblica. La tua lettera viaggerà a tutta la Repubblica con la posta di domani.',
+      confirmPrivate: 'Sigillata come privata. La tua lettera andrà solo al tuo circolo invitato con la posta di domani.',
+      ocrReading: 'Lettura della tua scrittura…',
+      ocrReady: 'Trascrizione pronta — correggila nel corpo della lettera. (L’OCR è simulato in questo prototipo; la vera casa di posta estrae qui il tuo testo.)',
+      visNotePublic: 'Questa lettera sarà sigillata pubblica{via} — consegnata a tutta la Repubblica e inserita nel Catalogo.',
+      visNotePrivate: 'Questa lettera sarà sigillata privata{via} — consegnata solo al tuo circolo invitato. La corrispondenza privata è una funzione da mecenate nella casa di posta completa.',
+      viaDefault: ' (dalla tua impostazione generale)', viaOverride: ' (in deroga alla tua impostazione generale)',
+      catCount: '{n} di {m} lettere',
+      emptyShelf: 'Il tuo scaffale è vuoto con questi filtri — metti una stella o abbonati dalle schede per riempirlo.',
+      emptyTopic: 'Ancora nessuna lettera su questo tema — forse la tua sarà la prima.',
+      letterWord: 'Lettera', ansAbbrev: 'risp.',
+      readInPost: 'Leggi nella posta di oggi ↓',
+      subscribe: 'Abbonati', subscribed: 'Abbonato ✓',
+      viewManuscript: 'Vedi il manoscritto', viewTranscription: 'Vedi la trascrizione',
+      profileRole: 'Corrispondente fondatore',
+      popVis: 'Visibilità predefinita',
+      popShelfCount: '{f} con stella · {s} abbonate',
+      popGoShelf: 'Apri il mio scaffale',
+      popSignOut: 'Esci',
+      signIn: 'Accedi',
+      popLang: 'Lingua',
+      navCharter: 'La Carta', navCatalogue: 'Catalogo', navPost: 'Posta di oggi', navWrite: 'Scrivi',
+      navDesk: 'Scrittoio',
+      navHome: 'Inizio',
+      navCollapse: 'Riduci il menu',
+      navExpand: 'Espandi il menu',
+      homePost: 'Le lettere consegnate oggi.',
+      homeCat: 'Ogni lettera pubblica, archiviata.',
+      homeWrite: 'Spedisci la tua.',
+      inAnswerTo: 'In risposta a «{title}»',
+      deskTitle: 'Lo Scrittoio',
+      deskMeta: 'Strumenti di fiducia',
+      deskLede: 'La carta, le penne e la ceralacca con cui scriviamo davvero. Ogni lettera della Repubblica è nata su uno scrittoio come questo.',
+      deskDisclosure: 'Nota di affiliazione: questi sono link di affiliazione — se acquisti tramite essi, la Repubblica riceve una piccola commissione senza costi aggiuntivi per te. È uno dei modi per tenere aperta la casa di posta. Elenchiamo solo strumenti che usiamo noi stessi.',
+      deskView: 'Vedi su Amazon ↗',
+      authTitle: 'Unisciti alla Repubblica',
+      authLede: 'Un account, un nome, una mano. Le tue lettere porteranno la tua firma — de puño y letra.',
+      authGoogle: 'Continua con Google',
+      authOr: 'o con la tua email',
+      authCreate: 'Crea account',
+      authAgree: 'Iscrivendoti firmi la Carta — le tue lettere portano il tuo nome reale (Art. II).',
+      authConnecting: 'Connessione a Google…',
+      authNeedName: 'Art. II — la Repubblica richiede il tuo nome completo e reale.',
+      authNeedEmail: 'Inserisci un indirizzo email valido.',
+      phAuthName: 'Il tuo nome completo (Art. II)',
+      phAuthEmail: 'Email',
+      topics: { 'All': 'Tutte', 'Judgment': 'Giudizio', 'Accountability': 'Responsabilità', 'Machine feeling': 'Sentire della macchina', 'Labor': 'Lavoro', 'Governance': 'Governance' }
+    },
+    de: {
+      mastMeta: 'Bd. I · Nr. 1 — Gegründet MMXXVI',
+      ledgerTitle: 'Ihr Siegelbuch',
+      epigraph: 'Eine langsame Korrespondenz über die Ethik der künstlichen Intelligenz, in der Tradition der Gelehrtenrepublik. Alles hier kommt <span lang="es">de puño y letra</span> — von der eigenen Hand und Unterschrift des Verfassers. Keine Feeds, keine Meuten — nur Briefe, gesiegelt, und die Pflicht, das Gelobte gegen das Bestrittene abzuwägen.',
+      charterTitle: 'Die Charta — Regeln des Austauschs',
+      art1: '<strong>Schreiben Sie Briefe, keine Kommentare.</strong> Jeder Beitrag richtet sich an eine Person, beginnt mit der stärksten Fassung ihres Arguments und widerspricht erst danach. Wer den Fall des anderen nicht redlich wiedergeben kann, ist noch nicht bereit, ihn zu beantworten.',
+      art2: '<strong>Jedes Siegel ist unterschrieben — de puño y letra.</strong> Briefe, Zustimmungen und Einwände tragen Ihren Namen, und jeder Brief erscheint als Fotografie Ihrer eigenen Handschrift, bevor er Text wird. Die ursprüngliche Republik lebte von Ansehen, das über Jahrzehnte verbürgt wurde; Anonymität kauft Freimut billig und verbraucht Vertrauen teuer.',
+      art3: '<strong>Nur eigenes Material.</strong> Jeder Brief ist Ihre eigene Schrift. Worte, die von anderen stammen — lebend, verstorben oder maschinell —, stehen in Anführungszeichen mit genannter Urheberschaft. Eine ausgewiesene Entlehnung ist Gelehrsamkeit; eine unausgewiesene wird aus der Post zurückgezogen, und das Siegelbuch erinnert sich.',
+      art4: '<strong>Das ausgewogene Siegel.</strong> Lob und Widerspruch werden paarweise geprägt. Sie dürfen höchstens eine unbezahlte Zustimmung halten: um einen zweiten Brief zu bestärken, müssen Sie zuvor einem Brief widersprechen, den Sie wirklich bestreiten. Zustimmung ist hier niemals kostenlos — sie kostet Sie den schwereren Akt, Ihre Zweifel zu benennen.',
+      art5: '<strong>Ein Einwand ist eine Randbemerkung, keine Abwertung.</strong> Kein Einwand zählt ohne schriftliche Begründung, veröffentlicht am Rand unter Ihrem Namen. Eine Zahl sagt dem Verfasser nichts; ein Satz sagt ihm, worauf er den nächsten Brief richten soll.',
+      art6: '<strong>Die Post ist langsam.</strong> Briefe werden einmal täglich zugestellt, alle zusammen. Nichts, was Sie schreiben, kann bis zum Abendessen viral gehen — also muss nichts für die Menge geschrieben werden.',
+      art7: '<strong>Ein Brief je Korrespondent und Wechsel</strong>, bis der Verfasser geantwortet hat. Das Recht der Erwiderung gehört zuerst der angesprochenen Person.',
+      art8: '<strong>Die Republik hütet die Tür.</strong> Wir können jede Veröffentlichung — und jeden Korrespondenten — moderieren, zurückhalten, löschen oder sperren, wenn wir den Inhalt für beleidigend, taktlos oder charta-widrig halten. Die Entscheidung liegt bei der Republik; soweit möglich nennen wir die verletzte Regel und hören eine Beschwerde per Brief.',
+      catTitle: 'Der Katalog',
+      catLede: 'Die gesamte öffentliche Korrespondenz in einer Galerie. Markieren Sie einen Brief mit einem Stern (★), um ihn in Ihrem Regal zu behalten; abonnieren Sie eine Korrespondenz, um jede Antwort dieses Wechsels mit der Tagespost zu erhalten.',
+      topicLabel: 'Thema', shelfLabel: 'Regal',
+      filterFav: '★ Mein Regal', filterSub: 'Abonniert',
+      postTitle: 'Die heutige Post', postMeta: 'Zugestellt am 18. August 2026',
+      chLabel: 'Ihre Randbemerkung — ein Einwand muss sagen, <em>warum</em> (Art. V):',
+      chSubmit: 'Einwandsiegel anbringen', chCancel: 'Zurückziehen',
+      chHint: 'Erscheint am Rand unter Ihrem Namen.',
+      composeHead: 'An die Republik schreiben', composeMeta: 'Nächste Zustellung · morgen, 08:00',
+      attachLabel: 'Ihr handschriftliches Original — erforderlich (Art. II)',
+      attachUpload: 'Datei hochladen', attachCamera: 'Foto aufnehmen', attachRemove: 'Entfernen',
+      attachHint: 'Das Posthaus überträgt Ihre Handschrift in bearbeitbaren Text — Sie berichtigen die Abschrift unten, bevor Sie siegeln.',
+      visGeneral: 'Ihre allgemeine Einstellung', visThis: 'Dieser Brief',
+      visPublic: 'Öffentlich', visPrivate: 'Privat', visDefault: 'Meine Einstellung verwenden',
+      postBtn: 'Siegeln und senden',
+      postNote: 'Briefe warten auf die Tageszustellung — die Post ist mit Absicht langsam (Art. VI).',
+      colophon1: 'Ein Prototyp in Arbeit — Siegel und Briefe leben bislang nur in dieser Seite; ein echtes Posthaus braucht ein Backend.',
+      colophon2: '<em>Puño y Letra</em> — von „de su puño y letra“: mit eigener Hand geschrieben und unterschrieben, wie ein Notar es bezeugen würde. Gesetzt nach der Art der Korrespondenznetze des 17. Jahrhunderts, in Preußischblau und Siegellack.',
+      phTitle: 'Titel — „Über …“',
+      phBody: 'Digitale Abschrift — erscheint hier, nachdem Ihre Fotografie gelesen wurde, damit Sie sie berichtigen (Art. I: beginnen Sie mit der stärksten Fassung der Ansicht, der Sie antworten)…',
+      phName: 'Gezeichnet — Ihr Name (Art. II)',
+      phReason: 'Benennen Sie den stärksten Punkt, den Sie bestreiten, und Ihren Grund…',
+      phSigner: 'Gezeichnet — Ihr Name',
+      balanced: 'Ausgeglichen', unbalanced: 'Unausgeglichen', youOwe: 'Sie schulden',
+      endorsementN: 'Zustimmung', endorsementsN: 'Zustimmungen',
+      challengeN: 'Einwand', challengesN: 'Einwände',
+      endorse: 'Zustimmen', challenge: 'Einwenden', replyByLetter: 'Mit einem Brief antworten',
+      noteUnbalanced: 'Ihr Siegel ist unausgeglichen (Art. IV) — widersprechen Sie zuerst einem Brief, den Sie wirklich bestreiten.',
+      noteNeedsReason: 'Art. V — ein Einwand braucht einen echten Grund (mindestens einen Satz), bevor das Siegel hält.',
+      noteChallengeSealed: 'Einwand gesiegelt und am Rand veröffentlicht. Ihr Siegelbuch ist gutgeschrieben.',
+      aCorrespondent: 'Ein Korrespondent',
+      confirmAttach: 'Art. II — fügen Sie vor dem Siegeln eine Fotografie Ihres handschriftlichen Originals bei.',
+      confirmShort: 'Ein Brief verdient mehr als eine Zeile — die Post kann auf Ihren ganzen Gedanken warten.',
+      confirmPublic: 'Öffentlich gesiegelt. Ihr Brief reist mit der morgigen Post an die ganze Republik.',
+      confirmPrivate: 'Privat gesiegelt. Ihr Brief reist mit der morgigen Post nur an Ihren eingeladenen Kreis.',
+      ocrReading: 'Ihre Handschrift wird gelesen…',
+      ocrReady: 'Abschrift bereit — berichtigen Sie sie im Brieftext unten. (Das OCR ist in diesem Prototyp simuliert; das echte Posthaus liest hier Ihren Text aus.)',
+      visNotePublic: 'Dieser Brief wird öffentlich gesiegelt{via} — an die ganze Republik zugestellt und im Katalog geführt.',
+      visNotePrivate: 'Dieser Brief wird privat gesiegelt{via} — nur an Ihren eingeladenen Kreis zugestellt. Private Korrespondenz ist im vollständigen Posthaus eine Mäzenatenfunktion.',
+      viaDefault: ' (aus Ihrer allgemeinen Einstellung)', viaOverride: ' (Ihre allgemeine Einstellung übergehend)',
+      catCount: '{n} von {m} Briefen',
+      emptyShelf: 'Ihr Regal ist unter diesen Filtern leer — markieren oder abonnieren Sie von den Karten unten.',
+      emptyTopic: 'Noch keine Briefe zu diesem Thema — vielleicht wird Ihrer der erste.',
+      letterWord: 'Brief', ansAbbrev: 'Antw.',
+      readInPost: 'In der heutigen Post lesen ↓',
+      subscribe: 'Abonnieren', subscribed: 'Abonniert ✓',
+      viewManuscript: 'Handschrift ansehen', viewTranscription: 'Abschrift ansehen',
+      profileRole: 'Gründender Korrespondent',
+      popVis: 'Standard-Sichtbarkeit',
+      popShelfCount: '{f} markiert · {s} abonniert',
+      popGoShelf: 'Mein Regal öffnen',
+      popSignOut: 'Abmelden',
+      signIn: 'Anmelden',
+      popLang: 'Sprache',
+      navCharter: 'Charta', navCatalogue: 'Katalog', navPost: 'Heutige Post', navWrite: 'Schreiben',
+      navDesk: 'Schreibtisch',
+      navHome: 'Start',
+      navCollapse: 'Menü einklappen',
+      navExpand: 'Menü ausklappen',
+      homePost: 'Die heute zugestellten Briefe.',
+      homeCat: 'Jeder öffentliche Brief, geordnet.',
+      homeWrite: 'Senden Sie einen eigenen.',
+      inAnswerTo: 'Als Antwort auf „{title}“',
+      deskTitle: 'Der Schreibtisch',
+      deskMeta: 'Werkzeuge unseres Vertrauens',
+      deskLede: 'Das Papier, die Federn und der Siegellack, mit denen wir wirklich schreiben. Jeder Brief der Republik begann an einem Schreibtisch wie diesem.',
+      deskDisclosure: 'Affiliate-Hinweis: Dies sind Affiliate-Links — kaufen Sie darüber, erhält die Republik eine kleine Provision ohne Mehrkosten für Sie. So halten wir das Posthaus offen. Wir führen nur Werkzeuge, die wir selbst benutzen.',
+      deskView: 'Bei Amazon ansehen ↗',
+      authTitle: 'Der Republik beitreten',
+      authLede: 'Ein Konto, ein Name, eine Hand. Ihre Briefe tragen Ihre Unterschrift — de puño y letra.',
+      authGoogle: 'Mit Google fortfahren',
+      authOr: 'oder mit Ihrer E-Mail',
+      authCreate: 'Konto erstellen',
+      authAgree: 'Mit dem Beitritt unterschreiben Sie die Charta — Ihre Briefe tragen Ihren echten Namen (Art. II).',
+      authConnecting: 'Verbindung zu Google…',
+      authNeedName: 'Art. II — die Republik benötigt Ihren vollen, echten Namen.',
+      authNeedEmail: 'Geben Sie eine gültige E-Mail-Adresse ein.',
+      phAuthName: 'Ihr vollständiger Name (Art. II)',
+      phAuthEmail: 'E-Mail',
+      topics: { 'All': 'Alle', 'Judgment': 'Urteil', 'Accountability': 'Verantwortung', 'Machine feeling': 'Maschinengefühl', 'Labor': 'Arbeit', 'Governance': 'Regulierung' }
+    }
+  };
+
+  function T(key) {
+    var d = I18N[PYL.lang] || I18N.en;
+    return (key in d) ? d[key] : I18N.en[key];
+  }
+  window.T = T;
+
+  var PH_I18N = {
+    '#composeTitle': 'phTitle',
+    '#composeBody': 'phBody',
+    '#composeName': 'phName',
+    '[data-reason]': 'phReason',
+    '[data-signer]': 'phSigner',
+    '#authName': 'phAuthName',
+    '#authEmail': 'phAuthEmail'
+  };
+
+  PYL.applyLang = function (lang) {
+    PYL.lang = lang;
+    try { localStorage.setItem('pyl-lang', lang); } catch (e) {}
+    var wrap = document.querySelector('.wrap');
+    if (wrap) wrap.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      el.innerHTML = T(el.getAttribute('data-i18n'));
+    });
+    Object.keys(PH_I18N).forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        el.setAttribute('placeholder', T(PH_I18N[sel]));
+      });
+    });
+    var sel = document.getElementById('langSel');
+    if (sel && sel.value !== lang) sel.value = lang;
+    PYL.onLang.forEach(function (fn) { fn(); });
+  };
+
+  /* ---------- seals, ledger, letters, post ---------- */
+  (function () {
+    var endorsements = 0;
+    var challenges = 0;
+
+    var statusEl = document.getElementById('ledgerStatus');
+    var beam = document.getElementById('scaleBeam');
+
+    function owed() { return endorsements - challenges; }
+
+    function renderLedger() {
+      var diff = owed();
+      var tilt = Math.max(-12, Math.min(12, diff * -9));
+      beam.style.transform = 'rotate(' + tilt + 'deg)';
+      var label;
+      if (diff > 0) {
+        label = '<strong>' + T('unbalanced') + '</strong> — ' + T('youOwe') + ' ' + diff + ' ' + (diff > 1 ? T('challengesN') : T('challengeN'));
+        statusEl.classList.add('owing');
+      } else {
+        label = '<strong>' + T('balanced') + '</strong>';
+        statusEl.classList.remove('owing');
+      }
+      statusEl.innerHTML = label + ' · ' + endorsements + ' ' + (endorsements === 1 ? T('endorsementN') : T('endorsementsN')) +
+        ' / ' + challenges + ' ' + (challenges === 1 ? T('challengeN') : T('challengesN'));
+    }
+
+    function bump(btn, delta) {
+      var c = btn.querySelector('.count');
+      c.textContent = String(parseInt(c.textContent, 10) + delta);
+    }
+
+    function showNote(letter, msg) {
+      var note = letter.querySelector('[data-note]');
+      note.textContent = msg;
+      note.classList.add('show');
+      clearTimeout(note._t);
+      note._t = setTimeout(function () { note.classList.remove('show'); }, 6000);
+    }
+
+    document.querySelectorAll('article.letter').forEach(function (letter) {
+      var endorseBtn = letter.querySelector('[data-action="endorse"]');
+      var challengeBtn = letter.querySelector('[data-action="challenge"]');
+      var replyBtn = letter.querySelector('[data-action="reply"]');
+      var form = letter.querySelector('[data-form]');
+      var reason = form.querySelector('[data-reason]');
+      var signer = form.querySelector('[data-signer]');
+      var marginalia = letter.querySelector('[data-marginalia]');
+
+      endorseBtn.addEventListener('click', function () {
+        if (endorseBtn.classList.contains('active')) {
+          endorseBtn.classList.remove('active');
+          bump(endorseBtn, -1);
+          endorsements -= 1;
+          renderLedger();
+          return;
+        }
+        if (owed() >= 1) {
+          showNote(letter, T('noteUnbalanced'));
+          return;
+        }
+        endorseBtn.classList.add('active');
+        bump(endorseBtn, 1);
+        endorsements += 1;
+        renderLedger();
+      });
+
+      challengeBtn.addEventListener('click', function () {
+        if (challengeBtn.classList.contains('active')) return;
+        form.classList.toggle('open');
+        if (form.classList.contains('open')) reason.focus();
+      });
+
+      form.querySelector('[data-action="cancel-challenge"]').addEventListener('click', function () {
+        form.classList.remove('open');
+      });
+
+      form.querySelector('[data-action="submit-challenge"]').addEventListener('click', function () {
+        var text = reason.value.trim();
+        var name = signer.value.trim() || T('aCorrespondent');
+        if (text.length < 20) {
+          showNote(letter, T('noteNeedsReason'));
+          return;
+        }
+        var item = document.createElement('div');
+        item.className = 'marginalia-item';
+        item.textContent = '“' + text + '” ';
+        var who = document.createElement('span');
+        who.className = 'who';
+        who.textContent = '— ' + name;
+        item.appendChild(who);
+        marginalia.appendChild(item);
+
+        challengeBtn.classList.add('active');
+        bump(challengeBtn, 1);
+        challenges += 1;
+        form.classList.remove('open');
+        reason.value = '';
+        renderLedger();
+        showNote(letter, T('noteChallengeSealed'));
+      });
+
+      replyBtn.addEventListener('click', function () {
+        var title = letter.querySelector('.letter-title').textContent;
+        PYL.go('compose', function () {
+          var input = document.getElementById('composeTitle');
+          if (!input.value) input.value = T('inAnswerTo').replace('{title}', title);
+          document.getElementById('composeBody').focus();
+        });
+      });
+    });
+
+    document.getElementById('postLetter').addEventListener('click', function () {
+      var body = document.getElementById('composeBody');
+      var confirmEl = document.getElementById('postedConfirm');
+      confirmEl.classList.remove('show');
+      if (!document.getElementById('attachPreview').classList.contains('show')) {
+        confirmEl.textContent = T('confirmAttach');
+        confirmEl.classList.add('show');
+        return;
+      }
+      if (body.value.trim().length < 40) {
+        confirmEl.textContent = T('confirmShort');
+        confirmEl.classList.add('show');
+        return;
+      }
+      var postChoice = document.querySelector('#segPost .active').getAttribute('data-v');
+      var vis = postChoice === 'default'
+        ? document.querySelector('#segDefault .active').getAttribute('data-v')
+        : postChoice;
+      confirmEl.textContent = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
+      confirmEl.classList.add('show');
+      document.getElementById('composeTitle').value = '';
+      body.value = '';
+      document.getElementById('composeName').value = '';
+      document.getElementById('attachRemove').click();
+    });
+
+    PYL.onLang.push(function () {
+      renderLedger();
+      document.querySelectorAll('.endorse-btn').forEach(function (b) { b.childNodes[1].textContent = T('endorse') + ' · '; });
+      document.querySelectorAll('.challenge-btn').forEach(function (b) { b.childNodes[1].textContent = T('challenge') + ' · '; });
+      document.querySelectorAll('.reply-btn').forEach(function (b) { b.textContent = T('replyByLetter'); });
+    });
+
+    renderLedger();
+  })();
+
+  /* ---------- catalogue: gallery, shelf, filters ---------- */
+  (function () {
+    var LETTERS = [
+      { id: 1, no: 'I', author: 'E. Marin', title: 'On Borrowed Judgment', excerpt: 'The danger is not that the machine errs; it is that we forget how to notice.', tags: ['Judgment'], endorse: 14, challenge: 9, inPost: true },
+      { id: 2, no: 'II', author: 'R. Osei', title: 'Judgment Was Always Prosthetic', excerpt: 'A tool may think for me; it must not answer for me.', tags: ['Judgment', 'Accountability'], endorse: 11, challenge: 3, inPost: true, replyTo: 'I' },
+      { id: 3, no: 'III', author: 'A. Weiss', title: 'On Apologies from Machines', excerpt: 'The vocabulary of moral feeling should be spent only by those who can be spent by it.', tags: ['Machine feeling', 'Accountability'], endorse: 21, challenge: 17, inPost: true },
+      { id: 4, no: 'IV', author: 'L. Okafor', title: 'On the Wages of Invisible Work', excerpt: 'Every fluent answer is annotated somewhere by a person we have agreed not to see.', tags: ['Labor'], endorse: 18, challenge: 6 },
+      { id: 5, no: 'V', author: 'M. Fontaine', title: 'On Consent at Scale', excerpt: 'A billion small permissions, none of which was ever asked for, do not sum to one large one.', tags: ['Governance', 'Labor'], endorse: 16, challenge: 11 },
+      { id: 6, no: 'VI', author: 'P. Iyer', title: 'Against the Right to Be Predicted', excerpt: 'A forecast about me, acted upon, is a decision about me — and decisions have doors to knock on.', tags: ['Governance', 'Judgment'], endorse: 9, challenge: 8 },
+      { id: 7, no: 'VII', author: 'C. Duarte', title: 'On Teaching Machines Our Worst Habits', excerpt: 'We did not teach the machine to discriminate; we taught it to imitate, and it was a good student.', tags: ['Accountability'], endorse: 24, challenge: 5 },
+      { id: 8, no: 'VIII', author: 'N. Baradar', title: 'On the Comfort of Synthetic Friends', excerpt: 'Loneliness is a wound; the question is whether this is a dressing or a diet.', tags: ['Machine feeling'], endorse: 13, challenge: 12 },
+      { id: 9, no: 'IX', author: 'R. Osei', title: 'On Slowness as a Civic Duty', excerpt: 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence.', tags: ['Judgment', 'Governance'], endorse: 7, challenge: 2 }
+    ];
+    var TOPICS = ['All', 'Judgment', 'Accountability', 'Machine feeling', 'Labor', 'Governance'];
+
+    var state = { topic: 'All', shelfFav: false, shelfSub: false, fav: {}, sub: {} };
+    try {
+      var saved = JSON.parse(localStorage.getItem('pyl-shelf') || '{}');
+      state.fav = saved.fav || {};
+      state.sub = saved.sub || {};
+    } catch (e) { /* storage unavailable in this sandbox — shelf lives for the visit */ }
+    function persist() {
+      try { localStorage.setItem('pyl-shelf', JSON.stringify({ fav: state.fav, sub: state.sub })); } catch (e) {}
+    }
+
+    var gallery = document.getElementById('gallery');
+    var catCount = document.getElementById('catCount');
+    var topicRow = document.getElementById('topicChips');
+    var favChip = document.getElementById('filterFav');
+    var subChip = document.getElementById('filterSub');
+
+    TOPICS.forEach(function (t) {
+      var b = document.createElement('button');
+      b.className = 'chip' + (t === state.topic ? ' active' : '');
+      b.setAttribute('data-topic', t);
+      b.textContent = T('topics')[t] || t;
+      b.addEventListener('click', function () {
+        state.topic = t;
+        topicRow.querySelectorAll('.chip').forEach(function (c) {
+          c.classList.toggle('active', c.getAttribute('data-topic') === t);
+        });
+        render();
+      });
+      topicRow.appendChild(b);
+    });
+
+    favChip.addEventListener('click', function () {
+      state.shelfFav = !state.shelfFav;
+      favChip.classList.toggle('active', state.shelfFav);
+      render();
+    });
+    subChip.addEventListener('click', function () {
+      state.shelfSub = !state.shelfSub;
+      subChip.classList.toggle('active', state.shelfSub);
+      render();
+    });
+
+    function visible() {
+      return LETTERS.filter(function (l) {
+        if (state.topic !== 'All' && l.tags.indexOf(state.topic) === -1) return false;
+        if (state.shelfFav && !state.fav[l.id]) return false;
+        if (state.shelfSub && !state.sub[l.id]) return false;
+        return true;
+      });
+    }
+
+    function render() {
+      var list = visible();
+      gallery.innerHTML = '';
+      catCount.textContent = T('catCount').replace('{n}', list.length).replace('{m}', LETTERS.length);
+
+      if (!list.length) {
+        var empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = (state.shelfFav || state.shelfSub) ? T('emptyShelf') : T('emptyTopic');
+        gallery.appendChild(empty);
+        return;
+      }
+
+      list.forEach(function (l) {
+        var card = document.createElement('div');
+        card.className = 'card';
+
+        var meta = document.createElement('div');
+        meta.className = 'card-meta';
+        var m1 = document.createElement('span');
+        m1.className = 'meta';
+        m1.textContent = T('letterWord') + ' ' + l.no + ' · ' + l.author;
+        meta.appendChild(m1);
+        if (l.replyTo) {
+          var m2 = document.createElement('span');
+          m2.className = 'meta';
+          m2.textContent = T('ansAbbrev') + ' ' + l.replyTo;
+          meta.appendChild(m2);
+        }
+        card.appendChild(meta);
+
+        var h = document.createElement('h3');
+        h.className = 'display';
+        h.textContent = l.title;
+        card.appendChild(h);
+
+        var ex = document.createElement('p');
+        ex.className = 'excerpt';
+        ex.textContent = '“' + l.excerpt + '”';
+        card.appendChild(ex);
+
+        var tags = document.createElement('div');
+        tags.className = 'tags';
+        l.tags.forEach(function (t) {
+          var tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.textContent = T('topics')[t] || t;
+          tags.appendChild(tag);
+        });
+        card.appendChild(tags);
+
+        if (l.inPost) {
+          var read = document.createElement('button');
+          read.className = 'read-link';
+          read.textContent = T('readInPost');
+          read.addEventListener('click', function () {
+            PYL.go('letters', function () {
+              var target = document.querySelector('article[data-letter="' + l.id + '"]');
+              if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+          });
+          card.appendChild(read);
+        }
+
+        var foot = document.createElement('div');
+        foot.className = 'card-foot';
+
+        var counts = document.createElement('span');
+        counts.className = 'counts';
+        counts.innerHTML = '<span class="e">● ' + l.endorse + '</span><span class="c">◆ ' + l.challenge + '</span>';
+        foot.appendChild(counts);
+
+        var fav = document.createElement('button');
+        fav.className = 'fav-btn' + (state.fav[l.id] ? ' active' : '');
+        fav.textContent = state.fav[l.id] ? '★' : '☆';
+        fav.setAttribute('aria-label', (state.fav[l.id] ? T('filterFav') + ' −' : T('filterFav') + ' +') + ' ' + l.title);
+        fav.addEventListener('click', function () {
+          if (state.fav[l.id]) delete state.fav[l.id]; else state.fav[l.id] = true;
+          persist();
+          render();
+        });
+        foot.appendChild(fav);
+
+        var sub = document.createElement('button');
+        sub.className = 'sub-btn' + (state.sub[l.id] ? ' active' : '');
+        sub.textContent = state.sub[l.id] ? T('subscribed') : T('subscribe');
+        sub.addEventListener('click', function () {
+          if (state.sub[l.id]) delete state.sub[l.id]; else state.sub[l.id] = true;
+          persist();
+          render();
+        });
+        foot.appendChild(sub);
+
+        card.appendChild(foot);
+        gallery.appendChild(card);
+      });
+    }
+
+    PYL.onLang.push(function () {
+      topicRow.querySelectorAll('.chip').forEach(function (c) {
+        var t = c.getAttribute('data-topic');
+        c.textContent = T('topics')[t] || t;
+      });
+      render();
+    });
+
+    render();
+  })();
+
+  /* ---------- compose: handwritten original + visibility ---------- */
+  (function () {
+    var input = document.getElementById('attachInput');
+    var preview = document.getElementById('attachPreview');
+    var img = document.getElementById('attachImg');
+    var nameEl = document.getElementById('attachName');
+    var ocr = document.getElementById('ocrStatus');
+    var body = document.getElementById('composeBody');
+    var ocrTimer = null;
+    var objectUrl = null;
+
+    document.getElementById('attachUpload').addEventListener('click', function () {
+      input.removeAttribute('capture');
+      input.click();
+    });
+    document.getElementById('attachCamera').addEventListener('click', function () {
+      input.setAttribute('capture', 'environment');
+      input.click();
+    });
+
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      objectUrl = URL.createObjectURL(file);
+      img.src = objectUrl;
+      nameEl.textContent = file.name;
+      preview.classList.add('show');
+      ocr.textContent = T('ocrReading');
+      ocr.classList.add('show');
+      clearTimeout(ocrTimer);
+      ocrTimer = setTimeout(function () {
+        ocr.textContent = T('ocrReady');
+        body.focus();
+      }, 1200);
+    });
+
+    document.getElementById('attachRemove').addEventListener('click', function () {
+      input.value = '';
+      if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+      img.removeAttribute('src');
+      preview.classList.remove('show');
+      ocr.classList.remove('show');
+      clearTimeout(ocrTimer);
+    });
+
+    /* visibility: general setting + per-letter override */
+    var segDefault = document.getElementById('segDefault');
+    var segPost = document.getElementById('segPost');
+    var visNote = document.getElementById('visNote');
+
+    try {
+      var savedVis = localStorage.getItem('pyl-default-vis');
+      if (savedVis === 'private' || savedVis === 'public') {
+        segDefault.querySelectorAll('button').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-v') === savedVis);
+        });
+      }
+    } catch (e) {}
+
+    function effectiveVis() {
+      var postChoice = segPost.querySelector('.active').getAttribute('data-v');
+      return postChoice === 'default'
+        ? segDefault.querySelector('.active').getAttribute('data-v')
+        : postChoice;
+    }
+
+    function renderVisNote() {
+      var v = effectiveVis();
+      var postChoice = segPost.querySelector('.active').getAttribute('data-v');
+      var via = postChoice === 'default' ? T('viaDefault') : T('viaOverride');
+      if (v === 'private') {
+        visNote.textContent = T('visNotePrivate').replace('{via}', via);
+        visNote.classList.add('private');
+      } else {
+        visNote.textContent = T('visNotePublic').replace('{via}', via);
+        visNote.classList.remove('private');
+      }
+    }
+
+    segDefault.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      segDefault.querySelectorAll('button').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      try { localStorage.setItem('pyl-default-vis', btn.getAttribute('data-v')); } catch (err) {}
+      renderVisNote();
+    });
+    segPost.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      segPost.querySelectorAll('button').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderVisNote();
+    });
+
+    PYL.onLang.push(renderVisNote);
+    renderVisNote();
+  })();
+
+  /* ---------- manuscript <-> transcription animation ---------- */
+  (function () {
+    document.querySelectorAll('article.letter').forEach(function (letter) {
+      var head = letter.querySelector('.letter-head');
+      var body = letter.querySelector('.letter-body');
+      if (!head || !body) return;
+
+      var stage = document.createElement('div');
+      stage.className = 'ms-stage';
+      body.parentNode.insertBefore(stage, body);
+
+      var ms = document.createElement('div');
+      ms.className = 'ms-layer';
+      ms.setAttribute('aria-hidden', 'true');
+      ms.innerHTML = body.innerHTML;
+      stage.appendChild(ms);
+
+      body.classList.add('type-layer');
+      stage.appendChild(body);
+
+      var scan = document.createElement('div');
+      scan.className = 'scan';
+      scan.setAttribute('aria-hidden', 'true');
+      stage.appendChild(scan);
+
+      var btn = document.createElement('button');
+      btn.className = 'ms-toggle';
+      btn.textContent = T('viewManuscript');
+      btn.setAttribute('aria-pressed', 'false');
+      head.appendChild(btn);
+
+      var showingMs = false;
+      var busy = false;
+      btn.addEventListener('click', function () {
+        if (busy) return;
+        busy = true;
+        setTimeout(function () { busy = false; }, 1550);
+
+        if (!showingMs) {
+          /* scan sweeps down, type recedes to reveal the hand */
+          stage.classList.add('to-ms');
+        } else {
+          /* digitize: jump the type layer to hidden-at-top without animating, then sweep it in */
+          stage.classList.add('no-anim', 'pre-type');
+          stage.classList.remove('to-ms');
+          void stage.offsetHeight;
+          stage.classList.remove('no-anim');
+          void stage.offsetHeight;
+          stage.classList.remove('pre-type');
+        }
+        scan.classList.remove('run');
+        void scan.offsetWidth;
+        scan.classList.add('run');
+
+        showingMs = !showingMs;
+        btn.textContent = showingMs ? T('viewTranscription') : T('viewManuscript');
+        btn.setAttribute('aria-pressed', String(showingMs));
+        btn.classList.toggle('on', showingMs);
+      });
+    });
+
+    PYL.onLang.push(function () {
+      document.querySelectorAll('.ms-toggle').forEach(function (b) {
+        b.textContent = b.getAttribute('aria-pressed') === 'true' ? T('viewTranscription') : T('viewManuscript');
+      });
+    });
+  })();
+
+  /* ---------- profile ---------- */
+  (function () {
+    var profile = document.getElementById('profile');
+    var btn = document.getElementById('avatarBtn');
+    var pop = document.getElementById('profilePop');
+    var signInBtn = document.getElementById('signInBtn');
+
+    function fill() {
+      var v = document.querySelector('#segDefault .active').getAttribute('data-v');
+      document.getElementById('popVisVal').textContent = v === 'private' ? T('visPrivate') : T('visPublic');
+      var f = 0, s = 0;
+      try {
+        var sh = JSON.parse(localStorage.getItem('pyl-shelf') || '{}');
+        f = Object.keys(sh.fav || {}).length;
+        s = Object.keys(sh.sub || {}).length;
+      } catch (e) {}
+      document.getElementById('popShelfVal').textContent = T('popShelfCount').replace('{f}', f).replace('{s}', s);
+    }
+
+    function close() {
+      pop.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = pop.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      if (open) fill();
+    });
+    document.addEventListener('click', function (e) {
+      if (!profile.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+
+    document.getElementById('popGoShelf').addEventListener('click', function () {
+      close();
+      PYL.go('catalogue', function () {
+        var fav = document.getElementById('filterFav');
+        if (!fav.classList.contains('active')) fav.click();
+      });
+    });
+
+    document.getElementById('popSignOut').addEventListener('click', function () {
+      close();
+      btn.style.display = 'none';
+      signInBtn.style.display = 'inline-flex';
+    });
+    signInBtn.addEventListener('click', function () {
+      if (window.PYL.openAuth) window.PYL.openAuth();
+    });
+
+    /* the language toggle lives inside this popover — refresh its dynamic rows on switch */
+    PYL.onLang.push(function () {
+      if (pop.classList.contains('open')) fill();
+    });
+  })();
+
+  /* ---------- auth: signup with Google (simulated) ---------- */
+  (function () {
+    var overlay = document.getElementById('authOverlay');
+    var status = document.getElementById('authStatus');
+    var avatarBtn = document.getElementById('avatarBtn');
+    var signInBtn = document.getElementById('signInBtn');
+
+    function open() {
+      overlay.classList.add('open');
+      status.textContent = '';
+      status.classList.remove('err');
+    }
+    function close() { overlay.classList.remove('open'); }
+    window.PYL.openAuth = open;
+
+    document.getElementById('authClose').addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+
+    function signIn(name) {
+      var parts = name.trim().split(/\s+/);
+      var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
+      document.querySelectorAll('#profile .avatar').forEach(function (a) { a.textContent = initials; });
+      document.querySelector('.profile-name').textContent = name;
+      document.querySelector('#profilePop .pop-head strong').textContent = name;
+      signInBtn.style.display = 'none';
+      avatarBtn.style.display = 'inline-flex';
+      close();
+    }
+
+    document.getElementById('googleBtn').addEventListener('click', function () {
+      status.classList.remove('err');
+      status.textContent = T('authConnecting');
+      /* prototype: the real flow hands off to Google OAuth and returns the verified name */
+      setTimeout(function () { signIn('Euclides Marin'); }, 900);
+    });
+
+    document.getElementById('authCreate').addEventListener('click', function () {
+      var name = document.getElementById('authName').value.trim();
+      var email = document.getElementById('authEmail').value.trim();
+      if (name.split(/\s+/).length < 2) {
+        status.textContent = T('authNeedName');
+        status.classList.add('err');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = T('authNeedEmail');
+        status.classList.add('err');
+        return;
+      }
+      signIn(name);
+    });
+  })();
+
+  /* ---------- writing desk: recommended tools (affiliate) ---------- */
+  (function () {
+    /* Replace YOURTAG-20 with your real Amazon Associates tag after enrolling.
+       Search-style links never 404 and still carry the referral tag. */
+    var TAG = 'YOURTAG-20';
+    var TOOLS = [
+      {
+        name: 'Clairefontaine Triomphe A5',
+        kind: { en: 'Correspondence paper', es: 'Papel de correspondencia', fr: 'Papier à lettres', it: 'Carta da lettere', de: 'Briefpapier' },
+        why: {
+          en: 'The classic French letter pad — 90g satin paper that takes fountain-pen ink without a whisper of bleed.',
+          es: 'El clásico bloc de cartas francés — papel satinado de 90 g que recibe la tinta estilográfica sin una gota traspasada.',
+          fr: 'Le bloc de correspondance français par excellence — papier satiné 90 g qui reçoit l’encre sans le moindre passage au verso.',
+          it: 'Il classico blocco da lettere francese — carta satinata da 90 g che accoglie l’inchiostro senza trasparire.',
+          de: 'Der klassische französische Briefblock — 90-g-Satinpapier, das Tinte ohne jedes Durchschlagen aufnimmt.'
+        },
+        q: 'clairefontaine+triomphe+a5+pad'
+      },
+      {
+        name: 'Midori MD Notebook A5',
+        kind: { en: 'Drafting notebook', es: 'Cuaderno de borradores', fr: 'Carnet de brouillons', it: 'Quaderno per bozze', de: 'Entwurfsheft' },
+        why: {
+          en: 'Where letters are drafted before they are declared. Cream Japanese paper, lies flat, disappears under your hand.',
+          es: 'Donde las cartas se ensayan antes de declararse. Papel japonés crema, se abre plano, desaparece bajo tu mano.',
+          fr: 'Là où les lettres s’essaient avant de se déclarer. Papier japonais crème, s’ouvre à plat, disparaît sous la main.',
+          it: 'Dove le lettere si provano prima di dichiararsi. Carta giapponese avorio, si apre piatta, scompare sotto la mano.',
+          de: 'Wo Briefe entworfen werden, bevor sie erklärt werden. Cremefarbenes japanisches Papier, bleibt flach liegen, verschwindet unter der Hand.'
+        },
+        q: 'midori+md+notebook+a5'
+      },
+      {
+        name: 'Rhodia dotPad No. 16',
+        kind: { en: 'Thinking paper', es: 'Papel para pensar', fr: 'Papier à penser', it: 'Carta per pensare', de: 'Denkpapier' },
+        why: {
+          en: 'For arguments that need diagrams before they need sentences. The dot grid keeps your marginalia honest.',
+          es: 'Para argumentos que piden diagramas antes que oraciones. La cuadrícula de puntos mantiene honestas tus notas al margen.',
+          fr: 'Pour les arguments qui exigent des schémas avant des phrases. La trame de points garde vos notes en marge honnêtes.',
+          it: 'Per argomenti che chiedono diagrammi prima delle frasi. La griglia a punti tiene oneste le tue note a margine.',
+          de: 'Für Argumente, die Diagramme brauchen, bevor sie Sätze brauchen. Das Punktraster hält Ihre Randbemerkungen ehrlich.'
+        },
+        q: 'rhodia+dotpad+no+16'
+      },
+      {
+        name: 'LAMY Safari',
+        kind: { en: 'Fountain pen', es: 'Pluma estilográfica', fr: 'Stylo-plume', it: 'Penna stilografica', de: 'Füllfederhalter' },
+        why: {
+          en: 'The unkillable first fountain pen. A fine nib suits the OCR — your hand stays crisp at speed.',
+          es: 'La primera estilográfica indestructible. El plumín fino le conviene al OCR — tu letra se mantiene nítida incluso rápido.',
+          fr: 'Le premier stylo-plume increvable. Une plume fine sied à l’OCR — votre main reste nette à vive allure.',
+          it: 'La prima stilografica indistruttibile. Il pennino fine conviene all’OCR — la tua grafia resta nitida anche in velocità.',
+          de: 'Der unzerstörbare erste Füllhalter. Eine feine Feder bekommt dem OCR — Ihre Schrift bleibt auch im Tempo klar.'
+        },
+        q: 'lamy+safari+fountain+pen+fine'
+      },
+      {
+        name: 'Diamine Prussian Blue',
+        kind: { en: 'Ink', es: 'Tinta', fr: 'Encre', it: 'Inchiostro', de: 'Tinte' },
+        why: {
+          en: 'The Republic’s own color, in a bottle. Deep, well-behaved, and legible to both machines and grandmothers.',
+          es: 'El color de la República, embotellado. Profundo, de buen comportamiento y legible para máquinas y para abuelas.',
+          fr: 'La couleur même de la République, en flacon. Profonde, docile, lisible par les machines comme par les grands-mères.',
+          it: 'Il colore della Repubblica, in bottiglia. Profondo, ben educato, leggibile da macchine e da nonne.',
+          de: 'Die Farbe der Republik, in der Flasche. Tief, gutmütig und lesbar für Maschinen wie für Großmütter.'
+        },
+        q: 'diamine+prussian+blue+ink'
+      },
+      {
+        name: 'Spencerian Penmanship set',
+        kind: { en: 'Penmanship course', es: 'Curso de caligrafía', fr: 'Cours de calligraphie', it: 'Corso di calligrafia', de: 'Schreibkurs' },
+        why: {
+          en: 'The nineteenth-century American hand, taught the nineteenth-century way: one theory book, five copybooks, no shortcuts.',
+          es: 'La letra americana del siglo XIX, enseñada a la manera del siglo XIX: un libro de teoría, cinco cuadernillos de práctica, sin atajos.',
+          fr: 'L’écriture américaine du XIXᵉ siècle, enseignée à la manière du XIXᵉ : un livre de théorie, cinq cahiers d’exercices, aucun raccourci.',
+          it: 'La scrittura americana dell’Ottocento, insegnata al modo dell’Ottocento: un libro di teoria, cinque quaderni d’esercizio, nessuna scorciatoia.',
+          de: 'Die amerikanische Hand des 19. Jahrhunderts, gelehrt auf die Art des 19. Jahrhunderts: ein Theoriebuch, fünf Übungshefte, keine Abkürzungen.'
+        },
+        q: 'spencerian+penmanship+theory+copybooks+set'
+      },
+      {
+        name: 'The Palmer Method of Business Writing',
+        kind: { en: 'Penmanship practice book', es: 'Cuaderno de práctica caligráfica', fr: 'Cahier d’exercices', it: 'Quaderno di esercizi', de: 'Übungsheft' },
+        why: {
+          en: 'The hand that taught America to write fast without writing badly — whole-arm movement, drill by drill. The workbook your great-grandparents sweated over, back in print.',
+          es: 'La letra que enseñó a Estados Unidos a escribir rápido sin escribir mal — movimiento de todo el brazo, ejercicio por ejercicio. El cuaderno que sufrieron tus bisabuelos, de vuelta en imprenta.',
+          fr: 'L’écriture qui apprit à l’Amérique à écrire vite sans écrire mal — mouvement du bras entier, exercice après exercice. Le cahier sur lequel vos bisaïeux ont sué, réédité.',
+          it: 'La scrittura che insegnò all’America a scrivere veloce senza scrivere male — movimento di tutto il braccio, esercizio dopo esercizio. Il quaderno su cui sudarono i tuoi bisnonni, di nuovo in stampa.',
+          de: 'Die Schrift, die Amerika lehrte, schnell zu schreiben, ohne schlecht zu schreiben — Bewegung aus dem ganzen Arm, Übung für Übung. Das Heft, über dem Ihre Urgroßeltern schwitzten, wieder im Druck.'
+        },
+        q: 'palmer+method+business+writing+practice+book'
+      },
+      {
+        name: 'Getty-Dubay: Write Now',
+        kind: { en: 'Italic handwriting workbook', es: 'Cuaderno de letra itálica', fr: 'Cahier d’écriture italique', it: 'Quaderno di corsivo italico', de: 'Kursiv-Übungsbuch' },
+        why: {
+          en: 'The fastest route from illegible to elegant — a practical italic that stays readable at letter-writing speed, and the OCR will thank you.',
+          es: 'La ruta más corta de lo ilegible a lo elegante — una itálica práctica que sigue siendo legible a velocidad de carta, y el OCR te lo agradecerá.',
+          fr: 'Le chemin le plus court de l’illisible à l’élégant — une italique pratique qui reste lisible à la vitesse d’une lettre, et l’OCR vous en remerciera.',
+          it: 'La via più breve dall’illeggibile all’elegante — un italico pratico che resta leggibile alla velocità di una lettera, e l’OCR ti ringrazierà.',
+          de: 'Der kürzeste Weg von unlesbar zu elegant — eine praktische Kursive, die im Brieftempo lesbar bleibt; das OCR wird es Ihnen danken.'
+        },
+        q: 'getty+dubay+write+now+italic+handwriting'
+      },
+      {
+        name: 'The Art of Cursive Penmanship',
+        kind: { en: 'Penmanship book', es: 'Libro de caligrafía', fr: 'Livre de calligraphie', it: 'Libro di calligrafia', de: 'Schreibbuch' },
+        why: {
+          en: 'Michael Sull, master penman, on rebuilding a cursive hand as an adult. For correspondents who want their manuscript to be the argument.',
+          es: 'Michael Sull, maestro calígrafo, sobre reconstruir la cursiva de adulto. Para corresponsales que quieren que su manuscrito sea el argumento.',
+          fr: 'Michael Sull, maître calligraphe, sur la reconstruction d’une cursive à l’âge adulte. Pour les correspondants dont le manuscrit doit être l’argument.',
+          it: 'Michael Sull, maestro calligrafo, su come ricostruire il corsivo da adulti. Per corrispondenti che vogliono che il manoscritto sia l’argomento.',
+          de: 'Michael Sull, Meisterschreiber, über den Wiederaufbau einer Schreibschrift im Erwachsenenalter. Für Korrespondenten, deren Handschrift selbst das Argument sein soll.'
+        },
+        q: 'art+of+cursive+penmanship+michael+sull'
+      },
+      {
+        name: 'Wax seal kit',
+        kind: { en: 'Sealing wax', es: 'Lacre', fr: 'Cire à cacheter', it: 'Ceralacca', de: 'Siegellack' },
+        why: {
+          en: 'Strictly optional, entirely correct. For the correspondent who wants their endorsements to weigh something.',
+          es: 'Estrictamente opcional, enteramente correcto. Para quien quiere que sus respaldos pesen de verdad.',
+          fr: 'Strictement facultatif, entièrement juste. Pour le correspondant qui veut que ses appuis pèsent vraiment.',
+          it: 'Rigorosamente opzionale, del tutto appropriato. Per il corrispondente che vuole che i suoi sostegni pesino davvero.',
+          de: 'Streng genommen optional, ganz und gar richtig. Für den Korrespondenten, dessen Zustimmungen etwas wiegen sollen.'
+        },
+        q: 'wax+seal+stamp+kit'
+      }
+    ];
+
+    var grid = document.getElementById('deskGrid');
+
+    function renderDesk() {
+      var lang = PYL.lang;
+      grid.innerHTML = '';
+      TOOLS.forEach(function (t) {
+        var card = document.createElement('div');
+        card.className = 'card';
+
+        var meta = document.createElement('span');
+        meta.className = 'meta';
+        meta.textContent = t.kind[lang] || t.kind.en;
+        card.appendChild(meta);
+
+        var h = document.createElement('h3');
+        h.className = 'display';
+        h.textContent = t.name;
+        card.appendChild(h);
+
+        var why = document.createElement('p');
+        why.className = 'excerpt';
+        why.textContent = t.why[lang] || t.why.en;
+        card.appendChild(why);
+
+        var foot = document.createElement('div');
+        foot.className = 'card-foot';
+        var a = document.createElement('a');
+        a.className = 'sub-btn';
+        a.style.marginLeft = '0';
+        a.href = 'https://www.amazon.com/s?k=' + t.q + '&tag=' + TAG;
+        a.target = '_blank';
+        a.rel = 'sponsored noopener';
+        a.textContent = T('deskView');
+        foot.appendChild(a);
+        card.appendChild(foot);
+
+        grid.appendChild(card);
+      });
+    }
+
+    PYL.onLang.push(renderDesk);
+    renderDesk();
+  })();
+
+  /* ---------- collapsible sidebar ---------- */
+  (function () {
+    var shell = document.querySelector('.shell');
+    var btn = document.getElementById('navToggle');
+    var collapsed = false;
+    try { collapsed = localStorage.getItem('pyl-nav') === 'collapsed'; } catch (e) {}
+
+    function apply() {
+      shell.classList.toggle('nav-collapsed', collapsed);
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      var label = T(collapsed ? 'navExpand' : 'navCollapse');
+      btn.setAttribute('aria-label', label);
+      btn.title = label;
+      /* in the rail the labels are hidden, so each icon carries its name as a tooltip */
+      document.querySelectorAll('#sidenav a').forEach(function (a) {
+        var lbl = a.querySelector('.lbl');
+        if (lbl) a.title = lbl.textContent;
+      });
+    }
+
+    btn.addEventListener('click', function () {
+      collapsed = !collapsed;
+      try { localStorage.setItem('pyl-nav', collapsed ? 'collapsed' : 'open'); } catch (e) {}
+      apply();
+    });
+
+    PYL.onLang.push(apply);
+    apply();
+  })();
+
+  /* ---------- router: one page at a time ----------
+     State lives in JS, not in the URL: some sandboxed origins (data:/blob:) reload
+     the document when the hash changes, which would wipe the session. The hash is
+     kept in sync only as a best effort, so deep links still work where they can. */
+  (function () {
+    var PAGES = ['top', 'charter', 'catalogue', 'letters', 'compose', 'desk'];
+    var page = 'top';
+
+    try {
+      var fromHash = (location.hash || '').replace(/^#\/?/, '');
+      if (PAGES.indexOf(fromHash) !== -1) page = fromHash;
+    } catch (e) {}
+
+    function render() {
+      document.querySelectorAll('[data-page]').forEach(function (p) {
+        p.hidden = p.getAttribute('data-page') !== page;
+      });
+      document.querySelectorAll('#sidenav a').forEach(function (a) {
+        var on = a.getAttribute('href') === '#' + page;
+        a.classList.toggle('active', on);
+        if (on) { a.setAttribute('aria-current', 'page'); } else { a.removeAttribute('aria-current'); }
+      });
+      window.scrollTo(0, 0);
+    }
+
+    PYL.go = function (id, then) {
+      if (PAGES.indexOf(id) === -1) id = 'top';
+      page = id;
+      render();
+      try {
+        if (history.replaceState) { history.replaceState(null, '', '#' + id); }
+      } catch (e) {}
+      if (then) setTimeout(then, 0);
+    };
+
+    /* every in-page link routes through the state machine instead of the URL */
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var id = a.getAttribute('href').replace(/^#\/?/, '');
+      if (PAGES.indexOf(id) === -1) return;
+      e.preventDefault();
+      PYL.go(id);
+    });
+
+    /* back/forward, where the hash is usable */
+    window.addEventListener('hashchange', function () {
+      var id = (location.hash || '').replace(/^#\/?/, '');
+      if (PAGES.indexOf(id) !== -1 && id !== page) { page = id; render(); }
+    });
+
+    render();
+  })();
+
+  /* ---------- language toggle init ---------- */
+  (function () {
+    document.getElementById('langSel').addEventListener('change', function (e) {
+      PYL.applyLang(e.target.value);
+    });
+    PYL.applyLang(PYL.lang);
+  })();
+</script>
