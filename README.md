@@ -14,13 +14,14 @@ own hand, as a notary would attest.
 Two mechanics carry the whole product:
 
 **The balanced seal.** Praise and dissent are minted in pairs. A correspondent may hold at
-most one unpaid endorsement — to endorse a second letter, they must first challenge one they
-genuinely contest. Agreement is never free; it costs the harder act of saying what you doubt.
+most one unpaid endorsement — to endorse a second letter, they must first write marginalia on
+one they genuinely contest. Agreement is never free; it costs the harder act of saying what you doubt.
 
-**A challenge is marginalia, not a downvote.** No challenge counts without a written reason,
-published in the margin under the challenger's name. This is what stops the balance rule from
-degrading into a dislike *tax* paid carelessly: dissent costs a sentence, so it stays a
-contribution rather than a punishment.
+**Marginalia, not downvotes.** No marginal note counts without a written reason, published in
+the margin under its author's name. This is what stops the balance rule from degrading into a
+dislike *tax* paid carelessly: dissent costs a sentence, so it stays a contribution rather than
+a punishment. Dissent has one name here — a marginal note *is* the seal, not a tally beside it,
+so a letter's seal count and its published notes are the same number.
 
 The handwriting requirement is the third pillar and the one no competitor has tried. In an
 internet drowning in generated text, a photographed handwritten letter is the cheapest
@@ -40,8 +41,8 @@ What works:
 - Left sidebar with collapsible icon rail; single-page routing (one section per view)
 - Home, Charter, Catalogue, Today's Post, Write, Desk
 - The eight-article Charter
-- Endorse / challenge seals with the balance rule enforced, signed marginalia, a tilting
-  balance-scale ledger in the sidebar
+- Endorse / marginalia seals with the balance rule enforced, signed notes in the margin, a
+  tilting balance-scale ledger in the sidebar
 - Manuscript ⇄ transcription animation (scan-line wipe) on every letter
 - Catalogue gallery with topic filters, a private ★ shelf, and per-correspondence subscriptions
 - Compose sheet: handwritten-original upload (file picker + camera capture), simulated OCR,

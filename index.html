@@ -903,9 +903,9 @@
   .endorse-btn .dot { border: 2px solid var(--prussian); }
   .endorse-btn.active { background: var(--prussian-tint); }
   .endorse-btn.active .dot { background: var(--prussian); }
-  .challenge-btn { border: 1px solid var(--wax); color: var(--wax); }
-  .challenge-btn .dot { border: 2px solid var(--wax); border-radius: 1px; transform: rotate(45deg); }
-  .challenge-btn.active { background: var(--wax-tint); }
+  .margin-btn { border: 1px solid var(--wax); color: var(--wax); }
+  .margin-btn .dot { border: 2px solid var(--wax); border-radius: 1px; transform: rotate(45deg); }
+  .margin-btn.active { background: var(--wax-tint); }
   .reply-btn {
     border: 1px solid var(--rule);
     color: var(--ink-soft);
@@ -920,7 +920,7 @@
   }
   .rail-note.show { display: block; }
 
-  /* marginalia (challenges with reasons) */
+  /* marginalia (the published reasons) */
   .marginalia { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
   .marginalia-item {
     border-left: 2px solid var(--wax);
@@ -930,8 +930,8 @@
   }
   .marginalia-item .who { color: var(--wax); font-style: italic; }
 
-  /* challenge form */
-  .challenge-form {
+  /* marginal-note form */
+  .margin-form {
     display: none;
     margin-top: 1rem;
     border: 1px dashed var(--wax);
@@ -941,9 +941,9 @@
     gap: 0.6rem;
     background: var(--wax-tint);
   }
-  .challenge-form.open { display: flex; }
-  .challenge-form label { font-size: 0.85rem; color: var(--ink-soft); }
-  .challenge-form textarea, .challenge-form input {
+  .margin-form.open { display: flex; }
+  .margin-form label { font-size: 0.85rem; color: var(--ink-soft); }
+  .margin-form textarea, .margin-form input {
     width: 100%;
     border: 1px solid var(--rule);
     border-radius: 2px;
@@ -953,8 +953,8 @@
     font-size: 0.95rem;
     padding: 0.5rem 0.6rem;
   }
-  .challenge-form textarea { min-height: 4.2rem; resize: vertical; }
-  .challenge-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+  .margin-form textarea { min-height: 4.2rem; resize: vertical; }
+  .margin-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
   .btn-primary-wax {
     background: var(--wax);
     color: var(--sheet);
@@ -1327,22 +1327,22 @@
       <p class="signature">Written in good faith and open to correction,<span class="name">Euclides Marin</span></p>
       <div class="seal-rail">
         <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">14</span></button>
-        <button class="seal-btn challenge-btn" data-action="challenge"><span class="dot"></span>Challenge · <span class="count">9</span></button>
+        <button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">2</span></button>
         <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
         <p class="rail-note" data-note></p>
       </div>
-      <div class="challenge-form" data-form>
-        <label data-i18n="chLabel"></label>
+      <div class="margin-form" data-form>
+        <label data-i18n="mgLabel"></label>
         <textarea data-reason></textarea>
         <input data-signer type="text" />
-        <div class="challenge-actions">
-          <button class="btn-primary-wax" data-action="submit-challenge" data-i18n="chSubmit">Affix challenge seal</button>
-          <button class="btn-quiet" data-action="cancel-challenge" data-i18n="chCancel">Withdraw</button>
-          <p class="form-hint" data-i18n="chHint">Published in the margin under your name.</p>
+        <div class="margin-actions">
+          <button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>
+          <button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>
+          <p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>
         </div>
       </div>
       <div class="marginalia" data-marginalia>
-        <p class="meta" style="margin:0.5rem 0 0;">Marginalia · 2</p>
+        <p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>
         <div class="marginalia-item">"Atrophy assumes judgment was ever solitary. We have borrowed it from books, clerks, and committees for centuries — the ledger you should audit is accountability, not self-reliance." <span class="who">— R. Osei</span></div>
         <div class="marginalia-item">"Show-its-work is a comfort, not a cure: an explanation persuasive enough to check is persuasive enough to stop checking." <span class="who">— A. Weiss</span></div>
       </div>
@@ -1364,22 +1364,22 @@
       <p class="signature">With respect and a sharpened pen,<span class="name">Rebecca Osei</span></p>
       <div class="seal-rail">
         <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">11</span></button>
-        <button class="seal-btn challenge-btn" data-action="challenge"><span class="dot"></span>Challenge · <span class="count">3</span></button>
+        <button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">1</span></button>
         <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
         <p class="rail-note" data-note></p>
       </div>
-      <div class="challenge-form" data-form>
-        <label data-i18n="chLabel"></label>
+      <div class="margin-form" data-form>
+        <label data-i18n="mgLabel"></label>
         <textarea data-reason></textarea>
         <input data-signer type="text" />
-        <div class="challenge-actions">
-          <button class="btn-primary-wax" data-action="submit-challenge" data-i18n="chSubmit">Affix challenge seal</button>
-          <button class="btn-quiet" data-action="cancel-challenge" data-i18n="chCancel">Withdraw</button>
-          <p class="form-hint" data-i18n="chHint">Published in the margin under your name.</p>
+        <div class="margin-actions">
+          <button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>
+          <button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>
+          <p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>
         </div>
       </div>
       <div class="marginalia" data-marginalia>
-        <p class="meta" style="margin:0.5rem 0 0;">Marginalia · 1</p>
+        <p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>
         <div class="marginalia-item">"The signature requirement collapses when the signer cannot audit what they sign. A demand for accountability without capability is theater." <span class="who">— T. Ilves</span></div>
       </div>
     </article>
@@ -1400,22 +1400,22 @@
       <p class="signature">Yours in cheerful suspicion,<span class="name">Anselm Weiss</span></p>
       <div class="seal-rail">
         <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">21</span></button>
-        <button class="seal-btn challenge-btn" data-action="challenge"><span class="dot"></span>Challenge · <span class="count">17</span></button>
+        <button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">1</span></button>
         <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
         <p class="rail-note" data-note></p>
       </div>
-      <div class="challenge-form" data-form>
-        <label data-i18n="chLabel"></label>
+      <div class="margin-form" data-form>
+        <label data-i18n="mgLabel"></label>
         <textarea data-reason></textarea>
         <input data-signer type="text" />
-        <div class="challenge-actions">
-          <button class="btn-primary-wax" data-action="submit-challenge" data-i18n="chSubmit">Affix challenge seal</button>
-          <button class="btn-quiet" data-action="cancel-challenge" data-i18n="chCancel">Withdraw</button>
-          <p class="form-hint" data-i18n="chHint">Published in the margin under your name.</p>
+        <div class="margin-actions">
+          <button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>
+          <button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>
+          <p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>
         </div>
       </div>
       <div class="marginalia" data-marginalia>
-        <p class="meta" style="margin:0.5rem 0 0;">Marginalia · 1</p>
+        <p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>
         <div class="marginalia-item">"Politeness is not deception; it is interface. Nobody thinks the door thanks them, yet the sign that says 'thank you' still smooths the exit." <span class="who">— C. Duarte</span></div>
       </div>
     </article>
@@ -1432,7 +1432,7 @@
         <div id="quoteList"></div>
       </div>
       <div class="attach-block">
-        <span class="meta" data-i18n="attachLabel">Your handwritten original — required (Art. II)</span>
+        <span class="meta" data-i18n="attamgLabel">Your handwritten original — required (Art. II)</span>
         <div class="attach-actions">
           <button class="attach-btn" id="attachUpload">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5"/><path d="M4.8 5.2 8 2l3.2 3.2"/><path d="M2 10.5v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2.5"/></svg>
@@ -1450,7 +1450,7 @@
           <button class="btn-quiet" id="attachRemove" data-i18n="attachRemove">Remove</button>
         </div>
         <p class="ocr-status" id="ocrStatus" role="status"></p>
-        <p class="attach-hint" data-i18n="attachHint"></p>
+        <p class="attach-hint" data-i18n="attamgHint"></p>
       </div>
       <input id="composeTitle" type="text" aria-label="Letter title" />
       <textarea id="composeBody" aria-label="Letter body / transcription"></textarea>
@@ -1616,10 +1616,10 @@
       epigraph: 'A slow correspondence on the ethics of artificial intelligence, in the tradition of the Republic of Letters. Everything here arrives <span lang="es">de puño y letra</span> — by its author’s own hand and signature. No feeds, no pile-ons — only letters, sealed, and the obligation to weigh what you praise against what you contest.',
       charterTitle: 'The Charter — Rules of Engagement',
       art1: '<strong>Write letters, not comments.</strong> Every contribution is addressed to a person, opens by stating the strongest version of what they argued, and only then dissents. If you cannot restate their case fairly, you are not yet ready to answer it.',
-      art2: '<strong>Every seal is signed — <span lang="es">de puño y letra</span>.</strong> Letters, endorsements, and challenges all carry your name, and every letter is posted as a photograph of your own handwriting before it becomes text. The original Republic ran on reputation staked over decades; anonymity buys candor cheaply and spends trust dearly.',
+      art2: '<strong>Every seal is signed — <span lang="es">de puño y letra</span>.</strong> Letters, endorsements, and marginalia all carry your name, and every letter is posted as a photograph of your own handwriting before it becomes text. The original Republic ran on reputation staked over decades; anonymity buys candor cheaply and spends trust dearly.',
       art3: '<strong>Original material only.</strong> Every letter is your own writing. Words borrowed from another — living, dead, or machine — stand inside quotation marks with their author named. A credited borrowing is scholarship; an uncredited one is retracted from the post, and the ledger remembers.',
-      art4: '<strong>The balanced seal.</strong> Praise and dissent are minted in pairs. You may hold at most one unpaid endorsement: to endorse a second letter, you must first challenge one you genuinely contest. Agreement is never free here — it costs you the harder act of saying what you doubt.',
-      art5: '<strong>A challenge is marginalia, not a downvote.</strong> No challenge counts without a written reason, published in the margin under your name. A tally tells an author nothing; a sentence tells them where to aim their next letter.',
+      art4: '<strong>The balanced seal.</strong> Praise and dissent are minted in pairs. You may hold at most one unpaid endorsement: to endorse a second letter, you must first write marginalia on one you genuinely contest. Agreement is never free here — it costs you the harder act of saying what you doubt.',
+      art5: '<strong>Marginalia, not downvotes.</strong> No marginal note counts without a written reason, published in the margin under your name. A tally tells an author nothing; a sentence tells them where to aim their next letter.',
       art6: '<strong>The post is slow.</strong> Letters are delivered once a day, together. Nothing you write can go viral by suppertime, so nothing needs to be written for the crowd.',
       art7: '<strong>One letter per correspondent per exchange</strong> until the author has replied. The right of response belongs first to the person you addressed.',
       art8: '<strong>The Republic keeps the door.</strong> We may moderate, withhold, delete, or suspend any publication — and any correspondent — where we judge the content offensive, insensitive, or in breach of this Charter. The judgment is ours to make; where practical we will name the rule that was broken and hear an appeal by letter.',
@@ -1628,13 +1628,13 @@
       topicLabel: 'Topic', shelfLabel: 'Shelf',
       filterFav: '★ My shelf', filterSub: 'Subscribed',
       postTitle: 'Today’s Post', postMeta: 'Delivered 18 August 2026',
-      chLabel: 'Your marginal note — a challenge must say <em>why</em> (Art. V):',
-      chSubmit: 'Affix challenge seal', chCancel: 'Withdraw',
-      chHint: 'Published in the margin under your name.',
+      mgLabel: 'Your marginal note — it must say <em>why</em> (Art. V):',
+      mgSubmit: 'Affix marginal seal', mgCancel: 'Withdraw',
+      mgHint: 'Published in the margin under your name.',
       composeHead: 'Write to the Republic', composeMeta: 'Next delivery · tomorrow, 08:00',
-      attachLabel: 'Your handwritten original — required (Art. II)',
+      attamgLabel: 'Your handwritten original — required (Art. II)',
       attachUpload: 'Upload a file', attachCamera: 'Take a picture', attachRemove: 'Remove',
-      attachHint: 'The posting house transcribes your hand to editable text — you correct the transcription below before sealing.',
+      attamgHint: 'The posting house transcribes your hand to editable text — you correct the transcription below before sealing.',
       visGeneral: 'Your general setting', visThis: 'This letter',
       visPublic: 'Public', visPrivate: 'Private', visDefault: 'Use my default',
       postBtn: 'Seal &amp; post',
@@ -1648,11 +1648,11 @@
       phSigner: 'Signed — your name',
       balanced: 'Balanced', unbalanced: 'Unbalanced', youOwe: 'you owe',
       endorsementN: 'endorsement', endorsementsN: 'endorsements',
-      challengeN: 'challenge', challengesN: 'challenges',
-      endorse: 'Endorse', challenge: 'Challenge', replyByLetter: 'Reply by letter',
-      noteUnbalanced: 'Your seal is unbalanced (Art. IV) — before endorsing again, challenge a letter you genuinely contest.',
-      noteNeedsReason: 'Art. V — a challenge needs a real reason (a sentence, at least) before the seal will take.',
-      noteChallengeSealed: 'Challenge sealed and published in the margin. Your ledger is credited.',
+      marginN: 'marginal note', marginaliaN: 'marginal notes',
+      endorse: 'Endorse', marginalia: 'Marginalia', replyByLetter: 'Reply by letter',
+      noteUnbalanced: 'Your seal is unbalanced (Art. IV) — before endorsing again, write marginalia on a letter you genuinely contest.',
+      noteNeedsReason: 'Art. V — a marginal note needs a real reason (a sentence, at least) before the seal will take.',
+      noteMarginSealed: 'Sealed and published in the margin. Your ledger is credited.',
       aCorrespondent: 'A correspondent',
       confirmAttach: 'Art. II — attach a photograph of your handwritten original before sealing.',
       confirmShort: 'A letter deserves more than a line — the post can wait for your full thought.',
@@ -1761,10 +1761,10 @@
       epigraph: 'Una correspondencia lenta sobre la ética de la inteligencia artificial, en la tradición de la República de las Letras. Todo aquí llega <span lang="es">de puño y letra</span> — de la mano y firma de su autor. Sin feeds, sin turbas — solo cartas, selladas, y la obligación de sopesar lo que elogias contra lo que cuestionas.',
       charterTitle: 'La Carta — Reglas del intercambio',
       art1: '<strong>Escribe cartas, no comentarios.</strong> Toda contribución se dirige a una persona, comienza exponiendo la versión más fuerte de lo que esa persona argumentó, y solo después disiente. Si no puedes reformular su caso con justicia, aún no estás listo para responderlo.',
-      art2: '<strong>Todo sello va firmado — de puño y letra.</strong> Cartas, respaldos y objeciones llevan tu nombre, y cada carta se publica como fotografía de tu propia escritura antes de convertirse en texto. La República original funcionaba con reputación apostada durante décadas; el anonimato compra franqueza barata y gasta confianza cara.',
+      art2: '<strong>Todo sello va firmado — de puño y letra.</strong> Cartas, respaldos y marginalia llevan tu nombre, y cada carta se publica como fotografía de tu propia escritura antes de convertirse en texto. La República original funcionaba con reputación apostada durante décadas; el anonimato compra franqueza barata y gasta confianza cara.',
       art3: '<strong>Solo material original.</strong> Cada carta es escritura tuya. Las palabras tomadas de otro — vivo, muerto o máquina — van entre comillas con su autor nombrado. Un préstamo acreditado es erudición; uno sin acreditar se retira del correo, y el libro de sellos recuerda.',
-      art4: '<strong>El sello equilibrado.</strong> El elogio y el disenso se acuñan en pares. Puedes tener a lo sumo un respaldo sin pagar: para respaldar una segunda carta, primero debes objetar una que de verdad cuestiones. Aquí el acuerdo nunca es gratis — te cuesta el acto más difícil de decir lo que dudas.',
-      art5: '<strong>Una objeción es una nota al margen, no un voto negativo.</strong> Ninguna objeción cuenta sin una razón escrita, publicada al margen bajo tu nombre. Un conteo no le dice nada al autor; una oración le dice hacia dónde apuntar su próxima carta.',
+      art4: '<strong>El sello equilibrado.</strong> El elogio y el disenso se acuñan en pares. Puedes tener a lo sumo un respaldo sin pagar: para respaldar una segunda carta, primero debes escribir marginalia en una que de verdad cuestiones. Aquí el acuerdo nunca es gratis — te cuesta el acto más difícil de decir lo que dudas.',
+      art5: '<strong>Marginalia, no votos negativos.</strong> Ninguna nota al margen cuenta sin una razón escrita, publicada al margen bajo tu nombre. Un conteo no le dice nada al autor; una oración le dice hacia dónde apuntar su próxima carta.',
       art6: '<strong>El correo es lento.</strong> Las cartas se entregan una vez al día, todas juntas. Nada de lo que escribas puede volverse viral antes de la cena, así que nada necesita escribirse para la multitud.',
       art7: '<strong>Una carta por corresponsal por intercambio</strong> hasta que el autor haya respondido. El derecho de réplica pertenece primero a la persona a quien te dirigiste.',
       art8: '<strong>La República guarda la puerta.</strong> Podemos moderar, retener, eliminar o suspender cualquier publicación — y cualquier corresponsal — cuando juzguemos que el contenido es ofensivo, insensible o contrario a esta Carta. La decisión nos corresponde; cuando sea posible nombraremos la regla infringida y escucharemos una apelación por carta.',
@@ -1773,13 +1773,13 @@
       topicLabel: 'Tema', shelfLabel: 'Estante',
       filterFav: '★ Mi estante', filterSub: 'Suscritas',
       postTitle: 'El correo de hoy', postMeta: 'Entregado el 18 de agosto de 2026',
-      chLabel: 'Tu nota al margen — una objeción debe decir <em>por qué</em> (Art. V):',
-      chSubmit: 'Estampar sello de objeción', chCancel: 'Retirar',
-      chHint: 'Se publica al margen bajo tu nombre.',
+      mgLabel: 'Tu nota al margen — debe decir <em>por qué</em> (Art. V):',
+      mgSubmit: 'Estampar sello marginal', mgCancel: 'Retirar',
+      mgHint: 'Se publica al margen bajo tu nombre.',
       composeHead: 'Escribe a la República', composeMeta: 'Próxima entrega · mañana, 08:00',
-      attachLabel: 'Tu original manuscrito — obligatorio (Art. II)',
+      attamgLabel: 'Tu original manuscrito — obligatorio (Art. II)',
       attachUpload: 'Subir un archivo', attachCamera: 'Tomar una foto', attachRemove: 'Quitar',
-      attachHint: 'La casa de postas transcribe tu mano a texto editable — corriges la transcripción abajo antes de sellar.',
+      attamgHint: 'La casa de postas transcribe tu mano a texto editable — corriges la transcripción abajo antes de sellar.',
       visGeneral: 'Tu configuración general', visThis: 'Esta carta',
       visPublic: 'Pública', visPrivate: 'Privada', visDefault: 'Usar mi configuración',
       postBtn: 'Sellar y enviar',
@@ -1793,11 +1793,11 @@
       phSigner: 'Firmado — tu nombre',
       balanced: 'Equilibrado', unbalanced: 'Desequilibrado', youOwe: 'debes',
       endorsementN: 'respaldo', endorsementsN: 'respaldos',
-      challengeN: 'objeción', challengesN: 'objeciones',
-      endorse: 'Respaldar', challenge: 'Objetar', replyByLetter: 'Responder con carta',
-      noteUnbalanced: 'Tu sello está desequilibrado (Art. IV) — antes de respaldar de nuevo, objeta una carta que de verdad cuestiones.',
-      noteNeedsReason: 'Art. V — una objeción necesita una razón real (al menos una oración) antes de que el sello prenda.',
-      noteChallengeSealed: 'Objeción sellada y publicada al margen. Tu libro queda acreditado.',
+      marginN: 'nota al margen', marginaliaN: 'notas al margen',
+      endorse: 'Respaldar', marginalia: 'Marginalia', replyByLetter: 'Responder con carta',
+      noteUnbalanced: 'Tu sello está desequilibrado (Art. IV) — antes de respaldar de nuevo, escribe marginalia en una carta que de verdad cuestiones.',
+      noteNeedsReason: 'Art. V — una nota al margen necesita una razón real (al menos una oración) antes de que el sello prenda.',
+      noteMarginSealed: 'Sellada y publicada al margen. Tu libro queda acreditado.',
       aCorrespondent: 'Un corresponsal',
       confirmAttach: 'Art. II — adjunta una fotografía de tu original manuscrito antes de sellar.',
       confirmShort: 'Una carta merece más que una línea — el correo puede esperar tu pensamiento completo.',
@@ -1906,10 +1906,10 @@
       epigraph: 'Une correspondance lente sur l’éthique de l’intelligence artificielle, dans la tradition de la République des Lettres. Tout ici arrive <span lang="es">de puño y letra</span> — de la main et de la signature de son auteur. Pas de fils d’actualité, pas de meutes — seulement des lettres, scellées, et l’obligation de peser ce que vous louez contre ce que vous contestez.',
       charterTitle: 'La Charte — Règles de l’échange',
       art1: '<strong>Écrivez des lettres, non des commentaires.</strong> Toute contribution s’adresse à une personne, commence par énoncer la version la plus forte de son argument, et ne conteste qu’ensuite. Si vous ne pouvez reformuler son propos avec justesse, vous n’êtes pas encore prêt à y répondre.',
-      art2: '<strong>Tout sceau est signé — de puño y letra.</strong> Lettres, appuis et objections portent votre nom, et chaque lettre est publiée comme photographie de votre propre écriture avant de devenir texte. La République d’origine reposait sur une réputation engagée durant des décennies ; l’anonymat achète la franchise à bas prix et dépense la confiance à prix fort.',
+      art2: '<strong>Tout sceau est signé — de puño y letra.</strong> Lettres, appuis et marginalia portent votre nom, et chaque lettre est publiée comme photographie de votre propre écriture avant de devenir texte. La République d’origine reposait sur une réputation engagée durant des décennies ; l’anonymat achète la franchise à bas prix et dépense la confiance à prix fort.',
       art3: '<strong>Matériel original uniquement.</strong> Chaque lettre est de votre plume. Les mots empruntés à autrui — vivant, mort ou machine — se tiennent entre guillemets, leur auteur nommé. Un emprunt crédité est de l’érudition ; un emprunt non crédité est retiré du courrier, et le registre s’en souvient.',
-      art4: '<strong>Le sceau équilibré.</strong> L’éloge et le dissentiment se frappent par paires. Vous ne pouvez détenir qu’un seul appui impayé : pour appuyer une deuxième lettre, il faut d’abord objecter à une lettre que vous contestez sincèrement. Ici l’accord n’est jamais gratuit — il vous coûte l’acte plus difficile de dire vos doutes.',
-      art5: '<strong>Une objection est une note en marge, non un vote négatif.</strong> Aucune objection ne compte sans raison écrite, publiée en marge sous votre nom. Un décompte n’apprend rien à l’auteur ; une phrase lui indique où viser sa prochaine lettre.',
+      art4: '<strong>Le sceau équilibré.</strong> L’éloge et le dissentiment se frappent par paires. Vous ne pouvez détenir qu’un seul appui impayé : pour appuyer une deuxième lettre, il faut d’abord écrire une note en marge d’une lettre que vous contestez sincèrement. Ici l’accord n’est jamais gratuit — il vous coûte l’acte plus difficile de dire vos doutes.',
+      art5: '<strong>Des notes en marge, non des votes négatifs.</strong> Aucune note ne compte sans raison écrite, publiée en marge sous votre nom. Un décompte n’apprend rien à l’auteur ; une phrase lui indique où viser sa prochaine lettre.',
       art6: '<strong>Le courrier est lent.</strong> Les lettres sont distribuées une fois par jour, ensemble. Rien de ce que vous écrivez ne peut devenir viral avant le dîner ; rien n’a donc besoin d’être écrit pour la foule.',
       art7: '<strong>Une lettre par correspondant et par échange</strong> jusqu’à ce que l’auteur ait répondu. Le droit de réponse appartient d’abord à la personne à qui vous vous adressez.',
       art8: '<strong>La République garde la porte.</strong> Nous pouvons modérer, retenir, supprimer ou suspendre toute publication — et tout correspondant — lorsque nous jugeons le contenu offensant, indélicat ou contraire à cette Charte. La décision appartient à la République ; dans la mesure du possible, nous dirons quelle règle a été enfreinte et entendrons un appel par lettre.',
@@ -1918,13 +1918,13 @@
       topicLabel: 'Thème', shelfLabel: 'Étagère',
       filterFav: '★ Mon étagère', filterSub: 'Abonnements',
       postTitle: 'Le courrier du jour', postMeta: 'Distribué le 18 août 2026',
-      chLabel: 'Votre note en marge — une objection doit dire <em>pourquoi</em> (Art. V) :',
-      chSubmit: 'Apposer le sceau d’objection', chCancel: 'Retirer',
-      chHint: 'Publiée en marge sous votre nom.',
+      mgLabel: 'Votre note en marge — elle doit dire <em>pourquoi</em> (Art. V) :',
+      mgSubmit: 'Apposer le sceau marginal', mgCancel: 'Retirer',
+      mgHint: 'Publiée en marge sous votre nom.',
       composeHead: 'Écrire à la République', composeMeta: 'Prochaine distribution · demain, 08h00',
-      attachLabel: 'Votre original manuscrit — requis (Art. II)',
+      attamgLabel: 'Votre original manuscrit — requis (Art. II)',
       attachUpload: 'Téléverser un fichier', attachCamera: 'Prendre une photo', attachRemove: 'Retirer',
-      attachHint: 'La maison de poste transcrit votre main en texte modifiable — vous corrigez la transcription ci-dessous avant de sceller.',
+      attamgHint: 'La maison de poste transcrit votre main en texte modifiable — vous corrigez la transcription ci-dessous avant de sceller.',
       visGeneral: 'Votre réglage général', visThis: 'Cette lettre',
       visPublic: 'Publique', visPrivate: 'Privée', visDefault: 'Utiliser mon réglage',
       postBtn: 'Sceller et envoyer',
@@ -1938,11 +1938,11 @@
       phSigner: 'Signé — votre nom',
       balanced: 'Équilibré', unbalanced: 'Déséquilibré', youOwe: 'vous devez',
       endorsementN: 'appui', endorsementsN: 'appuis',
-      challengeN: 'objection', challengesN: 'objections',
-      endorse: 'Appuyer', challenge: 'Objecter', replyByLetter: 'Répondre par lettre',
-      noteUnbalanced: 'Votre sceau est déséquilibré (Art. IV) — avant d’appuyer de nouveau, objectez à une lettre que vous contestez sincèrement.',
-      noteNeedsReason: 'Art. V — une objection exige une véritable raison (une phrase au moins) avant que le sceau ne prenne.',
-      noteChallengeSealed: 'Objection scellée et publiée en marge. Votre registre est crédité.',
+      marginN: 'note en marge', marginaliaN: 'notes en marge',
+      endorse: 'Appuyer', marginalia: 'Marginalia', replyByLetter: 'Répondre par lettre',
+      noteUnbalanced: 'Votre sceau est déséquilibré (Art. IV) — avant d’appuyer de nouveau, écrivez une note en marge d’une lettre que vous contestez sincèrement.',
+      noteNeedsReason: 'Art. V — une note en marge exige une véritable raison (une phrase au moins) avant que le sceau ne prenne.',
+      noteMarginSealed: 'Scellée et publiée en marge. Votre registre est crédité.',
       aCorrespondent: 'Un correspondant',
       confirmAttach: 'Art. II — joignez une photographie de votre original manuscrit avant de sceller.',
       confirmShort: 'Une lettre mérite plus d’une ligne — le courrier peut attendre votre pensée entière.',
@@ -2051,10 +2051,10 @@
       epigraph: 'Una corrispondenza lenta sull’etica dell’intelligenza artificiale, nella tradizione della Repubblica delle Lettere. Tutto qui arriva <span lang="es">de puño y letra</span> — dalla mano e dalla firma del suo autore. Nessun feed, nessuna gogna — solo lettere, sigillate, e l’obbligo di pesare ciò che elogi contro ciò che contesti.',
       charterTitle: 'La Carta — Regole dello scambio',
       art1: '<strong>Scrivi lettere, non commenti.</strong> Ogni contributo è rivolto a una persona, apre enunciando la versione più forte di ciò che ha sostenuto, e solo dopo dissente. Se non sai riformulare la sua tesi con equità, non sei ancora pronto a risponderle.',
-      art2: '<strong>Ogni sigillo è firmato — de puño y letra.</strong> Lettere, sostegni e obiezioni portano il tuo nome, e ogni lettera è pubblicata come fotografia della tua scrittura prima di diventare testo. La Repubblica originaria viveva di reputazione messa in gioco per decenni; l’anonimato compra franchezza a poco prezzo e spende fiducia a caro prezzo.',
+      art2: '<strong>Ogni sigillo è firmato — de puño y letra.</strong> Lettere, sostegni e marginalia portano il tuo nome, e ogni lettera è pubblicata come fotografia della tua scrittura prima di diventare testo. La Repubblica originaria viveva di reputazione messa in gioco per decenni; l’anonimato compra franchezza a poco prezzo e spende fiducia a caro prezzo.',
       art3: '<strong>Solo materiale originale.</strong> Ogni lettera è scrittura tua. Le parole prese da altri — vivi, morti o macchine — stanno tra virgolette con il loro autore nominato. Un prestito accreditato è erudizione; uno non accreditato viene ritirato dalla posta, e il registro ricorda.',
-      art4: '<strong>Il sigillo in equilibrio.</strong> Lode e dissenso si coniano in coppia. Puoi tenere al massimo un sostegno non pagato: per sostenere una seconda lettera devi prima obiettare a una che contesti davvero. Qui l’accordo non è mai gratuito — ti costa l’atto più difficile di dire ciò che dubiti.',
-      art5: '<strong>Un’obiezione è una nota a margine, non un voto negativo.</strong> Nessuna obiezione conta senza una ragione scritta, pubblicata a margine sotto il tuo nome. Un conteggio non dice nulla all’autore; una frase gli dice dove puntare la prossima lettera.',
+      art4: '<strong>Il sigillo in equilibrio.</strong> Lode e dissenso si coniano in coppia. Puoi tenere al massimo un sostegno non pagato: per sostenere una seconda lettera devi prima scrivere una nota a margine su una che contesti davvero. Qui l’accordo non è mai gratuito — ti costa l’atto più difficile di dire ciò che dubiti.',
+      art5: '<strong>Note a margine, non voti contrari.</strong> Nessuna nota conta senza una ragione scritta, pubblicata a margine sotto il tuo nome. Un conteggio non dice nulla all’autore; una frase gli dice dove puntare la prossima lettera.',
       art6: '<strong>La posta è lenta.</strong> Le lettere si consegnano una volta al giorno, tutte insieme. Nulla di ciò che scrivi può diventare virale prima di cena, quindi nulla deve essere scritto per la folla.',
       art7: '<strong>Una lettera per corrispondente per ogni scambio</strong> finché l’autore non ha risposto. Il diritto di replica spetta prima a chi ti sei rivolto.',
       art8: '<strong>La Repubblica custodisce la porta.</strong> Possiamo moderare, trattenere, cancellare o sospendere qualsiasi pubblicazione — e qualsiasi corrispondente — quando giudichiamo il contenuto offensivo, insensibile o contrario a questa Carta. La decisione spetta alla Repubblica; quando possibile diremo quale regola è stata infranta e ascolteremo un appello per lettera.',
@@ -2063,13 +2063,13 @@
       topicLabel: 'Tema', shelfLabel: 'Scaffale',
       filterFav: '★ Il mio scaffale', filterSub: 'Abbonate',
       postTitle: 'La posta di oggi', postMeta: 'Consegnata il 18 agosto 2026',
-      chLabel: 'La tua nota a margine — un’obiezione deve dire <em>perché</em> (Art. V):',
-      chSubmit: 'Apporre il sigillo di obiezione', chCancel: 'Ritira',
-      chHint: 'Pubblicata a margine sotto il tuo nome.',
+      mgLabel: 'La tua nota a margine — deve dire <em>perché</em> (Art. V):',
+      mgSubmit: 'Apporre il sigillo marginale', mgCancel: 'Ritira',
+      mgHint: 'Pubblicata a margine sotto il tuo nome.',
       composeHead: 'Scrivi alla Repubblica', composeMeta: 'Prossima consegna · domani, 08:00',
-      attachLabel: 'Il tuo originale manoscritto — obbligatorio (Art. II)',
+      attamgLabel: 'Il tuo originale manoscritto — obbligatorio (Art. II)',
       attachUpload: 'Carica un file', attachCamera: 'Scatta una foto', attachRemove: 'Rimuovi',
-      attachHint: 'La casa di posta trascrive la tua mano in testo modificabile — correggi la trascrizione qui sotto prima di sigillare.',
+      attamgHint: 'La casa di posta trascrive la tua mano in testo modificabile — correggi la trascrizione qui sotto prima di sigillare.',
       visGeneral: 'La tua impostazione generale', visThis: 'Questa lettera',
       visPublic: 'Pubblica', visPrivate: 'Privata', visDefault: 'Usa la mia impostazione',
       postBtn: 'Sigilla e spedisci',
@@ -2083,11 +2083,11 @@
       phSigner: 'Firmato — il tuo nome',
       balanced: 'In equilibrio', unbalanced: 'In disequilibrio', youOwe: 'devi',
       endorsementN: 'sostegno', endorsementsN: 'sostegni',
-      challengeN: 'obiezione', challengesN: 'obiezioni',
-      endorse: 'Sostieni', challenge: 'Obietta', replyByLetter: 'Rispondi con una lettera',
-      noteUnbalanced: 'Il tuo sigillo è in disequilibrio (Art. IV) — prima di sostenere di nuovo, obietta a una lettera che contesti davvero.',
-      noteNeedsReason: 'Art. V — un’obiezione richiede una ragione vera (almeno una frase) prima che il sigillo prenda.',
-      noteChallengeSealed: 'Obiezione sigillata e pubblicata a margine. Il tuo registro è accreditato.',
+      marginN: 'nota a margine', marginaliaN: 'note a margine',
+      endorse: 'Sostieni', marginalia: 'Marginalia', replyByLetter: 'Rispondi con una lettera',
+      noteUnbalanced: 'Il tuo sigillo è in disequilibrio (Art. IV) — prima di sostenere di nuovo, scrivi una nota a margine su una lettera che contesti davvero.',
+      noteNeedsReason: 'Art. V — una nota a margine richiede una ragione vera (almeno una frase) prima che il sigillo prenda.',
+      noteMarginSealed: 'Sigillata e pubblicata a margine. Il tuo registro è accreditato.',
       aCorrespondent: 'Un corrispondente',
       confirmAttach: 'Art. II — allega una fotografia del tuo originale manoscritto prima di sigillare.',
       confirmShort: 'Una lettera merita più di una riga — la posta può attendere il tuo pensiero intero.',
@@ -2196,10 +2196,10 @@
       epigraph: 'Eine langsame Korrespondenz über die Ethik der künstlichen Intelligenz, in der Tradition der Gelehrtenrepublik. Alles hier kommt <span lang="es">de puño y letra</span> — von der eigenen Hand und Unterschrift des Verfassers. Keine Feeds, keine Meuten — nur Briefe, gesiegelt, und die Pflicht, das Gelobte gegen das Bestrittene abzuwägen.',
       charterTitle: 'Die Charta — Regeln des Austauschs',
       art1: '<strong>Schreiben Sie Briefe, keine Kommentare.</strong> Jeder Beitrag richtet sich an eine Person, beginnt mit der stärksten Fassung ihres Arguments und widerspricht erst danach. Wer den Fall des anderen nicht redlich wiedergeben kann, ist noch nicht bereit, ihn zu beantworten.',
-      art2: '<strong>Jedes Siegel ist unterschrieben — de puño y letra.</strong> Briefe, Zustimmungen und Einwände tragen Ihren Namen, und jeder Brief erscheint als Fotografie Ihrer eigenen Handschrift, bevor er Text wird. Die ursprüngliche Republik lebte von Ansehen, das über Jahrzehnte verbürgt wurde; Anonymität kauft Freimut billig und verbraucht Vertrauen teuer.',
+      art2: '<strong>Jedes Siegel ist unterschrieben — de puño y letra.</strong> Briefe, Zustimmungen und Marginalien tragen Ihren Namen, und jeder Brief erscheint als Fotografie Ihrer eigenen Handschrift, bevor er Text wird. Die ursprüngliche Republik lebte von Ansehen, das über Jahrzehnte verbürgt wurde; Anonymität kauft Freimut billig und verbraucht Vertrauen teuer.',
       art3: '<strong>Nur eigenes Material.</strong> Jeder Brief ist Ihre eigene Schrift. Worte, die von anderen stammen — lebend, verstorben oder maschinell —, stehen in Anführungszeichen mit genannter Urheberschaft. Eine ausgewiesene Entlehnung ist Gelehrsamkeit; eine unausgewiesene wird aus der Post zurückgezogen, und das Siegelbuch erinnert sich.',
-      art4: '<strong>Das ausgewogene Siegel.</strong> Lob und Widerspruch werden paarweise geprägt. Sie dürfen höchstens eine unbezahlte Zustimmung halten: um einen zweiten Brief zu bestärken, müssen Sie zuvor einem Brief widersprechen, den Sie wirklich bestreiten. Zustimmung ist hier niemals kostenlos — sie kostet Sie den schwereren Akt, Ihre Zweifel zu benennen.',
-      art5: '<strong>Ein Einwand ist eine Randbemerkung, keine Abwertung.</strong> Kein Einwand zählt ohne schriftliche Begründung, veröffentlicht am Rand unter Ihrem Namen. Eine Zahl sagt dem Verfasser nichts; ein Satz sagt ihm, worauf er den nächsten Brief richten soll.',
+      art4: '<strong>Das ausgewogene Siegel.</strong> Lob und Widerspruch werden paarweise geprägt. Sie dürfen höchstens eine unbezahlte Zustimmung halten: um einen zweiten Brief zu bestärken, müssen Sie zuvor eine Marginalie zu einem Brief schreiben, den Sie wirklich bestreiten. Zustimmung ist hier niemals kostenlos — sie kostet Sie den schwereren Akt, Ihre Zweifel zu benennen.',
+      art5: '<strong>Marginalien, keine Abwertungen.</strong> Keine Marginalie zählt ohne schriftliche Begründung, veröffentlicht am Rand unter Ihrem Namen. Eine Zahl sagt dem Verfasser nichts; ein Satz sagt ihm, worauf er den nächsten Brief richten soll.',
       art6: '<strong>Die Post ist langsam.</strong> Briefe werden einmal täglich zugestellt, alle zusammen. Nichts, was Sie schreiben, kann bis zum Abendessen viral gehen — also muss nichts für die Menge geschrieben werden.',
       art7: '<strong>Ein Brief je Korrespondent und Wechsel</strong>, bis der Verfasser geantwortet hat. Das Recht der Erwiderung gehört zuerst der angesprochenen Person.',
       art8: '<strong>Die Republik hütet die Tür.</strong> Wir können jede Veröffentlichung — und jeden Korrespondenten — moderieren, zurückhalten, löschen oder sperren, wenn wir den Inhalt für beleidigend, taktlos oder charta-widrig halten. Die Entscheidung liegt bei der Republik; soweit möglich nennen wir die verletzte Regel und hören eine Beschwerde per Brief.',
@@ -2208,13 +2208,13 @@
       topicLabel: 'Thema', shelfLabel: 'Regal',
       filterFav: '★ Mein Regal', filterSub: 'Abonniert',
       postTitle: 'Die heutige Post', postMeta: 'Zugestellt am 18. August 2026',
-      chLabel: 'Ihre Randbemerkung — ein Einwand muss sagen, <em>warum</em> (Art. V):',
-      chSubmit: 'Einwandsiegel anbringen', chCancel: 'Zurückziehen',
-      chHint: 'Erscheint am Rand unter Ihrem Namen.',
+      mgLabel: 'Ihre Marginalie — sie muss sagen, <em>warum</em> (Art. V):',
+      mgSubmit: 'Randsiegel anbringen', mgCancel: 'Zurückziehen',
+      mgHint: 'Erscheint am Rand unter Ihrem Namen.',
       composeHead: 'An die Republik schreiben', composeMeta: 'Nächste Zustellung · morgen, 08:00',
-      attachLabel: 'Ihr handschriftliches Original — erforderlich (Art. II)',
+      attamgLabel: 'Ihr handschriftliches Original — erforderlich (Art. II)',
       attachUpload: 'Datei hochladen', attachCamera: 'Foto aufnehmen', attachRemove: 'Entfernen',
-      attachHint: 'Das Posthaus überträgt Ihre Handschrift in bearbeitbaren Text — Sie berichtigen die Abschrift unten, bevor Sie siegeln.',
+      attamgHint: 'Das Posthaus überträgt Ihre Handschrift in bearbeitbaren Text — Sie berichtigen die Abschrift unten, bevor Sie siegeln.',
       visGeneral: 'Ihre allgemeine Einstellung', visThis: 'Dieser Brief',
       visPublic: 'Öffentlich', visPrivate: 'Privat', visDefault: 'Meine Einstellung verwenden',
       postBtn: 'Siegeln und senden',
@@ -2228,11 +2228,11 @@
       phSigner: 'Gezeichnet — Ihr Name',
       balanced: 'Ausgeglichen', unbalanced: 'Unausgeglichen', youOwe: 'Sie schulden',
       endorsementN: 'Zustimmung', endorsementsN: 'Zustimmungen',
-      challengeN: 'Einwand', challengesN: 'Einwände',
-      endorse: 'Zustimmen', challenge: 'Einwenden', replyByLetter: 'Mit einem Brief antworten',
-      noteUnbalanced: 'Ihr Siegel ist unausgeglichen (Art. IV) — widersprechen Sie zuerst einem Brief, den Sie wirklich bestreiten.',
-      noteNeedsReason: 'Art. V — ein Einwand braucht einen echten Grund (mindestens einen Satz), bevor das Siegel hält.',
-      noteChallengeSealed: 'Einwand gesiegelt und am Rand veröffentlicht. Ihr Siegelbuch ist gutgeschrieben.',
+      marginN: 'Marginalie', marginaliaN: 'Marginalien',
+      endorse: 'Zustimmen', marginalia: 'Marginalie', replyByLetter: 'Mit einem Brief antworten',
+      noteUnbalanced: 'Ihr Siegel ist unausgeglichen (Art. IV) — schreiben Sie zuerst eine Marginalie zu einem Brief, den Sie wirklich bestreiten.',
+      noteNeedsReason: 'Art. V — eine Marginalie braucht einen echten Grund (mindestens einen Satz), bevor das Siegel hält.',
+      noteMarginSealed: 'Gesiegelt und am Rand veröffentlicht. Ihr Siegelbuch ist gutgeschrieben.',
       aCorrespondent: 'Ein Korrespondent',
       confirmAttach: 'Art. II — fügen Sie vor dem Siegeln eine Fotografie Ihres handschriftlichen Originals bei.',
       confirmShort: 'Ein Brief verdient mehr als eine Zeile — die Post kann auf Ihren ganzen Gedanken warten.',
@@ -2341,10 +2341,10 @@
       epigraph: 'Uma correspondência lenta sobre a ética da inteligência artificial, na tradição da República das Letras. Tudo aqui chega <span lang="es">de puño y letra</span> — da própria mão e assinatura de quem escreve. Sem feeds, sem linchamentos — apenas cartas, seladas, e a obrigação de pesar o que você elogia contra o que você contesta.',
       charterTitle: 'A Carta — Regras do intercâmbio',
       art1: '<strong>Escreva cartas, não comentários.</strong> Toda contribuição se dirige a uma pessoa, começa expondo a versão mais forte do que ela argumentou e só depois discorda. Se você não consegue reformular a tese dela com justiça, ainda não está pronto para respondê-la.',
-      art2: '<strong>Todo selo é assinado — de puño y letra.</strong> Cartas, apoios e objeções levam seu nome, e cada carta é publicada como fotografia da sua própria caligrafia antes de se tornar texto. A República original vivia de reputação empenhada por décadas; o anonimato compra franqueza barato e gasta confiança caro.',
+      art2: '<strong>Todo selo é assinado — de puño y letra.</strong> Cartas, apoios e marginália levam seu nome, e cada carta é publicada como fotografia da sua própria caligrafia antes de se tornar texto. A República original vivia de reputação empenhada por décadas; o anonimato compra franqueza barato e gasta confiança caro.',
       art3: '<strong>Somente material original.</strong> Cada carta é escrita sua. Palavras tomadas de outro — vivo, morto ou máquina — ficam entre aspas com o autor nomeado. Um empréstimo creditado é erudição; um não creditado é retirado do correio, e o livro de selos lembra.',
-      art4: '<strong>O selo equilibrado.</strong> Elogio e dissenso são cunhados em pares. Você pode ter no máximo um apoio não pago: para apoiar uma segunda carta, precisa primeiro objetar a uma que realmente contesta. Aqui a concordância nunca é gratuita — custa o ato mais difícil de dizer o que você duvida.',
-      art5: '<strong>Uma objeção é nota à margem, não voto negativo.</strong> Nenhuma objeção conta sem uma razão escrita, publicada à margem sob seu nome. Uma contagem não diz nada ao autor; uma frase diz a ele para onde apontar a próxima carta.',
+      art4: '<strong>O selo equilibrado.</strong> Elogio e dissenso são cunhados em pares. Você pode ter no máximo um apoio não pago: para apoiar uma segunda carta, precisa primeiro escrever marginália numa que realmente contesta. Aqui a concordância nunca é gratuita — custa o ato mais difícil de dizer o que você duvida.',
+      art5: '<strong>Marginália, não votos negativos.</strong> Nenhuma nota à margem conta sem uma razão escrita, publicada à margem sob seu nome. Uma contagem não diz nada ao autor; uma frase diz a ele para onde apontar a próxima carta.',
       art6: '<strong>O correio é lento.</strong> As cartas são entregues uma vez por dia, todas juntas. Nada que você escreva pode viralizar antes do jantar, então nada precisa ser escrito para a multidão.',
       art7: '<strong>Uma carta por correspondente por intercâmbio</strong> até que o autor tenha respondido. O direito de resposta pertence primeiro à pessoa a quem você se dirigiu.',
       art8: '<strong>A República guarda a porta.</strong> Podemos moderar, reter, excluir ou suspender qualquer publicação — e qualquer correspondente — quando julgarmos o conteúdo ofensivo, insensível ou contrário a esta Carta. A decisão é nossa; quando possível nomearemos a regra infringida e ouviremos um recurso por carta.',
@@ -2353,13 +2353,13 @@
       topicLabel: 'Tema', shelfLabel: 'Estante',
       filterFav: '★ Minha estante', filterSub: 'Assinadas',
       postTitle: 'O correio de hoje', postMeta: 'Entregue em 18 de agosto de 2026',
-      chLabel: 'Sua nota à margem — uma objeção precisa dizer <em>por quê</em> (Art. V):',
-      chSubmit: 'Aplicar selo de objeção', chCancel: 'Retirar',
-      chHint: 'Publicada à margem sob seu nome.',
+      mgLabel: 'Sua nota à margem — precisa dizer <em>por quê</em> (Art. V):',
+      mgSubmit: 'Aplicar selo marginal', mgCancel: 'Retirar',
+      mgHint: 'Publicada à margem sob seu nome.',
       composeHead: 'Escrever à República', composeMeta: 'Próxima entrega · amanhã, 08:00',
-      attachLabel: 'Seu original manuscrito — obrigatório (Art. II)',
+      attamgLabel: 'Seu original manuscrito — obrigatório (Art. II)',
       attachUpload: 'Enviar um arquivo', attachCamera: 'Tirar uma foto', attachRemove: 'Remover',
-      attachHint: 'A casa de postas transcreve sua mão em texto editável — você corrige a transcrição abaixo antes de selar.',
+      attamgHint: 'A casa de postas transcreve sua mão em texto editável — você corrige a transcrição abaixo antes de selar.',
       visGeneral: 'Sua configuração geral', visThis: 'Esta carta',
       visPublic: 'Pública', visPrivate: 'Privada', visDefault: 'Usar minha configuração',
       postBtn: 'Selar e enviar',
@@ -2373,11 +2373,11 @@
       phSigner: 'Assinado — seu nome',
       balanced: 'Equilibrado', unbalanced: 'Desequilibrado', youOwe: 'você deve',
       endorsementN: 'apoio', endorsementsN: 'apoios',
-      challengeN: 'objeção', challengesN: 'objeções',
-      endorse: 'Apoiar', challenge: 'Objetar', replyByLetter: 'Responder por carta',
-      noteUnbalanced: 'Seu selo está desequilibrado (Art. IV) — antes de apoiar de novo, objete a uma carta que você realmente contesta.',
-      noteNeedsReason: 'Art. V — uma objeção precisa de uma razão real (ao menos uma frase) antes de o selo pegar.',
-      noteChallengeSealed: 'Objeção selada e publicada à margem. Seu livro foi creditado.',
+      marginN: 'nota à margem', marginaliaN: 'notas à margem',
+      endorse: 'Apoiar', marginalia: 'Marginália', replyByLetter: 'Responder por carta',
+      noteUnbalanced: 'Seu selo está desequilibrado (Art. IV) — antes de apoiar de novo, escreva marginália numa carta que você realmente contesta.',
+      noteNeedsReason: 'Art. V — uma nota à margem precisa de uma razão real (ao menos uma frase) antes de o selo pegar.',
+      noteMarginSealed: 'Selada e publicada à margem. Seu livro foi creditado.',
       aCorrespondent: 'Um correspondente',
       confirmAttach: 'Art. II — anexe uma fotografia do seu original manuscrito antes de selar.',
       confirmShort: 'Uma carta merece mais de uma linha — o correio pode esperar seu pensamento inteiro.',
@@ -2486,10 +2486,10 @@
       epigraph: 'Commercium epistularum lentum de ethica intelligentiae artificialis, more Rei Publicae Litterarum. Omnia hic <span lang="es">de puño y letra</span> adveniunt — manu ipsa et subscriptione auctoris. Nulli rivi nuntiorum, nullae turbae — solae epistulae, obsignatae, et officium ponderandi quod laudas contra id quod reprehendis.',
       charterTitle: 'Charta — Leges commercii',
       art1: '<strong>Epistulas scribe, non commentaria.</strong> Omnis contributio ad personam dirigitur, incipit a validissima forma eius quod ille asseruit, et tum demum dissentit. Si causam eius aequo animo referre non potes, nondum paratus es ad respondendum.',
-      art2: '<strong>Omne sigillum subscribitur — de puño y letra.</strong> Epistulae, suffragia et reprehensiones nomen tuum ferunt, et omnis epistula ut imago manus tuae editur priusquam textus fiat. Res Publica prisca fama per decennia pignerata vivebat; anonymitas candorem vili pretio emit et fidem magno pretio consumit.',
+      art2: '<strong>Omne sigillum subscribitur — de puño y letra.</strong> Epistulae, suffragia et notae marginales nomen tuum ferunt, et omnis epistula ut imago manus tuae editur priusquam textus fiat. Res Publica prisca fama per decennia pignerata vivebat; anonymitas candorem vili pretio emit et fidem magno pretio consumit.',
       art3: '<strong>Materia propria tantum.</strong> Omnis epistula scriptura tua est. Verba ab alio sumpta — a vivo, a mortuo, a machina — inter virgulas stant auctore nominato. Mutuum cum honore redditum eruditio est; sine honore, ex tabellario retrahitur, et tabulae meminerunt.',
-      art4: '<strong>Sigillum aequatum.</strong> Laus et dissensio geminatim cuduntur. Unum tantum suffragium non solutum tenere licet: ut alteri epistulae suffrageris, prius reprehendere debes eam quam vere in dubium vocas. Consensus hic numquam gratuitus est — constat te actu difficiliore, dicendi quod dubitas.',
-      art5: '<strong>Reprehensio nota marginalis est, non suffragium adversum.</strong> Nulla reprehensio valet sine ratione scripta, in margine sub nomine tuo edita. Numerus auctori nihil docet; sententia ei monstrat quo proximam epistulam dirigat.',
+      art4: '<strong>Sigillum aequatum.</strong> Laus et dissensio geminatim cuduntur. Unum tantum suffragium non solutum tenere licet: ut alteri epistulae suffrageris, prius notam marginalem scribere debes in eam quam vere in dubium vocas. Consensus hic numquam gratuitus est — constat te actu difficiliore, dicendi quod dubitas.',
+      art5: '<strong>Notae marginales, non suffragia adversa.</strong> Nulla nota valet sine ratione scripta, in margine sub nomine tuo edita. Numerus auctori nihil docet; sententia ei monstrat quo proximam epistulam dirigat.',
       art6: '<strong>Tabellarius lentus est.</strong> Epistulae semel in die, simul, traduntur. Nihil quod scribis ante cenam vulgari potest; itaque nihil turbae causa scribendum est.',
       art7: '<strong>Una epistula per commercium ab unoquoque</strong> donec auctor responderit. Ius respondendi primum ei est quem allocutus es.',
       art8: '<strong>Res Publica ianuam custodit.</strong> Quamlibet editionem — et quemlibet epistolographum — moderari, retinere, delere aut suspendere possumus, ubi materiam offensivam, duram aut huic Chartae contrariam iudicamus. Iudicium nostrum est; quantum fieri potest legem violatam nominabimus et appellationem per epistulam audiemus.',
@@ -2498,13 +2498,13 @@
       topicLabel: 'Argumentum', shelfLabel: 'Pluteus',
       filterFav: '★ Pluteus meus', filterSub: 'Adscripta',
       postTitle: 'Tabellarius hodiernus', postMeta: 'Traditus a.d. XVIII Augusti MMXXVI',
-      chLabel: 'Nota tua marginalis — reprehensio dicere debet <em>cur</em> (Art. V):',
-      chSubmit: 'Sigillum reprehensionis imprimere', chCancel: 'Retrahere',
-      chHint: 'In margine sub nomine tuo editur.',
+      mgLabel: 'Nota tua marginalis — dicere debet <em>cur</em> (Art. V):',
+      mgSubmit: 'Sigillum marginale imprimere', mgCancel: 'Retrahere',
+      mgHint: 'In margine sub nomine tuo editur.',
       composeHead: 'Ad Rem Publicam scribere', composeMeta: 'Proxima traditio · cras, hora VIII',
-      attachLabel: 'Autographum tuum manu scriptum — necessarium (Art. II)',
+      attamgLabel: 'Autographum tuum manu scriptum — necessarium (Art. II)',
       attachUpload: 'Fasciculum imponere', attachCamera: 'Imaginem capere', attachRemove: 'Removere',
-      attachHint: 'Domus tabellaria manum tuam in textum mutabilem transcribit — transcriptionem infra corrigis priusquam obsignes.',
+      attamgHint: 'Domus tabellaria manum tuam in textum mutabilem transcribit — transcriptionem infra corrigis priusquam obsignes.',
       visGeneral: 'Ratio tua generalis', visThis: 'Haec epistula',
       visPublic: 'Publica', visPrivate: 'Privata', visDefault: 'Ratione mea uti',
       postBtn: 'Obsignare et mittere',
@@ -2518,11 +2518,11 @@
       phSigner: 'Subscriptum — nomen tuum',
       balanced: 'Aequatum', unbalanced: 'Inaequatum', youOwe: 'debes',
       endorsementN: 'suffragium', endorsementsN: 'suffragia',
-      challengeN: 'reprehensio', challengesN: 'reprehensiones',
-      endorse: 'Suffragari', challenge: 'Reprehendere', replyByLetter: 'Epistula respondere',
-      noteUnbalanced: 'Sigillum tuum inaequatum est (Art. IV) — priusquam iterum suffrageris, reprehende epistulam quam vere in dubium vocas.',
-      noteNeedsReason: 'Art. V — reprehensio rationem veram (saltem sententiam) requirit priusquam sigillum haereat.',
-      noteChallengeSealed: 'Reprehensio obsignata et in margine edita. Tabulae tuae creditae sunt.',
+      marginN: 'nota marginalis', marginaliaN: 'notae marginales',
+      endorse: 'Suffragari', marginalia: 'Marginalia', replyByLetter: 'Epistula respondere',
+      noteUnbalanced: 'Sigillum tuum inaequatum est (Art. IV) — priusquam iterum suffrageris, notam marginalem scribe in epistulam quam vere in dubium vocas.',
+      noteNeedsReason: 'Art. V — nota marginalis rationem veram (saltem sententiam) requirit priusquam sigillum haereat.',
+      noteMarginSealed: 'Obsignata et in margine edita. Tabulae tuae creditae sunt.',
       aCorrespondent: 'Epistolographus quidam',
       confirmAttach: 'Art. II — imaginem autographi manu scripti adiunge priusquam obsignes.',
       confirmShort: 'Epistula plus quam uno versu digna est — tabellarius cogitationem tuam integram exspectare potest.',
@@ -2631,10 +2631,10 @@
       epigraph: 'Malrapida korespondado pri la etiko de artefarita inteligenteco, en la tradicio de la Respubliko de Leteroj. Ĉio ĉi alvenas <span lang="es">de puño y letra</span> — el la propra mano kaj subskribo de la aŭtoro. Nenia fluo, nenia homamasa atako — nur leteroj, sigelitaj, kaj la devo pesi tion, kion vi laŭdas, kontraŭ tio, kion vi kontestas.',
       charterTitle: 'La Ĉarto — Reguloj de la interŝanĝo',
       art1: '<strong>Skribu leterojn, ne komentojn.</strong> Ĉiu kontribuo estas adresita al persono, komencas per la plej forta versio de ties argumento, kaj nur poste malkonsentas. Se vi ne povas juste reformuli ties tezon, vi ankoraŭ ne pretas respondi ĝin.',
-      art2: '<strong>Ĉiu sigelo estas subskribita — de puño y letra.</strong> Leteroj, aproboj kaj kontestoj portas vian nomon, kaj ĉiu letero aperas kiel fotografio de via propra manskribo antaŭ ol fariĝi teksto. La origina Respubliko vivis el reputacio garantiita dum jardekoj; anonimeco aĉetas malkaŝemon malkare kaj elspezas fidon kare.',
+      art2: '<strong>Ĉiu sigelo estas subskribita — de puño y letra.</strong> Leteroj, aproboj kaj marĝenaj notoj portas vian nomon, kaj ĉiu letero aperas kiel fotografio de via propra manskribo antaŭ ol fariĝi teksto. La origina Respubliko vivis el reputacio garantiita dum jardekoj; anonimeco aĉetas malkaŝemon malkare kaj elspezas fidon kare.',
       art3: '<strong>Nur propra materialo.</strong> Ĉiu letero estas via propra skribo. Vortoj prenitaj de aliaj — vivaj, mortaj aŭ maŝinaj — staras inter citiloj kun nomita aŭtoro. Kreditita prunto estas erudicio; nekreditita estas retirita el la poŝto, kaj la registro memoras.',
-      art4: '<strong>La ekvilibra sigelo.</strong> Laŭdo kaj malkonsento estas monfaritaj pare. Vi povas teni maksimume unu nepagitan aprobon: por aprobi duan leteron, vi devas unue kontesti leteron, kiun vi vere pridubas. Konsento neniam estas senpaga ĉi tie — ĝi kostas al vi la pli malfacilan agon diri, kion vi dubas.',
-      art5: '<strong>Kontesto estas marĝena noto, ne malaproba voĉdono.</strong> Nenia kontesto validas sen skriba kialo, publikigita en la marĝeno sub via nomo. Nombro diras nenion al la aŭtoro; frazo diras al li, kien direkti la sekvan leteron.',
+      art4: '<strong>La ekvilibra sigelo.</strong> Laŭdo kaj malkonsento estas monfaritaj pare. Vi povas teni maksimume unu nepagitan aprobon: por aprobi duan leteron, vi devas unue skribi marĝenan noton pri letero, kiun vi vere pridubas. Konsento neniam estas senpaga ĉi tie — ĝi kostas al vi la pli malfacilan agon diri, kion vi dubas.',
+      art5: '<strong>Marĝenaj notoj, ne malaprobaj voĉdonoj.</strong> Nenia noto validas sen skriba kialo, publikigita en la marĝeno sub via nomo. Nombro diras nenion al la aŭtoro; frazo diras al li, kien direkti la sekvan leteron.',
       art6: '<strong>La poŝto estas malrapida.</strong> Leteroj estas liveritaj unufoje tage, kune. Nenio, kion vi skribas, povas iĝi virusa antaŭ vespermanĝo, do nenio devas esti skribita por la homamaso.',
       art7: '<strong>Unu letero po korespondanto po interŝanĝo</strong> ĝis la aŭtoro respondis. La rajto respondi apartenas unue al la persono, kiun vi alparolis.',
       art8: '<strong>La Respubliko gardas la pordon.</strong> Ni povas moderigi, reteni, forigi aŭ suspendi ĉiun publikigon — kaj ĉiun korespondanton — kiam ni juĝas la enhavon ofenda, sensenta aŭ kontraŭa al ĉi tiu Ĉarto. La juĝo estas nia; kiam eble ni nomos la rompitan regulon kaj aŭskultos apelacion per letero.',
@@ -2643,13 +2643,13 @@
       topicLabel: 'Temo', shelfLabel: 'Breto',
       filterFav: '★ Mia breto', filterSub: 'Abonitaj',
       postTitle: 'La hodiaŭa poŝto', postMeta: 'Liverita la 18-an de aŭgusto 2026',
-      chLabel: 'Via marĝena noto — kontesto devas diri <em>kial</em> (Art. V):',
-      chSubmit: 'Meti kontesto-sigelon', chCancel: 'Retiri',
-      chHint: 'Publikigita en la marĝeno sub via nomo.',
+      mgLabel: 'Via marĝena noto — ĝi devas diri <em>kial</em> (Art. V):',
+      mgSubmit: 'Meti marĝenan sigelon', mgCancel: 'Retiri',
+      mgHint: 'Publikigita en la marĝeno sub via nomo.',
       composeHead: 'Skribi al la Respubliko', composeMeta: 'Sekva livero · morgaŭ, 08:00',
-      attachLabel: 'Via manskribita originalo — deviga (Art. II)',
+      attamgLabel: 'Via manskribita originalo — deviga (Art. II)',
       attachUpload: 'Alŝuti dosieron', attachCamera: 'Fari foton', attachRemove: 'Forigi',
-      attachHint: 'La poŝtdomo transskribas vian manon en redakteblan tekston — vi korektas la transskribon sube antaŭ sigelado.',
+      attamgHint: 'La poŝtdomo transskribas vian manon en redakteblan tekston — vi korektas la transskribon sube antaŭ sigelado.',
       visGeneral: 'Via ĝenerala agordo', visThis: 'Ĉi tiu letero',
       visPublic: 'Publika', visPrivate: 'Privata', visDefault: 'Uzi mian agordon',
       postBtn: 'Sigeli kaj sendi',
@@ -2663,11 +2663,11 @@
       phSigner: 'Subskribite — via nomo',
       balanced: 'Ekvilibra', unbalanced: 'Malekvilibra', youOwe: 'vi ŝuldas',
       endorsementN: 'aprobo', endorsementsN: 'aproboj',
-      challengeN: 'kontesto', challengesN: 'kontestoj',
-      endorse: 'Aprobi', challenge: 'Kontesti', replyByLetter: 'Respondi per letero',
-      noteUnbalanced: 'Via sigelo estas malekvilibra (Art. IV) — antaŭ ol aprobi denove, kontestu leteron, kiun vi vere pridubas.',
-      noteNeedsReason: 'Art. V — kontesto bezonas veran kialon (almenaŭ unu frazon) antaŭ ol la sigelo tenas.',
-      noteChallengeSealed: 'Kontesto sigelita kaj publikigita en la marĝeno. Via registro estas kreditita.',
+      marginN: 'marĝena noto', marginaliaN: 'marĝenaj notoj',
+      endorse: 'Aprobi', marginalia: 'Marĝenaĵo', replyByLetter: 'Respondi per letero',
+      noteUnbalanced: 'Via sigelo estas malekvilibra (Art. IV) — antaŭ ol aprobi denove, skribu marĝenan noton pri letero, kiun vi vere pridubas.',
+      noteNeedsReason: 'Art. V — marĝena noto bezonas veran kialon (almenaŭ unu frazon) antaŭ ol la sigelo tenas.',
+      noteMarginSealed: 'Sigelita kaj publikigita en la marĝeno. Via registro estas kreditita.',
       aCorrespondent: 'Korespondanto',
       confirmAttach: 'Art. II — aldonu fotografion de via manskribita originalo antaŭ sigelado.',
       confirmShort: 'Letero meritas pli ol unu linion — la poŝto povas atendi vian tutan penson.',
@@ -2811,12 +2811,12 @@
   /* ---------- seals, ledger, letters, post ---------- */
   (function () {
     var endorsements = 0;
-    var challenges = 0;
+    var notes = 0;
 
     var statusEl = document.getElementById('ledgerStatus');
     var beam = document.getElementById('scaleBeam');
 
-    function owed() { return endorsements - challenges; }
+    function owed() { return endorsements - notes; }
 
     function renderLedger() {
       var diff = owed();
@@ -2824,14 +2824,22 @@
       beam.style.transform = 'rotate(' + tilt + 'deg)';
       var label;
       if (diff > 0) {
-        label = '<strong>' + T('unbalanced') + '</strong> — ' + T('youOwe') + ' ' + diff + ' ' + (diff > 1 ? T('challengesN') : T('challengeN'));
+        label = '<strong>' + T('unbalanced') + '</strong> — ' + T('youOwe') + ' ' + diff + ' ' + (diff > 1 ? T('marginaliaN') : T('marginN'));
         statusEl.classList.add('owing');
       } else {
         label = '<strong>' + T('balanced') + '</strong>';
         statusEl.classList.remove('owing');
       }
       statusEl.innerHTML = label + ' · ' + endorsements + ' ' + (endorsements === 1 ? T('endorsementN') : T('endorsementsN')) +
-        ' / ' + challenges + ' ' + (challenges === 1 ? T('challengeN') : T('challengesN'));
+        ' / ' + notes + ' ' + (notes === 1 ? T('marginN') : T('marginaliaN'));
+    }
+
+    function renderMarginHeads() {
+      document.querySelectorAll('[data-marginalia]').forEach(function (box) {
+        var head = box.querySelector('[data-margin-head]');
+        if (!head) return;
+        head.textContent = T('marginalia') + ' · ' + box.querySelectorAll('.marginalia-item').length;
+      });
     }
 
     function bump(btn, delta) {
@@ -2849,7 +2857,7 @@
 
     document.querySelectorAll('article.letter').forEach(function (letter) {
       var endorseBtn = letter.querySelector('[data-action="endorse"]');
-      var challengeBtn = letter.querySelector('[data-action="challenge"]');
+      var marginBtn = letter.querySelector('[data-action="margin"]');
       var replyBtn = letter.querySelector('[data-action="reply"]');
       var form = letter.querySelector('[data-form]');
       var reason = form.querySelector('[data-reason]');
@@ -2874,17 +2882,17 @@
         renderLedger();
       });
 
-      challengeBtn.addEventListener('click', function () {
-        if (challengeBtn.classList.contains('active')) return;
+      marginBtn.addEventListener('click', function () {
+        if (marginBtn.classList.contains('active')) return;
         form.classList.toggle('open');
         if (form.classList.contains('open')) reason.focus();
       });
 
-      form.querySelector('[data-action="cancel-challenge"]').addEventListener('click', function () {
+      form.querySelector('[data-action="cancel-margin"]').addEventListener('click', function () {
         form.classList.remove('open');
       });
 
-      form.querySelector('[data-action="submit-challenge"]').addEventListener('click', function () {
+      form.querySelector('[data-action="submit-margin"]').addEventListener('click', function () {
         var text = reason.value.trim();
         var name = signer.value.trim() || T('aCorrespondent');
         if (text.length < 20) {
@@ -2899,14 +2907,15 @@
         who.textContent = '— ' + name;
         item.appendChild(who);
         marginalia.appendChild(item);
+        renderMarginHeads();
 
-        challengeBtn.classList.add('active');
-        bump(challengeBtn, 1);
-        challenges += 1;
+        marginBtn.classList.add('active');
+        bump(marginBtn, 1);
+        notes += 1;
         form.classList.remove('open');
         reason.value = '';
         renderLedger();
-        showNote(letter, T('noteChallengeSealed'));
+        showNote(letter, T('noteMarginSealed'));
       });
 
       replyBtn.addEventListener('click', function () {
@@ -2962,26 +2971,28 @@
 
     PYL.onLang.push(function () {
       renderLedger();
+      renderMarginHeads();
       document.querySelectorAll('.endorse-btn').forEach(function (b) { b.childNodes[1].textContent = T('endorse') + ' · '; });
-      document.querySelectorAll('.challenge-btn').forEach(function (b) { b.childNodes[1].textContent = T('challenge') + ' · '; });
+      document.querySelectorAll('.margin-btn').forEach(function (b) { b.childNodes[1].textContent = T('marginalia') + ' · '; });
       document.querySelectorAll('.reply-btn').forEach(function (b) { b.textContent = T('replyByLetter'); });
     });
 
     renderLedger();
+    renderMarginHeads();
   })();
 
   /* ---------- catalogue: gallery, shelf, filters ---------- */
   (function () {
     var LETTERS = [
-      { id: 1, no: 'I', author: 'E. Marin', title: 'On Borrowed Judgment', excerpt: 'The danger is not that the machine errs; it is that we forget how to notice.', tags: ['Judgment'], endorse: 14, challenge: 9, inPost: true },
-      { id: 2, no: 'II', author: 'R. Osei', title: 'Judgment Was Always Prosthetic', excerpt: 'A tool may think for me; it must not answer for me.', tags: ['Judgment', 'Accountability'], endorse: 11, challenge: 3, inPost: true, replyTo: 'I' },
-      { id: 3, no: 'III', author: 'A. Weiss', title: 'On Apologies from Machines', excerpt: 'The vocabulary of moral feeling should be spent only by those who can be spent by it.', tags: ['Machine feeling', 'Accountability'], endorse: 21, challenge: 17, inPost: true },
-      { id: 4, no: 'IV', author: 'L. Okafor', title: 'On the Wages of Invisible Work', excerpt: 'Every fluent answer is annotated somewhere by a person we have agreed not to see.', tags: ['Labor'], endorse: 18, challenge: 6 },
-      { id: 5, no: 'V', author: 'M. Fontaine', title: 'On Consent at Scale', excerpt: 'A billion small permissions, none of which was ever asked for, do not sum to one large one.', tags: ['Governance', 'Labor'], endorse: 16, challenge: 11 },
-      { id: 6, no: 'VI', author: 'P. Iyer', title: 'Against the Right to Be Predicted', excerpt: 'A forecast about me, acted upon, is a decision about me — and decisions have doors to knock on.', tags: ['Governance', 'Judgment'], endorse: 9, challenge: 8 },
-      { id: 7, no: 'VII', author: 'C. Duarte', title: 'On Teaching Machines Our Worst Habits', excerpt: 'We did not teach the machine to discriminate; we taught it to imitate, and it was a good student.', tags: ['Accountability'], endorse: 24, challenge: 5 },
-      { id: 8, no: 'VIII', author: 'N. Baradar', title: 'On the Comfort of Synthetic Friends', excerpt: 'Loneliness is a wound; the question is whether this is a dressing or a diet.', tags: ['Machine feeling'], endorse: 13, challenge: 12 },
-      { id: 9, no: 'IX', author: 'R. Osei', title: 'On Slowness as a Civic Duty', excerpt: 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence.', tags: ['Judgment', 'Governance'], endorse: 7, challenge: 2 }
+      { id: 1, no: 'I', author: 'E. Marin', title: 'On Borrowed Judgment', excerpt: 'The danger is not that the machine errs; it is that we forget how to notice.', tags: ['Judgment'], endorse: 14, marginalia: 2, inPost: true },
+      { id: 2, no: 'II', author: 'R. Osei', title: 'Judgment Was Always Prosthetic', excerpt: 'A tool may think for me; it must not answer for me.', tags: ['Judgment', 'Accountability'], endorse: 11, marginalia: 1, inPost: true, replyTo: 'I' },
+      { id: 3, no: 'III', author: 'A. Weiss', title: 'On Apologies from Machines', excerpt: 'The vocabulary of moral feeling should be spent only by those who can be spent by it.', tags: ['Machine feeling', 'Accountability'], endorse: 21, marginalia: 1, inPost: true },
+      { id: 4, no: 'IV', author: 'L. Okafor', title: 'On the Wages of Invisible Work', excerpt: 'Every fluent answer is annotated somewhere by a person we have agreed not to see.', tags: ['Labor'], endorse: 18, marginalia: 3 },
+      { id: 5, no: 'V', author: 'M. Fontaine', title: 'On Consent at Scale', excerpt: 'A billion small permissions, none of which was ever asked for, do not sum to one large one.', tags: ['Governance', 'Labor'], endorse: 16, marginalia: 4 },
+      { id: 6, no: 'VI', author: 'P. Iyer', title: 'Against the Right to Be Predicted', excerpt: 'A forecast about me, acted upon, is a decision about me — and decisions have doors to knock on.', tags: ['Governance', 'Judgment'], endorse: 9, marginalia: 3 },
+      { id: 7, no: 'VII', author: 'C. Duarte', title: 'On Teaching Machines Our Worst Habits', excerpt: 'We did not teach the machine to discriminate; we taught it to imitate, and it was a good student.', tags: ['Accountability'], endorse: 24, marginalia: 2 },
+      { id: 8, no: 'VIII', author: 'N. Baradar', title: 'On the Comfort of Synthetic Friends', excerpt: 'Loneliness is a wound; the question is whether this is a dressing or a diet.', tags: ['Machine feeling'], endorse: 13, marginalia: 5 },
+      { id: 9, no: 'IX', author: 'R. Osei', title: 'On Slowness as a Civic Duty', excerpt: 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence.', tags: ['Judgment', 'Governance'], endorse: 7, marginalia: 1 }
     ];
     var TOPICS = ['All', 'Judgment', 'Accountability', 'Machine feeling', 'Labor', 'Governance'];
 
@@ -3105,7 +3116,7 @@
 
         var counts = document.createElement('span');
         counts.className = 'counts';
-        counts.innerHTML = '<span class="e">● ' + l.endorse + '</span><span class="c">◆ ' + l.challenge + '</span>';
+        counts.innerHTML = '<span class="e">● ' + l.endorse + '</span><span class="c">◆ ' + l.marginalia + '</span>';
         foot.appendChild(counts);
 
         var fav = document.createElement('button');
