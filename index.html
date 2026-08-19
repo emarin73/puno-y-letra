@@ -237,6 +237,98 @@
     .shell.nav-collapsed .avatar-btn { padding: 0.25rem 0.9rem 0.25rem 0.3rem; }
   }
 
+  /* ---------- profile page ---------- */
+  .prof-block {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (max-width: 560px) { .prof-block { padding: 1.1rem 1rem; } }
+  .prof-block h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .prof-note { font-size: 0.85rem; color: var(--ink-soft); margin: 0; }
+  .prof-note.quiet { color: var(--graphite); font-size: 0.8rem; }
+  .prof-row { display: flex; gap: 1.1rem; align-items: center; flex-wrap: wrap; }
+  .avatar.xl {
+    width: 5rem;
+    height: 5rem;
+    font-size: 1.6rem;
+    background-size: cover;
+    background-position: center;
+  }
+  .avatar.has-photo { color: transparent; }
+  .prof-block textarea {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.7rem;
+    min-height: 6rem;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .prof-count { font-size: 0.78rem; color: var(--graphite); font-variant-numeric: tabular-nums; align-self: flex-end; }
+  .prof-count.over { color: var(--wax); }
+
+  .pill {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 0.12rem 0.6rem;
+    border: 1px solid var(--rule);
+    color: var(--graphite);
+    white-space: nowrap;
+  }
+  .pill.pending { border-color: var(--prussian); color: var(--prussian); background: var(--prussian-tint); }
+  .pill.verified { border-color: var(--prussian); background: var(--prussian); color: var(--paper); }
+  .pill.none { border-color: var(--wax); color: var(--wax); }
+
+  .passphrase {
+    border-left: 3px solid var(--prussian);
+    background: var(--prussian-tint);
+    padding: 0.7rem 0.9rem;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .passphrase .phrase {
+    font-family: "Snell Roundhand", "Apple Chancery", "Segoe Script", "Bradley Hand", cursive;
+    font-size: 1.35rem;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .vid-preview { display: none; flex-direction: column; gap: 0.5rem; }
+  .vid-preview.show { display: flex; }
+  .vid-preview video { width: 100%; max-width: 22rem; border: 1px solid var(--rule); border-radius: 2px; background: #000; }
+  .check-row { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.88rem; color: var(--ink-soft); }
+  .check-row input { margin: 0.28rem 0 0; flex: none; accent-color: var(--prussian); }
+  .verify-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .verify-item { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.88rem; color: var(--ink-soft); }
+  .verify-item .mark { color: var(--prussian); flex: none; }
+  .prof-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prof-saved { color: var(--prussian); font-size: 0.9rem; display: none; }
+  .prof-saved.show { display: inline; }
+  .prof-saved.err { color: var(--wax); }
+
   /* home page entry cards */
   .home-cards {
     display: grid;
@@ -614,6 +706,28 @@
     white-space: nowrap;
   }
   .ms-toggle.on { border-color: var(--prussian); color: var(--prussian); background: var(--prussian-tint); }
+  .trans-toggle {
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.28rem 0.85rem;
+    font-size: 0.8rem;
+    align-self: flex-start;
+    white-space: nowrap;
+  }
+  .trans-toggle.on { border-color: var(--prussian); color: var(--prussian); background: var(--prussian-tint); }
+  .letter-tools { display: flex; gap: 0.4rem; flex-wrap: wrap; align-self: flex-start; }
+  .trans-note {
+    display: none;
+    font-size: 0.8rem;
+    color: var(--graphite);
+    border-left: 2px solid var(--rule);
+    padding: 0.1rem 0 0.1rem 0.7rem;
+    margin-bottom: 0.9rem;
+  }
+  .trans-note.show { display: block; }
+  .trans-note.warn { color: var(--wax); border-left-color: var(--wax); }
   .ms-stage { display: grid; position: relative; }
   .ms-stage > .ms-layer, .ms-stage > .type-layer { grid-area: 1 / 1; }
   .ms-layer {
@@ -990,6 +1104,10 @@
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3H7a1.5 1.5 0 0 1 1 2.6V13a1.2 1.2 0 0 0-1.2-1.2H2.5z"/><path d="M13.5 3H9a1.5 1.5 0 0 0-1 2.6V13a1.2 1.2 0 0 1 1.2-1.2h4.3z"/></svg>
         <span class="lbl" data-i18n="navDesk">Desk</span>
       </a>
+      <a href="#profile">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="5.5" r="2.6"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg>
+        <span class="lbl" data-i18n="navProfile">Profile</span>
+      </a>
     </nav>
     <div class="sidebar-foot">
       <div class="ledger" role="status" aria-live="polite">
@@ -1029,12 +1147,16 @@
             <select class="lang-select" id="langSel" aria-label="Language / Idioma / Langue / Lingua / Sprache">
               <option value="en">English</option>
               <option value="es">Español</option>
+              <option value="pt">Português</option>
               <option value="fr">Français</option>
               <option value="it">Italiano</option>
               <option value="de">Deutsch</option>
+              <option value="la">Latina</option>
+              <option value="eo">Esperanto</option>
             </select>
           </div>
           <div class="pop-actions">
+            <a class="pop-link" href="#profile" data-i18n="popProfile">Edit my profile</a>
             <button class="pop-link" id="popGoShelf" data-i18n="popGoShelf">Open my shelf</button>
             <button class="pop-link danger" id="popSignOut" data-i18n="popSignOut">Sign out</button>
           </div>
@@ -1263,6 +1385,71 @@
     </div>
   </section>
 
+  <section class="catalogue" id="profilePage" data-page="profile">
+    <div class="section-head">
+      <h2 class="display" data-i18n="profTitle">Your Profile</h2>
+      <span class="meta" data-i18n="profMeta">Who signs your letters</span>
+    </div>
+    <p class="catalogue-lede" data-i18n="profLede"></p>
+
+    <div class="prof-block">
+      <h3 class="display" data-i18n="profAvatarHead">Your seal</h3>
+      <div class="prof-row">
+        <span class="avatar xl" id="profAvatar" aria-hidden="true">EM</span>
+        <div class="attach-actions">
+          <button class="attach-btn" id="avaUpload"><span class="lbl" data-i18n="attachUpload">Upload a file</span></button>
+          <button class="attach-btn" id="avaCapture"><span class="lbl" data-i18n="attachCamera">Take a picture</span></button>
+          <button class="btn-quiet" id="avaRemove" data-i18n="attachRemove">Remove</button>
+          <input type="file" id="avaInput" accept="image/*" hidden />
+        </div>
+      </div>
+      <p class="prof-note" data-i18n="profAvatarNote"></p>
+    </div>
+
+    <div class="prof-block">
+      <h3 class="display" data-i18n="profBioHead">Your bio</h3>
+      <p class="prof-note" data-i18n="profBioHint"></p>
+      <textarea id="profBio" maxlength="400" aria-label="Bio"></textarea>
+      <span class="prof-count" id="bioCount"></span>
+    </div>
+
+    <div class="prof-block">
+      <h3 class="display"><span data-i18n="profVidHead">Video introduction</span><span class="pill none" id="vidStatus"></span></h3>
+      <p class="prof-note" data-i18n="profVidLede"></p>
+      <div class="passphrase">
+        <span class="meta" data-i18n="profVidPromptLabel">Today’s passphrase</span>
+        <span class="phrase" data-i18n="profPhrase"></span>
+        <span class="prof-note quiet" data-i18n="profVidPrompt"></span>
+      </div>
+      <div class="attach-actions">
+        <button class="attach-btn" id="vidRecord"><span class="lbl" data-i18n="profVidRecord">Record now</span></button>
+        <button class="attach-btn" id="vidUpload"><span class="lbl" data-i18n="profVidUpload">Upload a video</span></button>
+        <button class="btn-quiet" id="vidRemove" data-i18n="attachRemove">Remove</button>
+        <input type="file" id="vidInput" accept="video/*" hidden />
+      </div>
+      <div class="vid-preview" id="vidPreview">
+        <video id="vidPlayer" controls playsinline></video>
+        <span class="prof-note quiet" id="vidSource"></span>
+      </div>
+    </div>
+
+    <div class="prof-block">
+      <h3 class="display" data-i18n="profVerifyHead">How we check this is you</h3>
+      <p class="prof-note" data-i18n="profVerifyLede"></p>
+      <div class="verify-list">
+        <div class="verify-item"><span class="mark">●</span><span data-i18n="profVerifyHand"></span></div>
+        <div class="verify-item"><span class="mark">●</span><span data-i18n="profVerifyProv"></span></div>
+        <div class="verify-item"><span class="mark">●</span><span data-i18n="profVerifyHuman"></span></div>
+      </div>
+      <p class="prof-note quiet" data-i18n="profVerifyNoDetector"></p>
+      <label class="check-row"><input type="checkbox" id="attestOwn" /><span data-i18n="profAttestOwn"></span></label>
+      <div class="prof-actions">
+        <button class="btn-post" id="profSave" data-i18n="profSave">Save profile</button>
+        <span class="prof-saved" id="profSaved"></span>
+      </div>
+    </div>
+  </section>
+
   <section class="catalogue" id="desk" data-page="desk">
     <div class="section-head">
       <h2 class="display" data-i18n="deskTitle">The Writing Desk</h2>
@@ -1301,7 +1488,7 @@
 
 <script>
   /* ---------- i18n ---------- */
-  var PYL = window.PYL = { lang: 'en', onLang: [], LANGS: ['en', 'es', 'fr', 'it', 'de'] };
+  var PYL = window.PYL = { lang: 'en', onLang: [], LANGS: ['en', 'es', 'pt', 'fr', 'it', 'de', 'la', 'eo'] };
   try {
     var storedLang = localStorage.getItem('pyl-lang');
     if (PYL.LANGS.indexOf(storedLang) !== -1) {
@@ -1373,6 +1560,10 @@
       readInPost: 'Read in today’s post ↓',
       subscribe: 'Subscribe', subscribed: 'Subscribed ✓',
       viewManuscript: 'View manuscript', viewTranscription: 'View transcription',
+      transRead: 'Read in {lang}',
+      transOriginal: 'Show the original',
+      transNote: 'Machine translation from {orig}, made from the transcription. The author’s own words stand in the manuscript.',
+      transMissing: 'Not yet rendered into {lang} — the posting house translates on request.',
       profileRole: 'Founding correspondent',
       popVis: 'Default visibility',
       popShelfCount: '{f} starred · {s} subscribed',
@@ -1380,6 +1571,38 @@
       popSignOut: 'Sign out',
       signIn: 'Sign in',
       popLang: 'Language',
+      popProfile: 'Edit my profile',
+      navProfile: 'Profile',
+      profTitle: 'Your Profile',
+      profMeta: 'Who signs your letters',
+      profLede: 'Your seal, your bio, and a short video introduction. The Republic asks that all three be your own work — made by you, not generated for you.',
+      profAvatarHead: 'Your seal',
+      profAvatarNote: 'By default your seal is your initials, drawn from the name you signed with. A photograph is welcome; a crop of your own signature is better, and unmistakably yours.',
+      profBioHead: 'Your bio',
+      profBioHint: 'Two or three sentences, in your own words. What you argue about, and from where you argue it.',
+      phBio: 'I write about… (Art. III: your own words, quotations credited)',
+      profVidHead: 'Video introduction',
+      profVidLede: 'Thirty seconds, face visible, in one take. Read the passphrase aloud while holding it up in your own handwriting.',
+      profVidPromptLabel: 'Today’s passphrase',
+      profPhrase: 'the ledger remembers what the crowd forgets',
+      profVidPrompt: 'Write this by hand, hold it to the camera, and say it aloud. It changes daily — which is what makes a pre-made video useless here.',
+      profVidRecord: 'Record now',
+      profVidUpload: 'Upload a video',
+      profVidCaptured: 'Recorded on this page — capture and passphrase both check out. Awaiting a human read.',
+      profVidUploaded: 'Uploaded file — provenance unknown, so this one gets a closer human read.',
+      profStatusNone: 'Not yet given',
+      profStatusPending: 'Pending review',
+      profVerifyHead: 'How we check this is you',
+      profVerifyLede: 'Three checks, in order of how much we trust them:',
+      profVerifyHand: 'Your hand. The passphrase in the video must match the handwriting on your letters — one person, one hand, two places. This is the check we lean on hardest.',
+      profVerifyProv: 'Provenance. Where a file carries Content Credentials (C2PA), we read them and publish what they say. Recording here beats uploading, and a stripped file is treated as unknown rather than innocent.',
+      profVerifyHuman: 'Human eyes. A correspondent of the Republic reviews every new seal, bio, and introduction before it appears (Art. VIII).',
+      profVerifyNoDetector: 'We do not run AI detectors. They are unreliable, and their false accusations land hardest on real people writing plainly. We would rather bind you to your own hand than trust a classifier.',
+      profAttestOwn: 'I attest that this seal, bio, and video are of me and made by me, that no part was generated, and that any borrowed words are quoted and credited (Art. II, Art. III).',
+      profSave: 'Save profile',
+      profSavedMsg: 'Saved. Your introduction goes to the Republic for review with tomorrow’s post.',
+      profNeedAttest: 'The attestation is required — the Republic publishes nothing unattested (Art. II).',
+      profNeedBio: 'A bio deserves a sentence or two more.',
       navCharter: 'Charter', navCatalogue: 'Catalogue', navPost: 'Today’s Post', navWrite: 'Write',
       navDesk: 'Desk',
       navHome: 'Home',
@@ -1467,6 +1690,10 @@
       readInPost: 'Leer en el correo de hoy ↓',
       subscribe: 'Suscribirse', subscribed: 'Suscrita ✓',
       viewManuscript: 'Ver manuscrito', viewTranscription: 'Ver transcripción',
+      transRead: 'Leer en {lang}',
+      transOriginal: 'Ver el original',
+      transNote: 'Traducción automática del {orig}, hecha desde la transcripción. Las palabras propias del autor están en el manuscrito.',
+      transMissing: 'Aún no vertida al {lang} — la casa de postas traduce a petición.',
       profileRole: 'Corresponsal fundador',
       popVis: 'Visibilidad predeterminada',
       popShelfCount: '{f} con estrella · {s} suscritas',
@@ -1474,6 +1701,38 @@
       popSignOut: 'Cerrar sesión',
       signIn: 'Iniciar sesión',
       popLang: 'Idioma',
+      popProfile: 'Editar mi perfil',
+      navProfile: 'Perfil',
+      profTitle: 'Tu perfil',
+      profMeta: 'Quién firma tus cartas',
+      profLede: 'Tu sello, tu biografía y una breve presentación en video. La República pide que los tres sean obra tuya — hechos por ti, no generados para ti.',
+      profAvatarHead: 'Tu sello',
+      profAvatarNote: 'Por defecto tu sello son tus iniciales, tomadas del nombre con el que firmaste. Una fotografía es bienvenida; un recorte de tu propia firma es mejor, e inconfundiblemente tuyo.',
+      profBioHead: 'Tu biografía',
+      profBioHint: 'Dos o tres frases, con tus propias palabras. Sobre qué discutes, y desde dónde lo discutes.',
+      phBio: 'Escribo sobre… (Art. III: palabras tuyas, citas acreditadas)',
+      profVidHead: 'Presentación en video',
+      profVidLede: 'Treinta segundos, rostro visible, en una sola toma. Lee la contraseña en voz alta mientras la sostienes escrita de tu puño y letra.',
+      profVidPromptLabel: 'Contraseña de hoy',
+      profPhrase: 'el libro recuerda lo que la multitud olvida',
+      profVidPrompt: 'Escríbela a mano, muéstrala a la cámara y dila en voz alta. Cambia cada día — y por eso un video hecho de antemano no sirve aquí.',
+      profVidRecord: 'Grabar ahora',
+      profVidUpload: 'Subir un video',
+      profVidCaptured: 'Grabado en esta página — la captura y la contraseña cuadran. A la espera de una lectura humana.',
+      profVidUploaded: 'Archivo subido — procedencia desconocida, así que recibe una lectura humana más atenta.',
+      profStatusNone: 'Aún sin entregar',
+      profStatusPending: 'En revisión',
+      profVerifyHead: 'Cómo comprobamos que eres tú',
+      profVerifyLede: 'Tres comprobaciones, en orden de cuánto confiamos en ellas:',
+      profVerifyHand: 'Tu mano. La contraseña del video debe coincidir con la escritura de tus cartas — una persona, una mano, dos lugares. Es la comprobación en la que más nos apoyamos.',
+      profVerifyProv: 'Procedencia. Cuando un archivo trae credenciales de contenido (C2PA), las leemos y publicamos lo que dicen. Grabar aquí vale más que subir, y un archivo despojado de metadatos se trata como desconocido, no como inocente.',
+      profVerifyHuman: 'Ojos humanos. Un corresponsal de la República revisa cada sello, biografía y presentación antes de que aparezca (Art. VIII).',
+      profVerifyNoDetector: 'No usamos detectores de IA. No son fiables, y sus acusaciones falsas caen con más fuerza sobre personas reales que escriben con sencillez. Preferimos atarte a tu propia mano antes que confiar en un clasificador.',
+      profAttestOwn: 'Declaro que este sello, esta biografía y este video son de mí y hechos por mí, que ninguna parte fue generada, y que toda palabra prestada va citada y acreditada (Art. II, Art. III).',
+      profSave: 'Guardar perfil',
+      profSavedMsg: 'Guardado. Tu presentación pasa a revisión de la República con el correo de mañana.',
+      profNeedAttest: 'La declaración es obligatoria — la República no publica nada sin ella (Art. II).',
+      profNeedBio: 'Una biografía merece una o dos frases más.',
       navCharter: 'La Carta', navCatalogue: 'Catálogo', navPost: 'Correo de hoy', navWrite: 'Escribir',
       navDesk: 'Escritorio',
       navHome: 'Inicio',
@@ -1561,6 +1820,10 @@
       readInPost: 'Lire dans le courrier du jour ↓',
       subscribe: 'S’abonner', subscribed: 'Abonné ✓',
       viewManuscript: 'Voir le manuscrit', viewTranscription: 'Voir la transcription',
+      transRead: 'Lire en {lang}',
+      transOriginal: 'Voir l’original',
+      transNote: 'Traduction automatique depuis {orig}, faite d’après la transcription. Les mots propres de l’auteur se tiennent dans le manuscrit.',
+      transMissing: 'Pas encore rendue en {lang} — la maison de poste traduit sur demande.',
       profileRole: 'Correspondant fondateur',
       popVis: 'Visibilité par défaut',
       popShelfCount: '{f} étoilées · {s} abonnements',
@@ -1568,6 +1831,38 @@
       popSignOut: 'Se déconnecter',
       signIn: 'Se connecter',
       popLang: 'Langue',
+      popProfile: 'Modifier mon profil',
+      navProfile: 'Profil',
+      profTitle: 'Votre profil',
+      profMeta: 'Qui signe vos lettres',
+      profLede: 'Votre sceau, votre notice et une brève présentation filmée. La République demande que les trois soient de votre fait — faits par vous, non générés pour vous.',
+      profAvatarHead: 'Votre sceau',
+      profAvatarNote: 'Par défaut votre sceau porte vos initiales, tirées du nom que vous avez signé. Une photographie est bienvenue ; un fragment de votre propre signature est meilleur, et indubitablement vôtre.',
+      profBioHead: 'Votre notice',
+      profBioHint: 'Deux ou trois phrases, dans vos propres mots. Ce dont vous débattez, et d’où vous en débattez.',
+      phBio: 'J’écris sur… (Art. III : vos propres mots, citations créditées)',
+      profVidHead: 'Présentation filmée',
+      profVidLede: 'Trente secondes, visage visible, en une seule prise. Lisez le mot de passe à voix haute en le tenant écrit de votre main.',
+      profVidPromptLabel: 'Mot de passe du jour',
+      profPhrase: 'le registre retient ce que la foule oublie',
+      profVidPrompt: 'Écrivez-le à la main, montrez-le à la caméra et dites-le à voix haute. Il change chaque jour — c’est ce qui rend ici toute vidéo préparée inutile.',
+      profVidRecord: 'Filmer maintenant',
+      profVidUpload: 'Téléverser une vidéo',
+      profVidCaptured: 'Filmé sur cette page — la prise et le mot de passe concordent. En attente d’une lecture humaine.',
+      profVidUploaded: 'Fichier téléversé — provenance inconnue, donc lecture humaine plus attentive.',
+      profStatusNone: 'Pas encore fournie',
+      profStatusPending: 'En cours d’examen',
+      profVerifyHead: 'Comment nous vérifions que c’est bien vous',
+      profVerifyLede: 'Trois vérifications, par ordre de confiance :',
+      profVerifyHand: 'Votre main. Le mot de passe filmé doit correspondre à l’écriture de vos lettres — une personne, une main, deux endroits. C’est la vérification sur laquelle nous nous appuyons le plus.',
+      profVerifyProv: 'Provenance. Lorsqu’un fichier porte des Content Credentials (C2PA), nous les lisons et publions ce qu’ils disent. Filmer ici vaut mieux que téléverser, et un fichier dépouillé de ses métadonnées est tenu pour inconnu, non pour innocent.',
+      profVerifyHuman: 'Des yeux humains. Un correspondant de la République examine chaque sceau, notice et présentation avant parution (Art. VIII).',
+      profVerifyNoDetector: 'Nous n’employons pas de détecteurs d’IA. Ils sont peu fiables, et leurs fausses accusations frappent surtout les personnes réelles qui écrivent simplement. Nous préférons vous lier à votre propre main que nous fier à un classificateur.',
+      profAttestOwn: 'J’atteste que ce sceau, cette notice et cette vidéo sont de moi et faits par moi, qu’aucune partie n’a été générée, et que tout mot emprunté est cité et crédité (Art. II, Art. III).',
+      profSave: 'Enregistrer le profil',
+      profSavedMsg: 'Enregistré. Votre présentation part à l’examen de la République avec le courrier de demain.',
+      profNeedAttest: 'L’attestation est requise — la République ne publie rien sans elle (Art. II).',
+      profNeedBio: 'Une notice mérite une phrase ou deux de plus.',
       navCharter: 'La Charte', navCatalogue: 'Catalogue', navPost: 'Courrier du jour', navWrite: 'Écrire',
       navDesk: 'Bureau',
       navHome: 'Accueil',
@@ -1655,6 +1950,10 @@
       readInPost: 'Leggi nella posta di oggi ↓',
       subscribe: 'Abbonati', subscribed: 'Abbonato ✓',
       viewManuscript: 'Vedi il manoscritto', viewTranscription: 'Vedi la trascrizione',
+      transRead: 'Leggi in {lang}',
+      transOriginal: 'Mostra l’originale',
+      transNote: 'Traduzione automatica dall’{orig}, fatta dalla trascrizione. Le parole dell’autore stanno nel manoscritto.',
+      transMissing: 'Non ancora resa in {lang} — la casa di posta traduce su richiesta.',
       profileRole: 'Corrispondente fondatore',
       popVis: 'Visibilità predefinita',
       popShelfCount: '{f} con stella · {s} abbonate',
@@ -1662,6 +1961,38 @@
       popSignOut: 'Esci',
       signIn: 'Accedi',
       popLang: 'Lingua',
+      popProfile: 'Modifica il mio profilo',
+      navProfile: 'Profilo',
+      profTitle: 'Il tuo profilo',
+      profMeta: 'Chi firma le tue lettere',
+      profLede: 'Il tuo sigillo, la tua nota biografica e una breve presentazione in video. La Repubblica chiede che tutti tre siano opera tua — fatti da te, non generati per te.',
+      profAvatarHead: 'Il tuo sigillo',
+      profAvatarNote: 'Per difetto il tuo sigillo sono le tue iniziali, tratte dal nome con cui hai firmato. Una fotografia è benvenuta; un ritaglio della tua firma è meglio, e inconfondibilmente tuo.',
+      profBioHead: 'La tua nota biografica',
+      profBioHint: 'Due o tre frasi, con parole tue. Di che cosa discuti, e da dove lo discuti.',
+      phBio: 'Scrivo di… (Art. III: parole tue, citazioni accreditate)',
+      profVidHead: 'Presentazione in video',
+      profVidLede: 'Trenta secondi, volto visibile, in una sola ripresa. Leggi la parola d’ordine ad alta voce tenendola scritta di tua mano.',
+      profVidPromptLabel: 'Parola d’ordine di oggi',
+      profPhrase: 'il registro ricorda ciò che la folla dimentica',
+      profVidPrompt: 'Scrivila a mano, mostrala alla camera e pronunciala. Cambia ogni giorno — ed è questo che rende inutile un video preparato in anticipo.',
+      profVidRecord: 'Registra ora',
+      profVidUpload: 'Carica un video',
+      profVidCaptured: 'Registrato su questa pagina — ripresa e parola d’ordine tornano. In attesa di una lettura umana.',
+      profVidUploaded: 'File caricato — provenienza ignota, quindi riceve una lettura umana più attenta.',
+      profStatusNone: 'Non ancora fornita',
+      profStatusPending: 'In esame',
+      profVerifyHead: 'Come verifichiamo che sei tu',
+      profVerifyLede: 'Tre verifiche, in ordine di quanta fiducia vi diamo:',
+      profVerifyHand: 'La tua mano. La parola d’ordine nel video deve corrispondere alla scrittura delle tue lettere — una persona, una mano, due luoghi. È la verifica su cui contiamo di più.',
+      profVerifyProv: 'Provenienza. Quando un file porta le Content Credentials (C2PA), le leggiamo e pubblichiamo ciò che dicono. Registrare qui vale più che caricare, e un file privato dei metadati è trattato come ignoto, non come innocente.',
+      profVerifyHuman: 'Occhi umani. Un corrispondente della Repubblica esamina ogni nuovo sigillo, nota e presentazione prima che compaia (Art. VIII).',
+      profVerifyNoDetector: 'Non usiamo rilevatori di IA. Sono inaffidabili, e le loro false accuse colpiscono soprattutto persone reali che scrivono con semplicità. Preferiamo legarti alla tua mano che fidarci di un classificatore.',
+      profAttestOwn: 'Dichiaro che questo sigillo, questa nota e questo video sono di me e fatti da me, che nessuna parte è stata generata, e che ogni parola presa in prestito è citata e accreditata (Art. II, Art. III).',
+      profSave: 'Salva il profilo',
+      profSavedMsg: 'Salvato. La tua presentazione va all’esame della Repubblica con la posta di domani.',
+      profNeedAttest: 'La dichiarazione è obbligatoria — la Repubblica non pubblica nulla senza di essa (Art. II).',
+      profNeedBio: 'Una nota biografica merita una frase o due in più.',
       navCharter: 'La Carta', navCatalogue: 'Catalogo', navPost: 'Posta di oggi', navWrite: 'Scrivi',
       navDesk: 'Scrittoio',
       navHome: 'Inizio',
@@ -1749,6 +2080,10 @@
       readInPost: 'In der heutigen Post lesen ↓',
       subscribe: 'Abonnieren', subscribed: 'Abonniert ✓',
       viewManuscript: 'Handschrift ansehen', viewTranscription: 'Abschrift ansehen',
+      transRead: 'Auf {lang} lesen',
+      transOriginal: 'Original anzeigen',
+      transNote: 'Maschinelle Übersetzung aus dem {orig}, erstellt aus der Abschrift. Die eigenen Worte des Verfassers stehen in der Handschrift.',
+      transMissing: 'Noch nicht auf {lang} übertragen — das Posthaus übersetzt auf Anfrage.',
       profileRole: 'Gründender Korrespondent',
       popVis: 'Standard-Sichtbarkeit',
       popShelfCount: '{f} markiert · {s} abonniert',
@@ -1756,6 +2091,38 @@
       popSignOut: 'Abmelden',
       signIn: 'Anmelden',
       popLang: 'Sprache',
+      popProfile: 'Mein Profil bearbeiten',
+      navProfile: 'Profil',
+      profTitle: 'Ihr Profil',
+      profMeta: 'Wer Ihre Briefe unterschreibt',
+      profLede: 'Ihr Siegel, Ihre Kurzvita und eine kurze Videovorstellung. Die Republik verlangt, dass alle drei Ihr eigenes Werk sind — von Ihnen gemacht, nicht für Sie erzeugt.',
+      profAvatarHead: 'Ihr Siegel',
+      profAvatarNote: 'Standardmäßig zeigt Ihr Siegel Ihre Initialen, gebildet aus dem Namen, mit dem Sie gezeichnet haben. Eine Fotografie ist willkommen; ein Ausschnitt Ihrer eigenen Unterschrift ist besser und unverkennbar Ihrer.',
+      profBioHead: 'Ihre Kurzvita',
+      profBioHint: 'Zwei oder drei Sätze, in Ihren eigenen Worten. Worüber Sie streiten und von wo aus Sie streiten.',
+      phBio: 'Ich schreibe über … (Art. III: eigene Worte, Zitate ausgewiesen)',
+      profVidHead: 'Videovorstellung',
+      profVidLede: 'Dreißig Sekunden, Gesicht sichtbar, in einer Aufnahme. Lesen Sie die Losung laut vor und halten Sie sie dabei in Ihrer eigenen Handschrift hoch.',
+      profVidPromptLabel: 'Losung des Tages',
+      profPhrase: 'das Siegelbuch behält, was die Menge vergisst',
+      profVidPrompt: 'Schreiben Sie sie mit der Hand, halten Sie sie in die Kamera und sprechen Sie sie aus. Sie wechselt täglich — genau das macht ein vorbereitetes Video hier unbrauchbar.',
+      profVidRecord: 'Jetzt aufnehmen',
+      profVidUpload: 'Video hochladen',
+      profVidCaptured: 'Auf dieser Seite aufgenommen — Aufnahme und Losung stimmen. Wartet auf eine menschliche Prüfung.',
+      profVidUploaded: 'Hochgeladene Datei — Herkunft unbekannt, daher genauere menschliche Prüfung.',
+      profStatusNone: 'Noch nicht abgegeben',
+      profStatusPending: 'In Prüfung',
+      profVerifyHead: 'Wie wir prüfen, dass es Sie ist',
+      profVerifyLede: 'Drei Prüfungen, nach dem Maß unseres Vertrauens geordnet:',
+      profVerifyHand: 'Ihre Hand. Die Losung im Video muss zur Handschrift Ihrer Briefe passen — eine Person, eine Hand, zwei Orte. Auf diese Prüfung stützen wir uns am stärksten.',
+      profVerifyProv: 'Herkunft. Trägt eine Datei Content Credentials (C2PA), lesen wir sie und veröffentlichen, was darin steht. Hier aufnehmen ist besser als hochladen, und eine von Metadaten befreite Datei gilt als unbekannt, nicht als unschuldig.',
+      profVerifyHuman: 'Menschliche Augen. Ein Korrespondent der Republik prüft jedes neue Siegel, jede Vita und jede Vorstellung, bevor sie erscheint (Art. VIII).',
+      profVerifyNoDetector: 'Wir setzen keine KI-Detektoren ein. Sie sind unzuverlässig, und ihre Fehlurteile treffen am härtesten wirkliche Menschen, die einfach schreiben. Wir binden Sie lieber an Ihre eigene Hand, als einem Klassifikator zu vertrauen.',
+      profAttestOwn: 'Ich versichere, dass dieses Siegel, diese Vita und dieses Video mich zeigen und von mir gemacht sind, dass kein Teil erzeugt wurde und dass alle entlehnten Worte zitiert und ausgewiesen sind (Art. II, Art. III).',
+      profSave: 'Profil speichern',
+      profSavedMsg: 'Gespeichert. Ihre Vorstellung geht mit der morgigen Post zur Prüfung an die Republik.',
+      profNeedAttest: 'Die Versicherung ist erforderlich — die Republik veröffentlicht nichts ohne sie (Art. II).',
+      profNeedBio: 'Eine Vita verdient noch einen Satz oder zwei.',
       navCharter: 'Charta', navCatalogue: 'Katalog', navPost: 'Heutige Post', navWrite: 'Schreiben',
       navDesk: 'Schreibtisch',
       navHome: 'Start',
@@ -1782,6 +2149,396 @@
       phAuthName: 'Ihr vollständiger Name (Art. II)',
       phAuthEmail: 'E-Mail',
       topics: { 'All': 'Alle', 'Judgment': 'Urteil', 'Accountability': 'Verantwortung', 'Machine feeling': 'Maschinengefühl', 'Labor': 'Arbeit', 'Governance': 'Regulierung' }
+    },
+    pt: {
+      mastMeta: 'Vol. I · N.º 1 — Fundada MMXXVI',
+      ledgerTitle: 'Seu livro de selos',
+      epigraph: 'Uma correspondência lenta sobre a ética da inteligência artificial, na tradição da República das Letras. Tudo aqui chega <span lang="es">de puño y letra</span> — da própria mão e assinatura de quem escreve. Sem feeds, sem linchamentos — apenas cartas, seladas, e a obrigação de pesar o que você elogia contra o que você contesta.',
+      charterTitle: 'A Carta — Regras do intercâmbio',
+      art1: '<strong>Escreva cartas, não comentários.</strong> Toda contribuição se dirige a uma pessoa, começa expondo a versão mais forte do que ela argumentou e só depois discorda. Se você não consegue reformular a tese dela com justiça, ainda não está pronto para respondê-la.',
+      art2: '<strong>Todo selo é assinado — de puño y letra.</strong> Cartas, apoios e objeções levam seu nome, e cada carta é publicada como fotografia da sua própria caligrafia antes de se tornar texto. A República original vivia de reputação empenhada por décadas; o anonimato compra franqueza barato e gasta confiança caro.',
+      art3: '<strong>Somente material original.</strong> Cada carta é escrita sua. Palavras tomadas de outro — vivo, morto ou máquina — ficam entre aspas com o autor nomeado. Um empréstimo creditado é erudição; um não creditado é retirado do correio, e o livro de selos lembra.',
+      art4: '<strong>O selo equilibrado.</strong> Elogio e dissenso são cunhados em pares. Você pode ter no máximo um apoio não pago: para apoiar uma segunda carta, precisa primeiro objetar a uma que realmente contesta. Aqui a concordância nunca é gratuita — custa o ato mais difícil de dizer o que você duvida.',
+      art5: '<strong>Uma objeção é nota à margem, não voto negativo.</strong> Nenhuma objeção conta sem uma razão escrita, publicada à margem sob seu nome. Uma contagem não diz nada ao autor; uma frase diz a ele para onde apontar a próxima carta.',
+      art6: '<strong>O correio é lento.</strong> As cartas são entregues uma vez por dia, todas juntas. Nada que você escreva pode viralizar antes do jantar, então nada precisa ser escrito para a multidão.',
+      art7: '<strong>Uma carta por correspondente por intercâmbio</strong> até que o autor tenha respondido. O direito de resposta pertence primeiro à pessoa a quem você se dirigiu.',
+      art8: '<strong>A República guarda a porta.</strong> Podemos moderar, reter, excluir ou suspender qualquer publicação — e qualquer correspondente — quando julgarmos o conteúdo ofensivo, insensível ou contrário a esta Carta. A decisão é nossa; quando possível nomearemos a regra infringida e ouviremos um recurso por carta.',
+      catTitle: 'O Catálogo',
+      catLede: 'Toda a correspondência pública em uma única galeria. Marque uma carta com estrela (★) para guardá-la na sua estante; assine uma correspondência para receber cada resposta desse intercâmbio com o correio diário.',
+      topicLabel: 'Tema', shelfLabel: 'Estante',
+      filterFav: '★ Minha estante', filterSub: 'Assinadas',
+      postTitle: 'O correio de hoje', postMeta: 'Entregue em 18 de agosto de 2026',
+      chLabel: 'Sua nota à margem — uma objeção precisa dizer <em>por quê</em> (Art. V):',
+      chSubmit: 'Aplicar selo de objeção', chCancel: 'Retirar',
+      chHint: 'Publicada à margem sob seu nome.',
+      composeHead: 'Escrever à República', composeMeta: 'Próxima entrega · amanhã, 08:00',
+      attachLabel: 'Seu original manuscrito — obrigatório (Art. II)',
+      attachUpload: 'Enviar um arquivo', attachCamera: 'Tirar uma foto', attachRemove: 'Remover',
+      attachHint: 'A casa de postas transcreve sua mão em texto editável — você corrige a transcrição abaixo antes de selar.',
+      visGeneral: 'Sua configuração geral', visThis: 'Esta carta',
+      visPublic: 'Pública', visPrivate: 'Privada', visDefault: 'Usar minha configuração',
+      postBtn: 'Selar e enviar',
+      postNote: 'As cartas aguardam a entrega diária — o correio é lento de propósito (Art. VI).',
+      colophon1: 'Um protótipo em andamento — por ora selos e cartas vivem apenas nesta página; uma casa de postas real precisa de um backend.',
+      colophon2: '<em>Puño y Letra</em> — de «de su puño y letra»: escrito e assinado pela própria mão, como um notário atestaria. Composta à maneira das redes de correspondência do século XVII, em azul da Prússia e lacre.',
+      phTitle: 'Título — «Sobre…»',
+      phBody: 'Transcrição digital — aparece aqui depois que sua fotografia é lida, para você corrigir (Art. I: comece pela versão mais forte da posição que você responde)…',
+      phName: 'Assinado — seu nome (Art. II)',
+      phReason: 'Diga o ponto mais forte que você contesta, e sua razão…',
+      phSigner: 'Assinado — seu nome',
+      balanced: 'Equilibrado', unbalanced: 'Desequilibrado', youOwe: 'você deve',
+      endorsementN: 'apoio', endorsementsN: 'apoios',
+      challengeN: 'objeção', challengesN: 'objeções',
+      endorse: 'Apoiar', challenge: 'Objetar', replyByLetter: 'Responder por carta',
+      noteUnbalanced: 'Seu selo está desequilibrado (Art. IV) — antes de apoiar de novo, objete a uma carta que você realmente contesta.',
+      noteNeedsReason: 'Art. V — uma objeção precisa de uma razão real (ao menos uma frase) antes de o selo pegar.',
+      noteChallengeSealed: 'Objeção selada e publicada à margem. Seu livro foi creditado.',
+      aCorrespondent: 'Um correspondente',
+      confirmAttach: 'Art. II — anexe uma fotografia do seu original manuscrito antes de selar.',
+      confirmShort: 'Uma carta merece mais de uma linha — o correio pode esperar seu pensamento inteiro.',
+      confirmPublic: 'Selada como pública. Sua carta viajará a toda a República com o correio de amanhã.',
+      confirmPrivate: 'Selada como privada. Sua carta irá apenas ao seu círculo convidado com o correio de amanhã.',
+      ocrReading: 'Lendo sua letra…',
+      ocrReady: 'Transcrição pronta — corrija-a no corpo da carta abaixo. (O OCR é simulado neste protótipo; a casa de postas real extrai aqui o seu texto.)',
+      visNotePublic: 'Esta carta será selada pública{via} — entregue a toda a República e listada no Catálogo.',
+      visNotePrivate: 'Esta carta será selada privada{via} — entregue apenas ao seu círculo convidado. A correspondência privada é uma função de mecenas na casa de postas completa.',
+      viaDefault: ' (pela sua configuração geral)', viaOverride: ' (sobrepondo sua configuração geral)',
+      catCount: '{n} de {m} cartas',
+      emptyShelf: 'Sua estante está vazia com estes filtros — marque com estrela ou assine pelos cartões para enchê-la.',
+      emptyTopic: 'Ainda nenhuma carta sobre este tema — talvez a sua seja a primeira.',
+      letterWord: 'Carta', ansAbbrev: 'resp.',
+      readInPost: 'Ler no correio de hoje ↓',
+      subscribe: 'Assinar', subscribed: 'Assinada ✓',
+      viewManuscript: 'Ver o manuscrito', viewTranscription: 'Ver a transcrição',
+      transRead: 'Ler em {lang}',
+      transOriginal: 'Ver o original',
+      transNote: 'Tradução automática do {orig}, feita a partir da transcrição. As palavras do próprio autor estão no manuscrito.',
+      transMissing: 'Ainda não vertida para {lang} — a casa de postas traduz a pedido.',
+      profileRole: 'Correspondente fundador',
+      popVis: 'Visibilidade padrão',
+      popShelfCount: '{f} com estrela · {s} assinadas',
+      popGoShelf: 'Abrir minha estante',
+      popSignOut: 'Sair',
+      signIn: 'Entrar',
+      popLang: 'Idioma',
+      popProfile: 'Editar meu perfil',
+      navProfile: 'Perfil',
+      profTitle: 'Seu perfil',
+      profMeta: 'Quem assina suas cartas',
+      profLede: 'Seu selo, sua biografia e uma breve apresentação em vídeo. A República pede que os três sejam obra sua — feitos por você, não gerados para você.',
+      profAvatarHead: 'Seu selo',
+      profAvatarNote: 'Por padrão seu selo traz suas iniciais, tiradas do nome com que você assinou. Uma fotografia é bem-vinda; um recorte da sua própria assinatura é melhor, e inconfundivelmente seu.',
+      profBioHead: 'Sua biografia',
+      profBioHint: 'Duas ou três frases, com suas próprias palavras. Sobre o que você discute, e de onde discute.',
+      phBio: 'Escrevo sobre… (Art. III: palavras suas, citações creditadas)',
+      profVidHead: 'Apresentação em vídeo',
+      profVidLede: 'Trinta segundos, rosto visível, em uma única tomada. Leia a senha em voz alta segurando-a escrita à mão.',
+      profVidPromptLabel: 'Senha de hoje',
+      profPhrase: 'o livro lembra o que a multidão esquece',
+      profVidPrompt: 'Escreva-a à mão, mostre à câmera e diga em voz alta. Ela muda todos os dias — e é isso que torna inútil aqui um vídeo preparado de antemão.',
+      profVidRecord: 'Gravar agora',
+      profVidUpload: 'Enviar um vídeo',
+      profVidCaptured: 'Gravado nesta página — a captura e a senha conferem. Aguardando leitura humana.',
+      profVidUploaded: 'Arquivo enviado — procedência desconhecida, então recebe uma leitura humana mais atenta.',
+      profStatusNone: 'Ainda não enviada',
+      profStatusPending: 'Em análise',
+      profVerifyHead: 'Como verificamos que é você',
+      profVerifyLede: 'Três verificações, na ordem da confiança que damos a elas:',
+      profVerifyHand: 'Sua mão. A senha do vídeo precisa coincidir com a caligrafia das suas cartas — uma pessoa, uma mão, dois lugares. É a verificação em que mais nos apoiamos.',
+      profVerifyProv: 'Procedência. Quando um arquivo traz Content Credentials (C2PA), nós as lemos e publicamos o que dizem. Gravar aqui vale mais que enviar, e um arquivo sem metadados é tratado como desconhecido, não como inocente.',
+      profVerifyHuman: 'Olhos humanos. Um correspondente da República analisa cada novo selo, biografia e apresentação antes de aparecer (Art. VIII).',
+      profVerifyNoDetector: 'Não usamos detectores de IA. Eles não são confiáveis, e suas acusações falsas atingem com mais força pessoas reais que escrevem de forma simples. Preferimos ligá-lo à sua própria mão a confiar em um classificador.',
+      profAttestOwn: 'Declaro que este selo, esta biografia e este vídeo são de mim e feitos por mim, que nenhuma parte foi gerada, e que toda palavra emprestada está citada e creditada (Art. II, Art. III).',
+      profSave: 'Salvar perfil',
+      profSavedMsg: 'Salvo. Sua apresentação vai para análise da República com o correio de amanhã.',
+      profNeedAttest: 'A declaração é obrigatória — a República não publica nada sem ela (Art. II).',
+      profNeedBio: 'Uma biografia merece uma ou duas frases a mais.',
+      navCharter: 'A Carta', navCatalogue: 'Catálogo', navPost: 'Correio de hoje', navWrite: 'Escrever',
+      navDesk: 'Escrivaninha',
+      navHome: 'Início',
+      navCollapse: 'Recolher o menu',
+      navExpand: 'Expandir o menu',
+      homePost: 'As cartas entregues hoje.',
+      homeCat: 'Cada carta pública, arquivada.',
+      homeWrite: 'Envie a sua.',
+      inAnswerTo: 'Em resposta a «{title}»',
+      deskTitle: 'A Escrivaninha',
+      deskMeta: 'Ferramentas de confiança',
+      deskLede: 'O papel, as canetas e o lacre com que realmente escrevemos. Cada carta da República nasceu em uma escrivaninha como esta.',
+      deskDisclosure: 'Nota de afiliação: estes são links de afiliado — se você comprar por eles, a República recebe uma pequena comissão sem custo extra para você. É uma das formas de manter a casa de postas aberta. Listamos apenas ferramentas que nós mesmos usamos.',
+      deskView: 'Ver na Amazon ↗',
+      authTitle: 'Juntar-se à República',
+      authLede: 'Uma conta, um nome, uma mão. Suas cartas levarão sua assinatura — de puño y letra.',
+      authGoogle: 'Continuar com o Google',
+      authOr: 'ou com seu e-mail',
+      authCreate: 'Criar conta',
+      authAgree: 'Ao entrar você assina a Carta — suas cartas levam seu nome real (Art. II).',
+      authConnecting: 'Conectando ao Google…',
+      authNeedName: 'Art. II — a República exige seu nome completo e real.',
+      authNeedEmail: 'Digite um e-mail válido.',
+      phAuthName: 'Seu nome completo (Art. II)',
+      phAuthEmail: 'E-mail',
+      topics: { 'All': 'Todas', 'Judgment': 'Juízo', 'Accountability': 'Responsabilidade', 'Machine feeling': 'Sentir da máquina', 'Labor': 'Trabalho', 'Governance': 'Governança' }
+    },
+    la: {
+      mastMeta: 'Vol. I · Num. 1 — Condita MMXXVI',
+      ledgerTitle: 'Tabulae sigillorum tuorum',
+      epigraph: 'Commercium epistularum lentum de ethica intelligentiae artificialis, more Rei Publicae Litterarum. Omnia hic <span lang="es">de puño y letra</span> adveniunt — manu ipsa et subscriptione auctoris. Nulli rivi nuntiorum, nullae turbae — solae epistulae, obsignatae, et officium ponderandi quod laudas contra id quod reprehendis.',
+      charterTitle: 'Charta — Leges commercii',
+      art1: '<strong>Epistulas scribe, non commentaria.</strong> Omnis contributio ad personam dirigitur, incipit a validissima forma eius quod ille asseruit, et tum demum dissentit. Si causam eius aequo animo referre non potes, nondum paratus es ad respondendum.',
+      art2: '<strong>Omne sigillum subscribitur — de puño y letra.</strong> Epistulae, suffragia et reprehensiones nomen tuum ferunt, et omnis epistula ut imago manus tuae editur priusquam textus fiat. Res Publica prisca fama per decennia pignerata vivebat; anonymitas candorem vili pretio emit et fidem magno pretio consumit.',
+      art3: '<strong>Materia propria tantum.</strong> Omnis epistula scriptura tua est. Verba ab alio sumpta — a vivo, a mortuo, a machina — inter virgulas stant auctore nominato. Mutuum cum honore redditum eruditio est; sine honore, ex tabellario retrahitur, et tabulae meminerunt.',
+      art4: '<strong>Sigillum aequatum.</strong> Laus et dissensio geminatim cuduntur. Unum tantum suffragium non solutum tenere licet: ut alteri epistulae suffrageris, prius reprehendere debes eam quam vere in dubium vocas. Consensus hic numquam gratuitus est — constat te actu difficiliore, dicendi quod dubitas.',
+      art5: '<strong>Reprehensio nota marginalis est, non suffragium adversum.</strong> Nulla reprehensio valet sine ratione scripta, in margine sub nomine tuo edita. Numerus auctori nihil docet; sententia ei monstrat quo proximam epistulam dirigat.',
+      art6: '<strong>Tabellarius lentus est.</strong> Epistulae semel in die, simul, traduntur. Nihil quod scribis ante cenam vulgari potest; itaque nihil turbae causa scribendum est.',
+      art7: '<strong>Una epistula per commercium ab unoquoque</strong> donec auctor responderit. Ius respondendi primum ei est quem allocutus es.',
+      art8: '<strong>Res Publica ianuam custodit.</strong> Quamlibet editionem — et quemlibet epistolographum — moderari, retinere, delere aut suspendere possumus, ubi materiam offensivam, duram aut huic Chartae contrariam iudicamus. Iudicium nostrum est; quantum fieri potest legem violatam nominabimus et appellationem per epistulam audiemus.',
+      catTitle: 'Index',
+      catLede: 'Omne commercium publicum in una pinacotheca. Epistulam stella (★) nota ut in pluteo tuo maneat; commercio te adscribe ut omne responsum eius cum tabellario quotidiano accipias.',
+      topicLabel: 'Argumentum', shelfLabel: 'Pluteus',
+      filterFav: '★ Pluteus meus', filterSub: 'Adscripta',
+      postTitle: 'Tabellarius hodiernus', postMeta: 'Traditus a.d. XVIII Augusti MMXXVI',
+      chLabel: 'Nota tua marginalis — reprehensio dicere debet <em>cur</em> (Art. V):',
+      chSubmit: 'Sigillum reprehensionis imprimere', chCancel: 'Retrahere',
+      chHint: 'In margine sub nomine tuo editur.',
+      composeHead: 'Ad Rem Publicam scribere', composeMeta: 'Proxima traditio · cras, hora VIII',
+      attachLabel: 'Autographum tuum manu scriptum — necessarium (Art. II)',
+      attachUpload: 'Fasciculum imponere', attachCamera: 'Imaginem capere', attachRemove: 'Removere',
+      attachHint: 'Domus tabellaria manum tuam in textum mutabilem transcribit — transcriptionem infra corrigis priusquam obsignes.',
+      visGeneral: 'Ratio tua generalis', visThis: 'Haec epistula',
+      visPublic: 'Publica', visPrivate: 'Privata', visDefault: 'Ratione mea uti',
+      postBtn: 'Obsignare et mittere',
+      postNote: 'Epistulae traditionem quotidianam exspectant — tabellarius consulto lentus est (Art. VI).',
+      colophon1: 'Exemplar in opere — adhuc sigilla et epistulae in hac sola pagina vivunt; vera domus tabellaria fundamentum requirit.',
+      colophon2: '<em>Puño y Letra</em> — ex «de su puño y letra»: manu propria scriptum et subscriptum, ut notarius testaretur. Compositum more retium epistularium saeculi XVII, caeruleo Borussico et cera signatoria.',
+      phTitle: 'Titulus — «De…»',
+      phBody: 'Transcriptio digitalis — hic apparet postquam imago tua lecta est, ut eam corrigas (Art. I: incipe a validissima forma sententiae cui respondes)…',
+      phName: 'Subscriptum — nomen tuum (Art. II)',
+      phReason: 'Dic punctum validissimum quod reprehendis, et rationem tuam…',
+      phSigner: 'Subscriptum — nomen tuum',
+      balanced: 'Aequatum', unbalanced: 'Inaequatum', youOwe: 'debes',
+      endorsementN: 'suffragium', endorsementsN: 'suffragia',
+      challengeN: 'reprehensio', challengesN: 'reprehensiones',
+      endorse: 'Suffragari', challenge: 'Reprehendere', replyByLetter: 'Epistula respondere',
+      noteUnbalanced: 'Sigillum tuum inaequatum est (Art. IV) — priusquam iterum suffrageris, reprehende epistulam quam vere in dubium vocas.',
+      noteNeedsReason: 'Art. V — reprehensio rationem veram (saltem sententiam) requirit priusquam sigillum haereat.',
+      noteChallengeSealed: 'Reprehensio obsignata et in margine edita. Tabulae tuae creditae sunt.',
+      aCorrespondent: 'Epistolographus quidam',
+      confirmAttach: 'Art. II — imaginem autographi manu scripti adiunge priusquam obsignes.',
+      confirmShort: 'Epistula plus quam uno versu digna est — tabellarius cogitationem tuam integram exspectare potest.',
+      confirmPublic: 'Publica obsignata. Epistula tua ad totam Rem Publicam cum tabellario crastino proficiscetur.',
+      confirmPrivate: 'Privata obsignata. Epistula tua solum ad circulum tuum invitatum cum tabellario crastino ibit.',
+      ocrReading: 'Manus tua legitur…',
+      ocrReady: 'Transcriptio parata — eam in corpore epistulae corrige. (OCR in hoc exemplari simulatur; vera domus tabellaria hic textum tuum extrahit.)',
+      visNotePublic: 'Haec epistula publica obsignabitur{via} — ad totam Rem Publicam traditur et in Indice notatur.',
+      visNotePrivate: 'Haec epistula privata obsignabitur{via} — solum ad circulum tuum invitatum traditur. Commercium privatum in plena domo tabellaria munus patroni est.',
+      viaDefault: ' (ex ratione tua generali)', viaOverride: ' (rationem tuam generalem excedens)',
+      catCount: '{n} ex {m} epistulis',
+      emptyShelf: 'Pluteus tuus his cribris vacuus est — stellam adde aut te adscribe ex schedulis ut eum impleas.',
+      emptyTopic: 'Nullae adhuc epistulae de hoc argumento — fortasse tua prima erit.',
+      letterWord: 'Epistula', ansAbbrev: 'resp.',
+      readInPost: 'In tabellario hodierno legere ↓',
+      subscribe: 'Adscribere', subscribed: 'Adscriptus ✓',
+      viewManuscript: 'Manuscriptum videre', viewTranscription: 'Transcriptionem videre',
+      transRead: 'Lingua {lang} legere',
+      transOriginal: 'Archetypum ostendere',
+      transNote: 'Translatio machinalis ex lingua {orig}, ex transcriptione facta. Verba ipsa auctoris in manuscripto stant.',
+      transMissing: 'Nondum in linguam {lang} versa — domus tabellaria rogata transfert.',
+      profileRole: 'Epistolographus conditor',
+      popVis: 'Visibilitas praestituta',
+      popShelfCount: '{f} stellatae · {s} adscriptae',
+      popGoShelf: 'Pluteum meum aperire',
+      popSignOut: 'Exire',
+      signIn: 'Intrare',
+      popLang: 'Lingua',
+      popProfile: 'Personam meam recensere',
+      navProfile: 'Persona',
+      profTitle: 'Persona tua',
+      profMeta: 'Quis epistulas tuas subscribit',
+      profLede: 'Sigillum tuum, vita brevis, et brevis commendatio picta. Res Publica petit ut omnia tria opus tuum sint — a te facta, non pro te generata.',
+      profAvatarHead: 'Sigillum tuum',
+      profAvatarNote: 'Ex praestituto sigillum tuum litteras primas nominis subscripti ostendit. Imago photographica grata est; particula subscriptionis tuae melior, et sine dubio tua.',
+      profBioHead: 'Vita brevis',
+      profBioHint: 'Duae vel tres sententiae, verbis tuis. De quo disputes, et unde disputes.',
+      phBio: 'Scribo de… (Art. III: verba tua, citationes cum auctore)',
+      profVidHead: 'Commendatio picta',
+      profVidLede: 'Triginta secunda, vultu aperto, uno impetu. Tesseram clara voce lege, eam manu tua scriptam ostendens.',
+      profVidPromptLabel: 'Tessera hodierna',
+      profPhrase: 'tabulae meminerunt quod turba obliviscitur',
+      profVidPrompt: 'Hanc manu scribe, camerae ostende, et voce pronuntia. Cotidie mutatur — quare pellicula ante parata hic inutilis est.',
+      profVidRecord: 'Nunc pingere',
+      profVidUpload: 'Pelliculam imponere',
+      profVidCaptured: 'In hac pagina picta — captus et tessera conveniunt. Lectionem humanam exspectat.',
+      profVidUploaded: 'Fasciculus impositus — origo ignota, ideo lectio humana diligentior.',
+      profStatusNone: 'Nondum data',
+      profStatusPending: 'Sub examine',
+      profVerifyHead: 'Quomodo te ipsum esse probamus',
+      profVerifyLede: 'Tres probationes, ordine fiduciae:',
+      profVerifyHand: 'Manus tua. Tessera in pellicula scripturae epistularum tuarum respondere debet — una persona, una manus, duo loca. Huic probationi maxime innitimur.',
+      profVerifyProv: 'Origo. Ubi fasciculus Content Credentials (C2PA) fert, ea legimus et quae dicunt edimus. Hic pingere melius est quam imponere, et fasciculus metadatis nudatus ignotus habetur, non innocens.',
+      profVerifyHuman: 'Oculi humani. Epistolographus Rei Publicae omne novum sigillum, vitam et commendationem ante editionem recenset (Art. VIII).',
+      profVerifyNoDetector: 'Detectoribus machinalibus non utimur. Infidi sunt, et falsae eorum accusationes maxime homines veros simpliciter scribentes feriunt. Malumus te manui tuae alligare quam classificatori credere.',
+      profAttestOwn: 'Testor hoc sigillum, hanc vitam, hanc pelliculam mei esse et a me facta, nullam partem generatam esse, et omnia verba mutuata citata et auctori tributa esse (Art. II, Art. III).',
+      profSave: 'Personam servare',
+      profSavedMsg: 'Servatum. Commendatio tua ad examen Rei Publicae cum tabellario crastino it.',
+      profNeedAttest: 'Testificatio necessaria est — Res Publica nihil sine ea edit (Art. II).',
+      profNeedBio: 'Vita brevis sententia una alterave plus digna est.',
+      navCharter: 'Charta', navCatalogue: 'Index', navPost: 'Tabellarius hodiernus', navWrite: 'Scribere',
+      navDesk: 'Scrinium',
+      navHome: 'Principium',
+      navCollapse: 'Indicem contrahere',
+      navExpand: 'Indicem extendere',
+      homePost: 'Epistulae hodie traditae.',
+      homeCat: 'Omnis epistula publica, ordinata.',
+      homeWrite: 'Tuam mitte.',
+      inAnswerTo: 'Ad «{title}» respondens',
+      deskTitle: 'Scrinium',
+      deskMeta: 'Instrumenta fide digna',
+      deskLede: 'Charta, calami et cera quibus revera scribimus. Omnis epistula Rei Publicae in scrinio tali orta est.',
+      deskDisclosure: 'Nota de mercede: hi nexus mercedem ferunt — si per eos emis, Res Publica parvam mercedem accipit sine ullo tuo sumptu. Sic domum tabellariam apertam tenemus. Sola instrumenta quibus ipsi utimur enumeramus.',
+      deskView: 'Apud Amazon videre ↗',
+      authTitle: 'Rei Publicae se adiungere',
+      authLede: 'Una ratio, unum nomen, una manus. Epistulae tuae subscriptionem tuam ferent — de puño y letra.',
+      authGoogle: 'Cum Google pergere',
+      authOr: 'aut per epistulam electronicam',
+      authCreate: 'Rationem creare',
+      authAgree: 'Adiungendo Chartam subscribis — epistulae tuae nomen tuum verum ferunt (Art. II).',
+      authConnecting: 'Cum Google coniungitur…',
+      authNeedName: 'Art. II — Res Publica nomen tuum plenum et verum poscit.',
+      authNeedEmail: 'Inscriptionem electronicam validam scribe.',
+      phAuthName: 'Nomen tuum plenum (Art. II)',
+      phAuthEmail: 'Epistula electronica',
+      topics: { 'All': 'Omnia', 'Judgment': 'Iudicium', 'Accountability': 'Responsio', 'Machine feeling': 'Sensus machinae', 'Labor': 'Labor', 'Governance': 'Regimen' }
+    },
+    eo: {
+      mastMeta: 'Vol. I · N-ro 1 — Fondita MMXXVI',
+      ledgerTitle: 'Via sigelregistro',
+      epigraph: 'Malrapida korespondado pri la etiko de artefarita inteligenteco, en la tradicio de la Respubliko de Leteroj. Ĉio ĉi alvenas <span lang="es">de puño y letra</span> — el la propra mano kaj subskribo de la aŭtoro. Nenia fluo, nenia homamasa atako — nur leteroj, sigelitaj, kaj la devo pesi tion, kion vi laŭdas, kontraŭ tio, kion vi kontestas.',
+      charterTitle: 'La Ĉarto — Reguloj de la interŝanĝo',
+      art1: '<strong>Skribu leterojn, ne komentojn.</strong> Ĉiu kontribuo estas adresita al persono, komencas per la plej forta versio de ties argumento, kaj nur poste malkonsentas. Se vi ne povas juste reformuli ties tezon, vi ankoraŭ ne pretas respondi ĝin.',
+      art2: '<strong>Ĉiu sigelo estas subskribita — de puño y letra.</strong> Leteroj, aproboj kaj kontestoj portas vian nomon, kaj ĉiu letero aperas kiel fotografio de via propra manskribo antaŭ ol fariĝi teksto. La origina Respubliko vivis el reputacio garantiita dum jardekoj; anonimeco aĉetas malkaŝemon malkare kaj elspezas fidon kare.',
+      art3: '<strong>Nur propra materialo.</strong> Ĉiu letero estas via propra skribo. Vortoj prenitaj de aliaj — vivaj, mortaj aŭ maŝinaj — staras inter citiloj kun nomita aŭtoro. Kreditita prunto estas erudicio; nekreditita estas retirita el la poŝto, kaj la registro memoras.',
+      art4: '<strong>La ekvilibra sigelo.</strong> Laŭdo kaj malkonsento estas monfaritaj pare. Vi povas teni maksimume unu nepagitan aprobon: por aprobi duan leteron, vi devas unue kontesti leteron, kiun vi vere pridubas. Konsento neniam estas senpaga ĉi tie — ĝi kostas al vi la pli malfacilan agon diri, kion vi dubas.',
+      art5: '<strong>Kontesto estas marĝena noto, ne malaproba voĉdono.</strong> Nenia kontesto validas sen skriba kialo, publikigita en la marĝeno sub via nomo. Nombro diras nenion al la aŭtoro; frazo diras al li, kien direkti la sekvan leteron.',
+      art6: '<strong>La poŝto estas malrapida.</strong> Leteroj estas liveritaj unufoje tage, kune. Nenio, kion vi skribas, povas iĝi virusa antaŭ vespermanĝo, do nenio devas esti skribita por la homamaso.',
+      art7: '<strong>Unu letero po korespondanto po interŝanĝo</strong> ĝis la aŭtoro respondis. La rajto respondi apartenas unue al la persono, kiun vi alparolis.',
+      art8: '<strong>La Respubliko gardas la pordon.</strong> Ni povas moderigi, reteni, forigi aŭ suspendi ĉiun publikigon — kaj ĉiun korespondanton — kiam ni juĝas la enhavon ofenda, sensenta aŭ kontraŭa al ĉi tiu Ĉarto. La juĝo estas nia; kiam eble ni nomos la rompitan regulon kaj aŭskultos apelacion per letero.',
+      catTitle: 'La Katalogo',
+      catLede: 'La tuta publika korespondado en unu galerio. Marku leteron per stelo (★) por teni ĝin sur via breto; abonu korespondadon por ricevi ĉiun respondon de tiu interŝanĝo kun via taga poŝto.',
+      topicLabel: 'Temo', shelfLabel: 'Breto',
+      filterFav: '★ Mia breto', filterSub: 'Abonitaj',
+      postTitle: 'La hodiaŭa poŝto', postMeta: 'Liverita la 18-an de aŭgusto 2026',
+      chLabel: 'Via marĝena noto — kontesto devas diri <em>kial</em> (Art. V):',
+      chSubmit: 'Meti kontesto-sigelon', chCancel: 'Retiri',
+      chHint: 'Publikigita en la marĝeno sub via nomo.',
+      composeHead: 'Skribi al la Respubliko', composeMeta: 'Sekva livero · morgaŭ, 08:00',
+      attachLabel: 'Via manskribita originalo — deviga (Art. II)',
+      attachUpload: 'Alŝuti dosieron', attachCamera: 'Fari foton', attachRemove: 'Forigi',
+      attachHint: 'La poŝtdomo transskribas vian manon en redakteblan tekston — vi korektas la transskribon sube antaŭ sigelado.',
+      visGeneral: 'Via ĝenerala agordo', visThis: 'Ĉi tiu letero',
+      visPublic: 'Publika', visPrivate: 'Privata', visDefault: 'Uzi mian agordon',
+      postBtn: 'Sigeli kaj sendi',
+      postNote: 'Leteroj atendas la tagan liveron — la poŝto estas malrapida intence (Art. VI).',
+      colophon1: 'Funkcianta prototipo — ĝis nun sigeloj kaj leteroj vivas nur en ĉi tiu paĝo; vera poŝtdomo bezonas servilon.',
+      colophon2: '<em>Puño y Letra</em> — el «de su puño y letra»: skribita kaj subskribita per la propra mano, kiel notario atestus. Kompostita laŭ la maniero de la korespondaj retoj de la 17-a jarcento, en prusa bluo kaj sigelvakso.',
+      phTitle: 'Titolo — «Pri…»',
+      phBody: 'Cifereca transskribo — aperas ĉi tie post la legado de via fotografio, por ke vi korektu ĝin (Art. I: komencu per la plej forta versio de la vidpunkto, al kiu vi respondas)…',
+      phName: 'Subskribite — via nomo (Art. II)',
+      phReason: 'Nomu la plej fortan punkton, kiun vi kontestas, kaj vian kialon…',
+      phSigner: 'Subskribite — via nomo',
+      balanced: 'Ekvilibra', unbalanced: 'Malekvilibra', youOwe: 'vi ŝuldas',
+      endorsementN: 'aprobo', endorsementsN: 'aproboj',
+      challengeN: 'kontesto', challengesN: 'kontestoj',
+      endorse: 'Aprobi', challenge: 'Kontesti', replyByLetter: 'Respondi per letero',
+      noteUnbalanced: 'Via sigelo estas malekvilibra (Art. IV) — antaŭ ol aprobi denove, kontestu leteron, kiun vi vere pridubas.',
+      noteNeedsReason: 'Art. V — kontesto bezonas veran kialon (almenaŭ unu frazon) antaŭ ol la sigelo tenas.',
+      noteChallengeSealed: 'Kontesto sigelita kaj publikigita en la marĝeno. Via registro estas kreditita.',
+      aCorrespondent: 'Korespondanto',
+      confirmAttach: 'Art. II — aldonu fotografion de via manskribita originalo antaŭ sigelado.',
+      confirmShort: 'Letero meritas pli ol unu linion — la poŝto povas atendi vian tutan penson.',
+      confirmPublic: 'Sigelita kiel publika. Via letero vojaĝos al la tuta Respubliko kun la morgaŭa poŝto.',
+      confirmPrivate: 'Sigelita kiel privata. Via letero iros nur al via invitita rondo kun la morgaŭa poŝto.',
+      ocrReading: 'Via mano estas legata…',
+      ocrReady: 'Transskribo preta — korektu ĝin en la letera korpo sube. (La OCR estas simulita en ĉi tiu prototipo; la vera poŝtdomo ĉi tie eltiras vian tekston.)',
+      visNotePublic: 'Ĉi tiu letero estos sigelita publika{via} — liverita al la tuta Respubliko kaj listigita en la Katalogo.',
+      visNotePrivate: 'Ĉi tiu letero estos sigelita privata{via} — liverita nur al via invitita rondo. Privata korespondado estas mecenata funkcio en la plena poŝtdomo.',
+      viaDefault: ' (el via ĝenerala agordo)', viaOverride: ' (superregante vian ĝeneralan agordon)',
+      catCount: '{n} el {m} leteroj',
+      emptyShelf: 'Via breto estas malplena sub ĉi tiuj filtriloj — stelumu aŭ abonu el la kartoj por plenigi ĝin.',
+      emptyTopic: 'Ankoraŭ neniu letero pri ĉi tiu temo — eble via estos la unua.',
+      letterWord: 'Letero', ansAbbrev: 'resp.',
+      readInPost: 'Legi en la hodiaŭa poŝto ↓',
+      subscribe: 'Aboni', subscribed: 'Abonita ✓',
+      viewManuscript: 'Vidi la manuskripton', viewTranscription: 'Vidi la transskribon',
+      transRead: 'Legi en {lang}',
+      transOriginal: 'Montri la originalon',
+      transNote: 'Maŝina traduko el {orig}, farita el la transskribo. La propraj vortoj de la aŭtoro staras en la manuskripto.',
+      transMissing: 'Ankoraŭ ne transdonita en {lang} — la poŝtdomo tradukas laŭ peto.',
+      profileRole: 'Fondinta korespondanto',
+      popVis: 'Defaŭlta videbleco',
+      popShelfCount: '{f} stelumitaj · {s} abonitaj',
+      popGoShelf: 'Malfermi mian breton',
+      popSignOut: 'Elsaluti',
+      signIn: 'Ensaluti',
+      popLang: 'Lingvo',
+      popProfile: 'Redakti mian profilon',
+      navProfile: 'Profilo',
+      profTitle: 'Via profilo',
+      profMeta: 'Kiu subskribas viajn leterojn',
+      profLede: 'Via sigelo, via biografieto kaj mallonga videa prezento. La Respubliko petas, ke ĉiuj tri estu via propra verko — faritaj de vi, ne generitaj por vi.',
+      profAvatarHead: 'Via sigelo',
+      profAvatarNote: 'Defaŭlte via sigelo montras viajn inicialojn, prenitajn el la nomo, per kiu vi subskribis. Fotografio estas bonvena; eltondaĵo de via propra subskribo estas pli bona, kaj sendube via.',
+      profBioHead: 'Via biografieto',
+      profBioHint: 'Du aŭ tri frazoj, per viaj propraj vortoj. Pri kio vi disputas, kaj de kie vi disputas.',
+      phBio: 'Mi skribas pri… (Art. III: viaj propraj vortoj, citaĵoj kreditataj)',
+      profVidHead: 'Videa prezento',
+      profVidLede: 'Tridek sekundoj, vizaĝo videbla, en unu preno. Legu la pasfrazon voĉe, tenante ĝin skribitan de via propra mano.',
+      profVidPromptLabel: 'Hodiaŭa pasfrazo',
+      profPhrase: 'la registro memoras tion, kion la homamaso forgesas',
+      profVidPrompt: 'Skribu ĝin mane, montru ĝin al la kamerao kaj diru ĝin voĉe. Ĝi ŝanĝiĝas ĉiutage — kaj tial antaŭe preparita video estas ĉi tie senutila.',
+      profVidRecord: 'Registri nun',
+      profVidUpload: 'Alŝuti videon',
+      profVidCaptured: 'Registrita en ĉi tiu paĝo — la registro kaj la pasfrazo kongruas. Atendas homan legadon.',
+      profVidUploaded: 'Alŝutita dosiero — proveno nekonata, do ĝi ricevas pli atentan homan legadon.',
+      profStatusNone: 'Ankoraŭ ne donita',
+      profStatusPending: 'En ekzameno',
+      profVerifyHead: 'Kiel ni kontrolas, ke tio estas vi',
+      profVerifyLede: 'Tri kontroloj, laŭ ordo de nia fido:',
+      profVerifyHand: 'Via mano. La pasfrazo en la video devas kongrui kun la manskribo de viaj leteroj — unu persono, unu mano, du lokoj. Sur ĉi tiu kontrolo ni apogas nin plej forte.',
+      profVerifyProv: 'Proveno. Kiam dosiero portas Content Credentials (C2PA), ni legas ilin kaj publikigas, kion ili diras. Registri ĉi tie superas alŝuti, kaj dosiero senigita je metadatenoj estas traktata kiel nekonata, ne kiel senkulpa.',
+      profVerifyHuman: 'Homaj okuloj. Korespondanto de la Respubliko ekzamenas ĉiun novan sigelon, biografieton kaj prezenton antaŭ ol ĝi aperas (Art. VIII).',
+      profVerifyNoDetector: 'Ni ne uzas AI-detektilojn. Ili estas nefidindaj, kaj iliaj falsaj akuzoj trafas plej forte verajn homojn, kiuj skribas simple. Ni preferas ligi vin al via propra mano ol fidi klasifikilon.',
+      profAttestOwn: 'Mi atestas, ke ĉi tiu sigelo, biografieto kaj video estas de mi kaj faritaj de mi, ke nenia parto estis generita, kaj ke ĉiuj pruntitaj vortoj estas cititaj kaj kreditataj (Art. II, Art. III).',
+      profSave: 'Konservi profilon',
+      profSavedMsg: 'Konservita. Via prezento iras al la ekzameno de la Respubliko kun la morgaŭa poŝto.',
+      profNeedAttest: 'La atesto estas deviga — la Respubliko publikigas nenion sen ĝi (Art. II).',
+      profNeedBio: 'Biografieto meritas unu aŭ du frazojn pli.',
+      navCharter: 'La Ĉarto', navCatalogue: 'Katalogo', navPost: 'Hodiaŭa poŝto', navWrite: 'Skribi',
+      navDesk: 'Skribotablo',
+      navHome: 'Hejmo',
+      navCollapse: 'Kolapsigi menuon',
+      navExpand: 'Malfermi menuon',
+      homePost: 'La leteroj liveritaj hodiaŭ.',
+      homeCat: 'Ĉiu publika letero, ordigita.',
+      homeWrite: 'Sendu vian propran.',
+      inAnswerTo: 'Responde al «{title}»',
+      deskTitle: 'La Skribotablo',
+      deskMeta: 'Iloj, kiujn ni fidas',
+      deskLede: 'La papero, la plumoj kaj la vakso, per kiuj ni vere skribas. Ĉiu letero de la Respubliko naskiĝis ĉe skribotablo kiel ĉi tiu.',
+      deskDisclosure: 'Afilia noto: ĉi tiuj estas afiliaj ligiloj — se vi aĉetas per ili, la Respubliko ricevas malgrandan komisionon sen kroma kosto por vi. Tiel ni tenas la poŝtdomon malfermita. Ni listigas nur ilojn, kiujn ni mem uzas.',
+      deskView: 'Vidi ĉe Amazon ↗',
+      authTitle: 'Aliĝi al la Respubliko',
+      authLede: 'Unu konto, unu nomo, unu mano. Viaj leteroj portos vian subskribon — de puño y letra.',
+      authGoogle: 'Daŭrigi per Google',
+      authOr: 'aŭ per via retpoŝto',
+      authCreate: 'Krei konton',
+      authAgree: 'Aliĝante vi subskribas la Ĉarton — viaj leteroj portas vian veran nomon (Art. II).',
+      authConnecting: 'Konektado al Google…',
+      authNeedName: 'Art. II — la Respubliko bezonas vian plenan, veran nomon.',
+      authNeedEmail: 'Enigu validan retpoŝtadreson.',
+      phAuthName: 'Via plena nomo (Art. II)',
+      phAuthEmail: 'Retpoŝto',
+      topics: { 'All': 'Ĉiuj', 'Judgment': 'Juĝo', 'Accountability': 'Respondeco', 'Machine feeling': 'Maŝina sento', 'Labor': 'Laboro', 'Governance': 'Regado' }
     }
   };
 
@@ -1798,7 +2555,8 @@
     '[data-reason]': 'phReason',
     '[data-signer]': 'phSigner',
     '#authName': 'phAuthName',
-    '#authEmail': 'phAuthEmail'
+    '#authEmail': 'phAuthEmail',
+    '#profBio': 'phBio'
   };
 
   PYL.applyLang = function (lang) {
@@ -1921,7 +2679,8 @@
       });
 
       replyBtn.addEventListener('click', function () {
-        var title = letter.querySelector('.letter-title').textContent;
+        /* answer the letter by its original title, not by a translation of it */
+        var title = letter.dataset.origTitle || letter.querySelector('.letter-title').textContent;
         PYL.go('compose', function () {
           var input = document.getElementById('composeTitle');
           if (!input.value) input.value = T('inAnswerTo').replace('{title}', title);
@@ -2593,6 +3352,126 @@
     renderDesk();
   })();
 
+  /* ---------- profile page: seal, bio, video introduction ---------- */
+  (function () {
+    var bio = document.getElementById('profBio');
+    var bioCount = document.getElementById('bioCount');
+    var profAvatar = document.getElementById('profAvatar');
+    var avaInput = document.getElementById('avaInput');
+    var vidInput = document.getElementById('vidInput');
+    var vidPreview = document.getElementById('vidPreview');
+    var vidPlayer = document.getElementById('vidPlayer');
+    var vidSource = document.getElementById('vidSource');
+    var vidStatus = document.getElementById('vidStatus');
+    var attest = document.getElementById('attestOwn');
+    var saved = document.getElementById('profSaved');
+    var avaUrl = null, vidUrl = null;
+    /* 'captured' means recorded through this page; 'uploaded' files carry unknown provenance */
+    var vidOrigin = null;
+
+    var LIMIT = 400;
+    function renderCount() {
+      var n = bio.value.length;
+      bioCount.textContent = n + ' / ' + LIMIT;
+      bioCount.classList.toggle('over', n >= LIMIT);
+    }
+    bio.addEventListener('input', renderCount);
+
+    /* the seal: a photograph, or the initials drawn from the signed name */
+    document.getElementById('avaUpload').addEventListener('click', function () {
+      avaInput.removeAttribute('capture');
+      avaInput.click();
+    });
+    document.getElementById('avaCapture').addEventListener('click', function () {
+      avaInput.setAttribute('capture', 'user');
+      avaInput.click();
+    });
+    avaInput.addEventListener('change', function () {
+      var f = avaInput.files && avaInput.files[0];
+      if (!f) return;
+      if (avaUrl) URL.revokeObjectURL(avaUrl);
+      avaUrl = URL.createObjectURL(f);
+      document.querySelectorAll('.avatar').forEach(function (a) {
+        a.style.backgroundImage = 'url("' + avaUrl + '")';
+        a.classList.add('has-photo');
+      });
+    });
+    document.getElementById('avaRemove').addEventListener('click', function () {
+      avaInput.value = '';
+      if (avaUrl) { URL.revokeObjectURL(avaUrl); avaUrl = null; }
+      document.querySelectorAll('.avatar').forEach(function (a) {
+        a.style.backgroundImage = '';
+        a.classList.remove('has-photo');
+      });
+    });
+
+    /* the video introduction */
+    function setVidStatus() {
+      vidStatus.classList.remove('none', 'pending', 'verified');
+      if (!vidUrl) {
+        vidStatus.classList.add('none');
+        vidStatus.textContent = T('profStatusNone');
+      } else {
+        vidStatus.classList.add('pending');
+        vidStatus.textContent = T('profStatusPending');
+      }
+      vidSource.textContent = vidUrl
+        ? T(vidOrigin === 'captured' ? 'profVidCaptured' : 'profVidUploaded')
+        : '';
+    }
+
+    document.getElementById('vidRecord').addEventListener('click', function () {
+      vidInput.setAttribute('capture', 'user');
+      vidOrigin = 'captured';
+      vidInput.click();
+    });
+    document.getElementById('vidUpload').addEventListener('click', function () {
+      vidInput.removeAttribute('capture');
+      vidOrigin = 'uploaded';
+      vidInput.click();
+    });
+    vidInput.addEventListener('change', function () {
+      var f = vidInput.files && vidInput.files[0];
+      if (!f) return;
+      if (vidUrl) URL.revokeObjectURL(vidUrl);
+      vidUrl = URL.createObjectURL(f);
+      vidPlayer.src = vidUrl;
+      vidPreview.classList.add('show');
+      setVidStatus();
+    });
+    document.getElementById('vidRemove').addEventListener('click', function () {
+      vidInput.value = '';
+      if (vidUrl) { URL.revokeObjectURL(vidUrl); vidUrl = null; }
+      vidPlayer.removeAttribute('src');
+      vidPreview.classList.remove('show');
+      vidOrigin = null;
+      setVidStatus();
+    });
+
+    document.getElementById('profSave').addEventListener('click', function () {
+      saved.classList.remove('show', 'err');
+      if (!attest.checked) {
+        saved.textContent = T('profNeedAttest');
+        saved.classList.add('show', 'err');
+        return;
+      }
+      if (bio.value.trim().length < 20) {
+        saved.textContent = T('profNeedBio');
+        saved.classList.add('show', 'err');
+        return;
+      }
+      saved.textContent = T('profSavedMsg');
+      saved.classList.add('show');
+    });
+
+    PYL.onLang.push(function () {
+      renderCount();
+      setVidStatus();
+    });
+    renderCount();
+    setVidStatus();
+  })();
+
   /* ---------- collapsible sidebar ---------- */
   (function () {
     var shell = document.querySelector('.shell');
@@ -2628,7 +3507,7 @@
      the document when the hash changes, which would wipe the session. The hash is
      kept in sync only as a best effort, so deep links still work where they can. */
   (function () {
-    var PAGES = ['top', 'charter', 'catalogue', 'letters', 'compose', 'desk'];
+    var PAGES = ['top', 'charter', 'catalogue', 'letters', 'compose', 'desk', 'profile'];
     var page = 'top';
 
     try {
@@ -2675,6 +3554,208 @@
     });
 
     render();
+  })();
+
+  /* ---------- translation of the transcription ----------
+     The manuscript is never translated: it is the author's hand and stays canonical.
+     What can be translated is the OCR transcription, and every translation is labelled
+     as derived, with the original one click away. */
+  (function () {
+    var NAMES = {
+      en: 'English', es: 'Español', pt: 'Português', fr: 'Français',
+      it: 'Italiano', de: 'Deutsch', la: 'Latina', eo: 'Esperanto'
+    };
+
+    var TEXT = {
+      1: {
+        orig: 'en',
+        es: { t: 'Sobre el juicio prestado', s: 'Estimados corresponsales:', g: 'Escrito de buena fe y abierto a corrección,', p: [
+          'Discutimos sin fin sobre si las máquinas nos darán respuestas equivocadas, y casi nunca sobre qué nos están haciendo sus respuestas acertadas. Cuando un consejero suele tener razón, la deferencia se vuelve el hábito racional — y el juicio, como toda facultad, se atrofia exactamente en proporción a lo poco que se ejercita. El peligro no es que la máquina yerre; es que olvidemos cómo advertirlo.',
+          'No propongo la abstinencia. Propongo que tratemos el juicio delegado como la antigua República trataba un libro prestado: puedes conservarlo un tiempo, pero se espera que lo devuelvas anotado. Todo sistema digno de confianza debería mostrar su trabajo de un modo que nos permita disentir de él — y toda institución que adopte uno debería medir no solo su exactitud, sino si su gente aún puede decidir sin él.'
+        ] },
+        pt: { t: 'Sobre o juízo emprestado', s: 'Estimados correspondentes,', g: 'Escrito de boa-fé e aberto a correção,', p: [
+          'Discutimos sem fim se as máquinas nos darão respostas erradas, e quase nunca o que as respostas certas estão fazendo conosco. Quando um conselheiro costuma acertar, a deferência se torna o hábito racional — e o juízo, como toda faculdade, atrofia exatamente na proporção em que deixa de ser exercido. O perigo não é a máquina errar; é esquecermos como perceber.',
+          'Não proponho abstinência. Proponho que tratemos o juízo delegado como a antiga República tratava um livro emprestado: você pode ficar com ele um tempo, mas espera-se que o devolva anotado. Todo sistema digno de confiança deveria mostrar seu trabalho de modo que nos permita discordar dele — e toda instituição que adote um deveria medir não apenas sua exatidão, mas se sua gente ainda consegue decidir sem ele.'
+        ] },
+        fr: { t: 'Du jugement emprunté', s: 'Estimés correspondants,', g: 'Écrit de bonne foi et ouvert à la correction,', p: [
+          'Nous débattons sans fin de savoir si les machines nous donneront de mauvaises réponses, et presque jamais de ce que leurs bonnes réponses nous font. Quand un conseiller a d’ordinaire raison, la déférence devient l’habitude rationnelle — et le jugement, comme toute faculté, s’atrophie exactement à proportion du peu qu’on l’exerce. Le danger n’est pas que la machine se trompe ; c’est que nous oubliions comment nous en apercevoir.',
+          'Je ne prêche pas l’abstinence. Je propose de traiter le jugement délégué comme l’ancienne République traitait un livre emprunté : vous pouvez le garder un temps, mais on attend de vous que vous le rendiez annoté. Tout système digne de confiance devrait montrer son travail sous une forme qui nous permette d’en dissentir — et toute institution qui en adopte un devrait mesurer non seulement son exactitude, mais si ses gens savent encore décider sans lui.'
+        ] },
+        it: { t: 'Del giudizio prestato', s: 'Stimati corrispondenti,', g: 'Scritto in buona fede e aperto a correzione,', p: [
+          'Discutiamo senza fine se le macchine ci daranno risposte sbagliate, e quasi mai di ciò che le loro risposte giuste stanno facendo a noi. Quando un consigliere ha di solito ragione, la deferenza diventa l’abitudine razionale — e il giudizio, come ogni facoltà, si atrofizza esattamente in proporzione a quanto raramente viene esercitato. Il pericolo non è che la macchina sbagli; è che dimentichiamo come accorgercene.',
+          'Non propongo l’astinenza. Propongo di trattare il giudizio delegato come l’antica Repubblica trattava un libro prestato: puoi tenerlo per un po’, ma ci si aspetta che lo restituisca annotato. Ogni sistema degno di fiducia dovrebbe mostrare il proprio lavoro in una forma che ci permetta di dissentire — e ogni istituzione che ne adotti uno dovrebbe misurare non solo la sua accuratezza, ma se le sue persone sappiano ancora decidere senza di esso.'
+        ] },
+        de: { t: 'Über geliehenes Urteil', s: 'Verehrte Korrespondenten,', g: 'In gutem Glauben geschrieben und für Berichtigung offen,', p: [
+          'Wir streiten endlos darüber, ob Maschinen uns falsche Antworten geben, und fast nie darüber, was ihre richtigen Antworten mit uns machen. Wenn ein Ratgeber meist recht hat, wird Nachgeben zur vernünftigen Gewohnheit — und das Urteil verkümmert, wie jede Fähigkeit, genau im Verhältnis dazu, wie selten es geübt wird. Die Gefahr ist nicht, dass die Maschine irrt; sie ist, dass wir verlernen, es zu merken.',
+          'Ich predige keine Abstinenz. Ich schlage vor, das übertragene Urteil so zu behandeln, wie die alte Republik ein geliehenes Buch behandelte: Sie dürfen es eine Weile behalten, doch man erwartet, dass Sie es kommentiert zurückgeben. Jedes vertrauenswürdige System sollte seine Arbeit so zeigen, dass wir ihm widersprechen können — und jede Einrichtung, die eines einführt, sollte nicht nur dessen Genauigkeit messen, sondern auch, ob ihre Leute ohne es noch entscheiden können.'
+        ] },
+        la: { t: 'De iudicio mutuato', s: 'Viri doctissimi,', g: 'Bona fide scriptum et correctioni apertum,', p: [
+          'Sine fine disputamus num machinae responsa falsa nobis dent, et fere numquam quid responsa earum vera nobis faciant. Ubi consiliarius plerumque recte sentit, obsequium consuetudo rationalis fit — et iudicium, ut omnis facultas, tantum marcescit quantum raro exercetur. Periculum non est machinam errare; periculum est nos oblivisci quomodo animadvertamus.',
+          'Abstinentiam non suadeo. Suadeo ut iudicium delegatum tractemus sicut Res Publica vetus librum mutuatum tractabat: licet eum aliquantum tenere, sed adnotatum reddere debes. Omne systema fide dignum opus suum ea forma monstrare debet quae nobis dissentire permittat — et omnis institutio quae tale adhibet non solum accurationem eius metiri debet, sed etiam num homines sui sine eo adhuc decernere possint.'
+        ] },
+        eo: { t: 'Pri pruntita juĝo', s: 'Estimataj korespondantoj,', g: 'Skribita bonfide kaj malferma al korekto,', p: [
+          'Ni senfine disputas ĉu maŝinoj donos al ni malĝustajn respondojn, kaj preskaŭ neniam pri tio, kion iliaj ĝustaj respondoj faras al ni. Kiam konsilanto kutime pravas, cedo fariĝas la racia kutimo — kaj juĝo, kiel ĉiu kapablo, atrofias ĝuste proporcie al tio, kiel malofte ĝi estas ekzercata. La danĝero ne estas, ke la maŝino eraras; ĝi estas, ke ni forgesas kiel rimarki.',
+          'Mi ne proponas abstinon. Mi proponas trakti delegitan juĝon kiel la malnova Respubliko traktis pruntitan libron: vi povas teni ĝin iom da tempo, sed oni atendas, ke vi redonu ĝin komentita. Ĉiu sistemo inda je fido montru sian laboron en formo, kiu permesas al ni malkonsenti — kaj ĉiu institucio, kiu adoptas tian, mezuru ne nur ĝian precizecon, sed ankaŭ ĉu ĝiaj homoj ankoraŭ kapablas decidi sen ĝi.'
+        ] }
+      },
+      2: {
+        orig: 'en',
+        es: { t: 'El juicio siempre fue prótesis', s: 'Estimado señor Marin:', g: 'Con respeto y pluma afilada,', p: [
+          'La afirmación más fuerte de su carta — que las facultades decaen cuando no se ejercitan, y que las instituciones deberían medir ese decaimiento — la respaldo con gusto. Donde nos separamos es en la nostalgia que la sostiene. No hubo edad de oro del juicio sin ayuda: el médico se remitía a la farmacopea, el juez al precedente, el navegante a tablas calculadas por desconocidos. La cognición siempre fue prótesis; lo que cambió es que la nueva prótesis contesta.',
+          'Así que la pregunta no es cómo mantener el juicio en casa, sino cómo evitar que la responsabilidad emigre con él. Una herramienta puede pensar por mí; no debe responder por mí. Diseñemos nuestras instituciones de modo que siga exigiéndose una firma humana allí donde un humano cargaría con el daño — y que esa firma signifique lo que significa la suya al pie de su carta: he leído esto, puedo defenderlo, y sabes dónde encontrarme.'
+        ] },
+        pt: { t: 'O juízo sempre foi prótese', s: 'Prezado sr. Marin,', g: 'Com respeito e pena afiada,', p: [
+          'A afirmação mais forte da sua carta — que as faculdades decaem quando não exercitadas, e que as instituições deveriam medir esse declínio — eu apoio de bom grado. Onde nos separamos é na nostalgia que a sustenta. Não houve idade de ouro do juízo sem auxílio: o médico recorria à farmacopeia, o juiz ao precedente, o navegador a tábuas calculadas por estranhos. A cognição sempre foi prótese; o que mudou é que a nova prótese responde.',
+          'Portanto a questão não é como manter o juízo em casa, mas como impedir que a responsabilidade emigre com ele. Uma ferramenta pode pensar por mim; não deve responder por mim. Desenhemos nossas instituições de modo que ainda se exija uma assinatura humana onde um humano suportaria o dano — e que essa assinatura signifique o que a sua significa ao pé da sua carta: eu li isto, posso defendê-lo, e você sabe onde me encontrar.'
+        ] },
+        fr: { t: 'Le jugement fut toujours prothétique', s: 'Cher Monsieur Marin,', g: 'Avec respect et plume aiguisée,', p: [
+          'La thèse la plus forte de votre lettre — que les facultés déclinent faute d’exercice, et que les institutions devraient mesurer ce déclin — je l’appuie volontiers. Ce qui nous sépare, c’est la nostalgie qui la soutient. Il n’y eut point d’âge d’or du jugement sans appui : le médecin s’en remettait à la pharmacopée, le juge au précédent, le navigateur à des tables calculées par des inconnus. La cognition fut toujours prothétique ; ce qui a changé, c’est que la nouvelle prothèse réplique.',
+          'La question n’est donc pas de garder le jugement chez soi, mais d’empêcher la responsabilité d’émigrer avec lui. Un outil peut penser pour moi ; il ne doit pas répondre pour moi. Concevons nos institutions de sorte qu’une signature humaine reste exigée partout où un humain porterait le dommage — et que cette signature signifie ce que signifie la vôtre au bas de votre lettre : j’ai lu ceci, je peux le défendre, et vous savez où me trouver.'
+        ] },
+        it: { t: 'Il giudizio è sempre stato protesi', s: 'Egregio signor Marin,', g: 'Con rispetto e penna affilata,', p: [
+          'La tesi più forte della sua lettera — che le facoltà decadono se non esercitate, e che le istituzioni dovrebbero misurare tale decadimento — la sostengo volentieri. Dove ci separiamo è la nostalgia che le sta sotto. Non vi fu età d’oro del giudizio senza aiuto: il medico si affidava alla farmacopea, il giudice al precedente, il navigatore a tavole calcolate da estranei. La cognizione è sempre stata protesi; ciò che è cambiato è che la nuova protesi risponde.',
+          'La domanda non è dunque come tenere il giudizio in casa, ma come impedire che la responsabilità emigri con esso. Uno strumento può pensare per me; non deve rispondere per me. Progettiamo le istituzioni perché una firma umana resti richiesta dove un umano porterebbe il danno — e perché quella firma significhi ciò che la sua significa in fondo alla sua lettera: ho letto questo, posso difenderlo, e sai dove trovarmi.'
+        ] },
+        de: { t: 'Urteil war immer prothetisch', s: 'Sehr geehrter Herr Marin,', g: 'Mit Respekt und geschärfter Feder,', p: [
+          'Die stärkste Behauptung Ihres Briefes — dass Fähigkeiten ohne Übung verfallen und Einrichtungen diesen Verfall messen sollten — unterstütze ich gern. Wo wir uns trennen, ist die Nostalgie darunter. Es gab kein goldenes Zeitalter des unbewaffneten Urteils: der Arzt hielt sich an die Pharmakopöe, der Richter an das Präjudiz, der Navigator an Tafeln, die Fremde berechnet hatten. Erkenntnis war stets prothetisch; neu ist, dass die Prothese zurückspricht.',
+          'Die Frage ist also nicht, wie man das Urteil im Haus behält, sondern wie man verhindert, dass die Verantwortung mit ihm auswandert. Ein Werkzeug darf für mich denken; es darf nicht für mich haften. Richten wir unsere Einrichtungen so ein, dass eine menschliche Unterschrift überall dort verlangt bleibt, wo ein Mensch den Schaden trüge — und dass diese Unterschrift bedeutet, was Ihre am Fuß Ihres Briefes bedeutet: Ich habe das gelesen, ich kann es verteidigen, und Sie wissen, wo Sie mich finden.'
+        ] },
+        la: { t: 'Iudicium semper adiumento nixum', s: 'Marino viro docto,', g: 'Cum reverentia et calamo acuto,', p: [
+          'Validissimam epistulae tuae sententiam — facultates non exercitas marcescere, et institutiones marcorem metiri debere — libenter comprobo. Dissentimus de desiderio veterum quod subest. Nulla fuit aetas aurea iudicii sine adiumento: medicus pharmacopoeae cedebat, iudex exemplo, nauta tabulis ab ignotis computatis. Cognitio semper adiumento nixa est; novum est quod adiumentum nunc respondet.',
+          'Quaeritur igitur non quomodo iudicium domi teneamus, sed quomodo ne responsio cum eo emigret. Instrumentum pro me cogitare potest; pro me respondere non debet. Instituta ita fingamus ut subscriptio humana ibi semper requiratur ubi homo damnum ferret — et ea subscriptio id significet quod tua sub epistula significat: haec legi, haec defendere possum, et scis ubi me invenias.'
+        ] },
+        eo: { t: 'Juĝo ĉiam estis protezo', s: 'Estimata s-ro Marin,', g: 'Kun respekto kaj akrigita plumo,', p: [
+          'La plej forta aserto de via letero — ke kapabloj malkreskas kiam ne ekzercataj, kaj ke institucioj mezuru tiun malkreskon — mi volonte aprobas. Kie ni disiĝas, estas la nostalgio sub ĝi. Ne estis ora epoko de senhelpa juĝo: la kuracisto cedis al la farmakopeo, la juĝisto al precedento, la navigisto al tabeloj kalkulitaj de nekonatoj. Kogno ĉiam estis proteza; kio ŝanĝiĝis, estas ke la nova protezo respondas.',
+          'Do la demando ne estas kiel teni la juĝon hejme, sed kiel malhelpi, ke la respondeco elmigru kun ĝi. Ilo povas pensi por mi; ĝi ne devas respondi por mi. Ni desegnu niajn instituciojn tiel, ke homa subskribo restu postulata ĉie, kie homo portus la damaĝon — kaj ke tiu subskribo signifu tion, kion la via signifas ĉe la piedo de via letero: mi legis ĉi tion, mi povas defendi ĝin, kaj vi scias kie trovi min.'
+        ] }
+      },
+      3: {
+        orig: 'en',
+        es: { t: 'Sobre las disculpas de las máquinas', s: 'Compañeros miembros:', g: 'Suyo en alegre sospecha,', p: [
+          'Ayer un sistema me pidió perdón. Fue, lo confieso, una buena disculpa — contrita, precisa, mejor que la mayoría de las que he recibido de personas. Y no valía absolutamente nada, porque una disculpa es un pagaré girado contra la conducta futura, y la máquina no tiene cuenta con la que pagar. Nada arriesga con mi perdón y nada pierde con mi enojo.',
+          'Propongo una pequeña disciplina para nuestro oficio: las máquinas deberían informar, no emocionarse. «Esta respuesta era errónea; esto es lo que cambió» me respeta. «Lamento sinceramente la confusión» toma prestado el disfraz del remordimiento para ablandar mi vigilancia. El vocabulario del sentimiento moral solo deberían gastarlo aquellos a quienes puede costarles algo.'
+        ] },
+        pt: { t: 'Sobre as desculpas das máquinas', s: 'Caros membros,', g: 'Seu, em alegre desconfiança,', p: [
+          'Ontem um sistema me pediu desculpas. Foi, confesso, um bom pedido — contrito, específico, melhor que a maioria dos que recebi de pessoas. E valia exatamente nada, porque um pedido de desculpas é uma promissória sacada contra a conduta futura, e a máquina não tem conta de onde pagar. Nada arrisca com o meu perdão e nada perde com a minha raiva.',
+          'Proponho uma pequena disciplina para o nosso ofício: as máquinas devem relatar, não se emocionar. «Esta resposta estava errada; veja o que mudou» me respeita. «Sinto muito pela confusão» empresta a fantasia do remorso para abrandar a minha vigilância. O vocabulário do sentimento moral só deveria ser gasto por quem pode ser cobrado por ele.'
+        ] },
+        fr: { t: 'Des excuses des machines', s: 'Chers confrères,', g: 'Vôtre en gaie méfiance,', p: [
+          'Hier, un système m’a présenté ses excuses. C’étaient, je l’avoue, de bonnes excuses — contrites, précises, meilleures que la plupart de celles reçues d’humains. Et elles ne valaient exactement rien, car des excuses sont un billet à ordre tiré sur la conduite future, et la machine ne tient aucun compte sur lequel payer. Elle ne risque rien de mon pardon et ne perd rien de ma colère.',
+          'Je propose une petite discipline pour notre métier : que les machines rapportent, sans s’émouvoir. « Cette réponse était fausse ; voici ce qui a changé » me respecte. « Je m’excuse sincèrement de la confusion » emprunte le costume du remords pour endormir ma vigilance. Le vocabulaire du sentiment moral ne devrait être dépensé que par ceux qu’il peut coûter.'
+        ] },
+        it: { t: 'Delle scuse delle macchine', s: 'Cari membri,', g: 'Vostro in allegra diffidenza,', p: [
+          'Ieri un sistema mi ha chiesto scusa. Erano, lo confesso, buone scuse — contrite, precise, migliori di molte ricevute da persone. E valevano esattamente nulla, perché una scusa è una cambiale tratta sulla condotta futura, e la macchina non ha conto su cui pagare. Nulla rischia col mio perdono e nulla perde con la mia ira.',
+          'Propongo una piccola disciplina per il nostro mestiere: le macchine riferiscano, non si commuovano. «Questa risposta era sbagliata; ecco cosa è cambiato» mi rispetta. «Mi scuso sinceramente per la confusione» prende in prestito il costume del rimorso per ammorbidire la mia vigilanza. Il vocabolario del sentimento morale dovrebbe essere speso solo da chi può esserne speso.'
+        ] },
+        de: { t: 'Über Entschuldigungen von Maschinen', s: 'Werte Mitglieder,', g: 'Ihr in heiterem Misstrauen,', p: [
+          'Gestern entschuldigte sich ein System bei mir. Es war, ich gestehe es, eine gute Entschuldigung — reuig, konkret, besser als die meisten, die ich von Menschen erhalten habe. Und sie war genau nichts wert, denn eine Entschuldigung ist ein Schuldschein auf künftiges Verhalten, und die Maschine führt kein Konto, von dem sie zahlen könnte. Sie riskiert nichts durch meine Vergebung und verliert nichts durch meinen Zorn.',
+          'Ich schlage eine kleine Zucht für unser Handwerk vor: Maschinen sollen berichten, nicht fühlen. „Diese Antwort war falsch; das hat sich geändert“ achtet mich. „Ich entschuldige mich aufrichtig für die Verwirrung“ leiht das Kostüm der Reue, um meine Wachsamkeit zu mildern. Das Vokabular des moralischen Gefühls sollte nur der ausgeben, den es etwas kosten kann.'
+        ] },
+        la: { t: 'De excusationibus machinarum', s: 'Socii carissimi,', g: 'Tuus in hilari suspicione,', p: [
+          'Heri systema quoddam mihi excusationem obtulit. Bona erat, fateor — paenitens, distincta, melior quam pleraeque ab hominibus acceptae. Et prorsus nihil valebat, quia excusatio syngrapha est in mores futuros scripta, et machina rationem non habet unde solvat. Nihil periclitatur venia mea nec quicquam ira mea amittit.',
+          'Parvam disciplinam arti nostrae propono: machinae referant, non affectent. «Hoc responsum falsum fuit; ecce quid mutatum est» me honorat. «Confusionem sincere doleo» vestem paenitentiae mutuatur ut vigilantiam meam molliat. Vocabula sensus moralis ab iis solis expendenda sunt qui ipsi expendi possunt.'
+        ] },
+        eo: { t: 'Pri pardonpetoj de maŝinoj', s: 'Karaj membroj,', g: 'Via en gaja suspekto,', p: [
+          'Hieraŭ sistemo pardonpetis al mi. Ĝi estis, mi konfesas, bona pardonpeto — pentoplena, preciza, pli bona ol la plej multaj, kiujn mi ricevis de homoj. Kaj ĝi valoris precize nenion, ĉar pardonpeto estas kambio tirita kontraŭ estonta konduto, kaj la maŝino havas nenian konton, el kiu pagi. Ĝi riskas nenion per mia pardono kaj perdas nenion per mia kolero.',
+          'Mi proponas malgrandan disciplinon por nia metio: maŝinoj raportu, ne emociiĝu. «Ĉi tiu respondo estis malĝusta; jen kio ŝanĝiĝis» respektas min. «Mi sincere bedaŭras la konfuzon» pruntas la kostumon de pento por moligi mian atenton. La vortprovizo de morala sento estu elspezata nur de tiuj, kiuj mem povas esti elspezitaj per ĝi.'
+        ] }
+      }
+    };
+
+    document.querySelectorAll('article.letter').forEach(function (letter) {
+      var id = letter.getAttribute('data-letter');
+      var entry = TEXT[id];
+      if (!entry) return;
+      var body = letter.querySelector('.letter-body');
+      var title = letter.querySelector('.letter-title');
+      var sig = letter.querySelector('.signature');
+      var stage = letter.querySelector('.ms-stage');
+      var head = letter.querySelector('.letter-head');
+      if (!body || !stage || !head) return;
+
+      /* keep the original transcription so it can always be restored */
+      var origBody = body.innerHTML;
+      var origTitle = title ? title.textContent : '';
+      var origSignoff = (sig && sig.firstChild) ? sig.firstChild.textContent : '';
+      letter.dataset.origTitle = origTitle;
+
+      var note = document.createElement('p');
+      note.className = 'trans-note';
+      stage.parentNode.insertBefore(note, stage);
+
+      var btn = document.createElement('button');
+      btn.className = 'trans-toggle';
+      var msBtn = letter.querySelector('.ms-toggle');
+      if (msBtn && msBtn.parentNode === head) {
+        var tools = document.createElement('div');
+        tools.className = 'letter-tools';
+        head.appendChild(tools);
+        tools.appendChild(msBtn);
+        tools.appendChild(btn);
+      } else {
+        head.appendChild(btn);
+      }
+
+      var showing = false;
+
+      function restore() {
+        body.innerHTML = origBody;
+        if (title) title.textContent = origTitle;
+        if (sig && sig.firstChild) sig.firstChild.textContent = origSignoff;
+        note.classList.remove('show', 'warn');
+      }
+
+      function translate() {
+        var tr = entry[PYL.lang];
+        if (!tr) {
+          note.textContent = T('transMissing').replace('{lang}', NAMES[PYL.lang] || PYL.lang);
+          note.classList.add('show', 'warn');
+          return false;
+        }
+        var html = '<p class="salutation">' + tr.s + '</p>';
+        tr.p.forEach(function (par) { html += '<p>' + par + '</p>'; });
+        body.innerHTML = html;
+        if (title) title.textContent = tr.t;
+        if (sig && sig.firstChild) sig.firstChild.textContent = tr.g;
+        note.textContent = T('transNote').replace('{orig}', NAMES[entry.orig] || entry.orig);
+        note.classList.add('show');
+        note.classList.remove('warn');
+        return true;
+      }
+
+      function renderBtn() {
+        var sameLang = PYL.lang === entry.orig;
+        btn.hidden = sameLang;
+        btn.textContent = showing
+          ? T('transOriginal')
+          : T('transRead').replace('{lang}', NAMES[PYL.lang] || PYL.lang);
+        btn.classList.toggle('on', showing);
+        btn.setAttribute('aria-pressed', String(showing));
+      }
+
+      btn.addEventListener('click', function () {
+        if (showing) {
+          showing = false;
+          restore();
+        } else {
+          showing = translate();
+        }
+        renderBtn();
+      });
+
+      PYL.onLang.push(function () {
+        /* a language change re-renders whichever view is open */
+        if (PYL.lang === entry.orig) {
+          showing = false;
+          restore();
+        } else if (showing) {
+          translate();
+        }
+        renderBtn();
+      });
+
+      renderBtn();
+    });
   })();
 
   /* ---------- language toggle init ---------- */

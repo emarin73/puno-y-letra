@@ -47,7 +47,32 @@ What works:
 - Compose sheet: handwritten-original upload (file picker + camera capture), simulated OCR,
   account-level default visibility with a per-letter override
 - Sign-up overlay with Google and email paths
-- Five languages (EN / ES / FR / IT / DE), auto-detected, switchable from the profile menu
+- Profile page: seal (initials or uploaded photo), bio, and a video introduction with a
+  daily passphrase, plus the human-verification panel and the originality attestation
+- **Eight languages** — English, Español, Português, Français, Italiano, Deutsch, Latina,
+  Esperanto — auto-detected, switchable from the profile menu. Latin is not a joke: the
+  original Republic of Letters corresponded in it.
+- **Letter translation.** The OCR transcription of every letter can be read in any supported
+  language. The manuscript is never translated — it is the author's hand and stays canonical —
+  and each translation carries a label naming it a machine translation of the transcription,
+  with the original one click away.
+
+### On proving a human made it
+
+There is no reliable detector for AI-generated text, images, or video, and false accusations
+fall hardest on real people. So the platform does not run detectors. It relies on, in order
+of how much weight they carry:
+
+1. **The hand.** The video introduction requires reading aloud a passphrase that changes daily
+   while holding it up in your own handwriting — which must match the handwriting on your
+   letters. One person, one hand, two places. A pre-made video cannot satisfy it.
+2. **Provenance.** Recording in-app is distinguished from uploading; where a file carries
+   C2PA Content Credentials they are read and published, and a file stripped of metadata is
+   treated as unknown rather than innocent.
+3. **Human review.** Every new seal, bio, and introduction is read by a person before it
+   appears (Art. VIII).
+
+Plus the attestation every correspondent signs at save time (Art. II, Art. III).
 
 What is **simulated** and needs a backend:
 
