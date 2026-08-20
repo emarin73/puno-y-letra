@@ -50,9 +50,11 @@ What works:
 - Sign-up overlay with Google and email paths
 - Profile page: seal (initials or uploaded photo), bio, and a video introduction with a
   daily passphrase, plus the human-verification panel and the originality attestation
-- **Eight languages** — English, Español, Português, Français, Italiano, Deutsch, Latin,
-  Esperanto — auto-detected, switchable from the profile menu. Latin is not a joke: the
-  original Republic of Letters corresponded in it.
+- **Nine languages** — English, Español, Português, Français, Italiano, Deutsch, Latin,
+  Esperanto, தமிழ் (Tamil) — auto-detected, switchable from the profile menu. Latin is not a
+  joke: the original Republic of Letters corresponded in it. Tamil is the first non-Latin
+  script here, so the font stacks carry Tamil faces (Tamil Sangam MN / Nirmala UI / Noto) and
+  `html[lang="ta"]` gets extra leading, since Tamil sets taller than Latin.
 - **Letter translation.** The OCR transcription of every letter can be read in any supported
   language. The manuscript is never translated — it is the author's hand and stays canonical —
   and each translation carries a label naming it a machine translation of the transcription,

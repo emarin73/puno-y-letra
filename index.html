@@ -53,17 +53,23 @@
 
   * { box-sizing: border-box; }
 
+  /* Tamil sets taller than Latin: give it room to breathe */
+  html[lang="ta"] body { line-height: 1.9; }
+  html[lang="ta"] .ms-layer { line-height: 2.2; }
+
   body {
     background: var(--paper);
     color: var(--ink);
-    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia,
+      "Tamil Sangam MN", "Nirmala UI", "Noto Serif Tamil", "Noto Sans Tamil", Latha, serif;
     font-size: 1.0625rem;
     line-height: 1.65;
     margin: 0;
   }
 
   .display {
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia,
+      "Tamil Sangam MN", "Nirmala UI", "Noto Serif Tamil", Latha, serif;
   }
   .meta {
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -1245,6 +1251,7 @@
               <option value="de">Deutsch</option>
               <option value="la">Latin</option>
               <option value="eo">Esperanto</option>
+              <option value="ta">தமிழ்</option>
             </select>
           </div>
           <div class="pop-actions">
@@ -1432,7 +1439,7 @@
         <div id="quoteList"></div>
       </div>
       <div class="attach-block">
-        <span class="meta" data-i18n="attamgLabel">Your handwritten original — required (Art. II)</span>
+        <span class="meta" data-i18n="attachLabel">Your handwritten original — required (Art. II)</span>
         <div class="attach-actions">
           <button class="attach-btn" id="attachUpload">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5"/><path d="M4.8 5.2 8 2l3.2 3.2"/><path d="M2 10.5v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2.5"/></svg>
@@ -1450,7 +1457,7 @@
           <button class="btn-quiet" id="attachRemove" data-i18n="attachRemove">Remove</button>
         </div>
         <p class="ocr-status" id="ocrStatus" role="status"></p>
-        <p class="attach-hint" data-i18n="attamgHint"></p>
+        <p class="attach-hint" data-i18n="attachHint"></p>
       </div>
       <input id="composeTitle" type="text" aria-label="Letter title" />
       <textarea id="composeBody" aria-label="Letter body / transcription"></textarea>
@@ -1598,7 +1605,7 @@
 
 <script>
   /* ---------- i18n ---------- */
-  var PYL = window.PYL = { lang: 'en', onLang: [], LANGS: ['en', 'es', 'pt', 'fr', 'it', 'de', 'la', 'eo'] };
+  var PYL = window.PYL = { lang: 'en', onLang: [], LANGS: ['en', 'es', 'pt', 'fr', 'it', 'de', 'la', 'eo', 'ta'] };
   try {
     var storedLang = localStorage.getItem('pyl-lang');
     if (PYL.LANGS.indexOf(storedLang) !== -1) {
@@ -1632,9 +1639,9 @@
       mgSubmit: 'Affix marginal seal', mgCancel: 'Withdraw',
       mgHint: 'Published in the margin under your name.',
       composeHead: 'Write to the Republic', composeMeta: 'Next delivery · tomorrow, 08:00',
-      attamgLabel: 'Your handwritten original — required (Art. II)',
+      attachLabel: 'Your handwritten original — required (Art. II)',
       attachUpload: 'Upload a file', attachCamera: 'Take a picture', attachRemove: 'Remove',
-      attamgHint: 'The posting house transcribes your hand to editable text — you correct the transcription below before sealing.',
+      attachHint: 'The posting house transcribes your hand to editable text — you correct the transcription below before sealing.',
       visGeneral: 'Your general setting', visThis: 'This letter',
       visPublic: 'Public', visPrivate: 'Private', visDefault: 'Use my default',
       postBtn: 'Seal &amp; post',
@@ -1777,9 +1784,9 @@
       mgSubmit: 'Estampar sello marginal', mgCancel: 'Retirar',
       mgHint: 'Se publica al margen bajo tu nombre.',
       composeHead: 'Escribe a la República', composeMeta: 'Próxima entrega · mañana, 08:00',
-      attamgLabel: 'Tu original manuscrito — obligatorio (Art. II)',
+      attachLabel: 'Tu original manuscrito — obligatorio (Art. II)',
       attachUpload: 'Subir un archivo', attachCamera: 'Tomar una foto', attachRemove: 'Quitar',
-      attamgHint: 'La casa de postas transcribe tu mano a texto editable — corriges la transcripción abajo antes de sellar.',
+      attachHint: 'La casa de postas transcribe tu mano a texto editable — corriges la transcripción abajo antes de sellar.',
       visGeneral: 'Tu configuración general', visThis: 'Esta carta',
       visPublic: 'Pública', visPrivate: 'Privada', visDefault: 'Usar mi configuración',
       postBtn: 'Sellar y enviar',
@@ -1922,9 +1929,9 @@
       mgSubmit: 'Apposer le sceau marginal', mgCancel: 'Retirer',
       mgHint: 'Publiée en marge sous votre nom.',
       composeHead: 'Écrire à la République', composeMeta: 'Prochaine distribution · demain, 08h00',
-      attamgLabel: 'Votre original manuscrit — requis (Art. II)',
+      attachLabel: 'Votre original manuscrit — requis (Art. II)',
       attachUpload: 'Téléverser un fichier', attachCamera: 'Prendre une photo', attachRemove: 'Retirer',
-      attamgHint: 'La maison de poste transcrit votre main en texte modifiable — vous corrigez la transcription ci-dessous avant de sceller.',
+      attachHint: 'La maison de poste transcrit votre main en texte modifiable — vous corrigez la transcription ci-dessous avant de sceller.',
       visGeneral: 'Votre réglage général', visThis: 'Cette lettre',
       visPublic: 'Publique', visPrivate: 'Privée', visDefault: 'Utiliser mon réglage',
       postBtn: 'Sceller et envoyer',
@@ -2067,9 +2074,9 @@
       mgSubmit: 'Apporre il sigillo marginale', mgCancel: 'Ritira',
       mgHint: 'Pubblicata a margine sotto il tuo nome.',
       composeHead: 'Scrivi alla Repubblica', composeMeta: 'Prossima consegna · domani, 08:00',
-      attamgLabel: 'Il tuo originale manoscritto — obbligatorio (Art. II)',
+      attachLabel: 'Il tuo originale manoscritto — obbligatorio (Art. II)',
       attachUpload: 'Carica un file', attachCamera: 'Scatta una foto', attachRemove: 'Rimuovi',
-      attamgHint: 'La casa di posta trascrive la tua mano in testo modificabile — correggi la trascrizione qui sotto prima di sigillare.',
+      attachHint: 'La casa di posta trascrive la tua mano in testo modificabile — correggi la trascrizione qui sotto prima di sigillare.',
       visGeneral: 'La tua impostazione generale', visThis: 'Questa lettera',
       visPublic: 'Pubblica', visPrivate: 'Privata', visDefault: 'Usa la mia impostazione',
       postBtn: 'Sigilla e spedisci',
@@ -2212,9 +2219,9 @@
       mgSubmit: 'Randsiegel anbringen', mgCancel: 'Zurückziehen',
       mgHint: 'Erscheint am Rand unter Ihrem Namen.',
       composeHead: 'An die Republik schreiben', composeMeta: 'Nächste Zustellung · morgen, 08:00',
-      attamgLabel: 'Ihr handschriftliches Original — erforderlich (Art. II)',
+      attachLabel: 'Ihr handschriftliches Original — erforderlich (Art. II)',
       attachUpload: 'Datei hochladen', attachCamera: 'Foto aufnehmen', attachRemove: 'Entfernen',
-      attamgHint: 'Das Posthaus überträgt Ihre Handschrift in bearbeitbaren Text — Sie berichtigen die Abschrift unten, bevor Sie siegeln.',
+      attachHint: 'Das Posthaus überträgt Ihre Handschrift in bearbeitbaren Text — Sie berichtigen die Abschrift unten, bevor Sie siegeln.',
       visGeneral: 'Ihre allgemeine Einstellung', visThis: 'Dieser Brief',
       visPublic: 'Öffentlich', visPrivate: 'Privat', visDefault: 'Meine Einstellung verwenden',
       postBtn: 'Siegeln und senden',
@@ -2357,9 +2364,9 @@
       mgSubmit: 'Aplicar selo marginal', mgCancel: 'Retirar',
       mgHint: 'Publicada à margem sob seu nome.',
       composeHead: 'Escrever à República', composeMeta: 'Próxima entrega · amanhã, 08:00',
-      attamgLabel: 'Seu original manuscrito — obrigatório (Art. II)',
+      attachLabel: 'Seu original manuscrito — obrigatório (Art. II)',
       attachUpload: 'Enviar um arquivo', attachCamera: 'Tirar uma foto', attachRemove: 'Remover',
-      attamgHint: 'A casa de postas transcreve sua mão em texto editável — você corrige a transcrição abaixo antes de selar.',
+      attachHint: 'A casa de postas transcreve sua mão em texto editável — você corrige a transcrição abaixo antes de selar.',
       visGeneral: 'Sua configuração geral', visThis: 'Esta carta',
       visPublic: 'Pública', visPrivate: 'Privada', visDefault: 'Usar minha configuração',
       postBtn: 'Selar e enviar',
@@ -2502,9 +2509,9 @@
       mgSubmit: 'Sigillum marginale imprimere', mgCancel: 'Retrahere',
       mgHint: 'In margine sub nomine tuo editur.',
       composeHead: 'Ad Rem Publicam scribere', composeMeta: 'Proxima traditio · cras, hora VIII',
-      attamgLabel: 'Autographum tuum manu scriptum — necessarium (Art. II)',
+      attachLabel: 'Autographum tuum manu scriptum — necessarium (Art. II)',
       attachUpload: 'Fasciculum imponere', attachCamera: 'Imaginem capere', attachRemove: 'Removere',
-      attamgHint: 'Domus tabellaria manum tuam in textum mutabilem transcribit — transcriptionem infra corrigis priusquam obsignes.',
+      attachHint: 'Domus tabellaria manum tuam in textum mutabilem transcribit — transcriptionem infra corrigis priusquam obsignes.',
       visGeneral: 'Ratio tua generalis', visThis: 'Haec epistula',
       visPublic: 'Publica', visPrivate: 'Privata', visDefault: 'Ratione mea uti',
       postBtn: 'Obsignare et mittere',
@@ -2647,9 +2654,9 @@
       mgSubmit: 'Meti marĝenan sigelon', mgCancel: 'Retiri',
       mgHint: 'Publikigita en la marĝeno sub via nomo.',
       composeHead: 'Skribi al la Respubliko', composeMeta: 'Sekva livero · morgaŭ, 08:00',
-      attamgLabel: 'Via manskribita originalo — deviga (Art. II)',
+      attachLabel: 'Via manskribita originalo — deviga (Art. II)',
       attachUpload: 'Alŝuti dosieron', attachCamera: 'Fari foton', attachRemove: 'Forigi',
-      attamgHint: 'La poŝtdomo transskribas vian manon en redakteblan tekston — vi korektas la transskribon sube antaŭ sigelado.',
+      attachHint: 'La poŝtdomo transskribas vian manon en redakteblan tekston — vi korektas la transskribon sube antaŭ sigelado.',
       visGeneral: 'Via ĝenerala agordo', visThis: 'Ĉi tiu letero',
       visPublic: 'Publika', visPrivate: 'Privata', visDefault: 'Uzi mian agordon',
       postBtn: 'Sigeli kaj sendi',
@@ -2769,6 +2776,151 @@
       quoteOnlyOriginal: 'Citaĵoj ankras al la originala transskribo — revenu al ĝi por elekti kaj vidi la markojn.',
       quoteCarried: 'Ĝi portas {n} citaĵo(j)n el la letero, al kiu ĝi respondas.',
       topics: { 'All': 'Ĉiuj', 'Judgment': 'Juĝo', 'Accountability': 'Respondeco', 'Machine feeling': 'Maŝina sento', 'Labor': 'Laboro', 'Governance': 'Regado' }
+    },
+    ta: {
+      mastMeta: 'தொகுதி I · எண் 1 — நிறுவப்பட்டது MMXXVI',
+      ledgerTitle: 'உங்கள் முத்திரை ஏடு',
+      epigraph: 'செயற்கை நுண்ணறிவின் நெறிமுறைகள் குறித்த ஒரு நிதானமான கடிதப் பரிமாற்றம், கடிதங்களின் குடியரசு மரபில். இங்கு வரும் அனைத்தும் <span lang="es">de puño y letra</span> — எழுதியவரின் சொந்தக் கையெழுத்திலும் கையொப்பத்திலும். ஊட்டங்கள் இல்லை, கூட்டத் தாக்குதல்கள் இல்லை — முத்திரையிடப்பட்ட கடிதங்கள் மட்டுமே, மேலும் நீங்கள் பாராட்டுவதையும் மறுப்பதையும் ஒப்பிட்டு எடைபோடும் கடமை.',
+      charterTitle: 'சாசனம் — பரிமாற்ற விதிகள்',
+      art1: '<strong>கடிதங்கள் எழுதுங்கள், கருத்துகள் அல்ல.</strong> ஒவ்வொரு பங்களிப்பும் ஒரு நபருக்கு உரையாற்றப்படுகிறது, அவர் வாதித்ததின் வலிமையான வடிவத்தை முதலில் கூறி, பின்னரே மறுக்கிறது. அவரது வாதத்தை நேர்மையாக மீண்டும் சொல்ல முடியாவிட்டால், அதற்குப் பதிலளிக்க நீங்கள் இன்னும் தயாராகவில்லை.',
+      art2: '<strong>ஒவ்வொரு முத்திரையும் கையொப்பமிடப்படுகிறது — de puño y letra.</strong> கடிதங்கள், ஆதரவுகள், விளிம்புக் குறிப்புகள் அனைத்தும் உங்கள் பெயரைத் தாங்குகின்றன; ஒவ்வொரு கடிதமும் உரையாக மாறுவதற்கு முன் உங்கள் சொந்தக் கையெழுத்தின் புகைப்படமாக வெளியிடப்படுகிறது. மூல குடியரசு பல பத்தாண்டுகளாக ஈடுவைக்கப்பட்ட நற்பெயரால் இயங்கியது; அநாமதேயம் நேர்மையை மலிவாக வாங்கி, நம்பிக்கையை விலையுயர்வாகச் செலவழிக்கிறது.',
+      art3: '<strong>சொந்தப் படைப்பு மட்டுமே.</strong> ஒவ்வொரு கடிதமும் உங்கள் சொந்த எழுத்து. பிறரிடமிருந்து — உயிருள்ளவர், மறைந்தவர், அல்லது இயந்திரம் — எடுத்த சொற்கள் மேற்கோள் குறிகளுக்குள், ஆசிரியர் பெயருடன் நிற்கும். ஒப்புக்கொள்ளப்பட்ட கடன் அறிவுத்திறன்; ஒப்புக்கொள்ளாத கடன் தபாலிலிருந்து திரும்பப் பெறப்படும், ஏடு அதை நினைவில் வைத்திருக்கும்.',
+      art4: '<strong>சமநிலை முத்திரை.</strong> பாராட்டும் மறுப்பும் இணையாகவே அச்சிடப்படுகின்றன. செலுத்தப்படாத ஒரு ஆதரவை மட்டுமே வைத்திருக்க முடியும்: இரண்டாவது கடிதத்தை ஆதரிக்க, நீங்கள் உண்மையாக மறுக்கும் ஒரு கடிதத்தில் முதலில் விளிம்புக் குறிப்பு எழுத வேண்டும். இங்கு உடன்பாடு ஒருபோதும் இலவசம் அல்ல — நீங்கள் சந்தேகிப்பதைச் சொல்லும் கடினமான செயலை அது உங்களிடம் கேட்கிறது.',
+      art5: '<strong>விளிம்புக் குறிப்புகள், எதிர் வாக்குகள் அல்ல.</strong> எழுதப்பட்ட காரணம் இல்லாமல் எந்தக் குறிப்பும் கணக்கில் வராது; அது உங்கள் பெயரின் கீழ் விளிம்பில் வெளியிடப்படும். எண்ணிக்கை ஆசிரியருக்கு எதையும் சொல்லாது; ஒரு வாக்கியம் அவரது அடுத்த கடிதத்தை எங்கே இலக்காக்குவது என்று சொல்லும்.',
+      art6: '<strong>தபால் நிதானமானது.</strong> கடிதங்கள் நாளொன்றுக்கு ஒருமுறை, ஒன்றாகவே வழங்கப்படுகின்றன. நீங்கள் எழுதுவது இரவு உணவுக்கு முன் பரவிவிட முடியாது; எனவே எதையும் கூட்டத்திற்காக எழுத வேண்டியதில்லை.',
+      art7: '<strong>ஒரு பரிமாற்றத்தில் ஒருவருக்கு ஒரு கடிதம்</strong> — ஆசிரியர் பதிலளிக்கும் வரை. பதிலளிக்கும் உரிமை முதலில் நீங்கள் உரையாற்றியவருக்கே.',
+      art8: '<strong>குடியரசு வாசலைக் காக்கிறது.</strong> உள்ளடக்கம் புண்படுத்துவதாக, இரக்கமற்றதாக, அல்லது இந்தச் சாசனத்திற்கு எதிராக இருப்பதாக நாங்கள் கருதும்போது, எந்த வெளியீட்டையும் — எந்தக் கடிதப் பரிமாற்றரையும் — நாங்கள் மட்டுப்படுத்தலாம், தடுத்து வைக்கலாம், நீக்கலாம், அல்லது இடைநிறுத்தலாம். தீர்ப்பு எங்களுடையது; இயன்றவரை மீறப்பட்ட விதியைப் பெயரிட்டு, கடிதம் வழியாக மேல்முறையீட்டைக் கேட்போம்.',
+      catTitle: 'அடைவு',
+      catLede: 'பொதுக் கடிதப் பரிமாற்றம் அனைத்தும் ஒரே காட்சியகத்தில். ஒரு கடிதத்தை நட்சத்திரமிட்டு (★) உங்கள் அலமாரியில் வைத்துக்கொள்ளுங்கள்; ஒரு பரிமாற்றத்திற்குச் சந்தா செய்தால் அதன் ஒவ்வொரு பதிலும் உங்கள் நாள்தோறும் வரும் தபாலுடன் வரும்.',
+      topicLabel: 'பொருள்', shelfLabel: 'அலமாரி',
+      filterFav: '★ என் அலமாரி', filterSub: 'சந்தா செய்தவை',
+      postTitle: 'இன்றைய தபால்', postMeta: '2026 ஆகஸ்ட் 18 அன்று வழங்கப்பட்டது',
+      mgLabel: 'உங்கள் விளிம்புக் குறிப்பு — <em>ஏன்</em> என்று அது சொல்ல வேண்டும் (பிரிவு V):',
+      mgSubmit: 'விளிம்பு முத்திரையை இடுங்கள்', mgCancel: 'திரும்பப் பெறு',
+      mgHint: 'உங்கள் பெயரின் கீழ் விளிம்பில் வெளியிடப்படும்.',
+      composeHead: 'குடியரசுக்கு எழுதுங்கள்', composeMeta: 'அடுத்த வழங்கல் · நாளை, 08:00',
+      attachLabel: 'உங்கள் கையெழுத்து மூலப்படி — கட்டாயம் (பிரிவு II)',
+      attachUpload: 'கோப்பைப் பதிவேற்று', attachCamera: 'படம் எடு', attachRemove: 'நீக்கு',
+      attachHint: 'தபால் நிலையம் உங்கள் கையெழுத்தைத் திருத்தக்கூடிய உரையாக மாற்றுகிறது — முத்திரையிடும் முன் கீழே அந்தப் படியெடுப்பை நீங்கள் திருத்துகிறீர்கள்.',
+      visGeneral: 'உங்கள் பொது அமைப்பு', visThis: 'இந்தக் கடிதம்',
+      visPublic: 'பொது', visPrivate: 'தனிப்பட்ட', visDefault: 'என் அமைப்பைப் பயன்படுத்து',
+      postBtn: 'முத்திரையிட்டு அனுப்பு',
+      postNote: 'கடிதங்கள் நாள்தோறும் நடக்கும் வழங்கலுக்குக் காத்திருக்கும் — தபால் வேண்டுமென்றே நிதானமானது (பிரிவு VI).',
+      colophon1: 'இயங்கும் மாதிரி — இப்போதைக்கு முத்திரைகளும் கடிதங்களும் இந்தப் பக்கத்தில் மட்டுமே வாழ்கின்றன; உண்மையான தபால் நிலையத்திற்கு ஒரு சேவையகம் தேவை.',
+      colophon2: '<em>Puño y Letra</em> — «de su puño y letra» என்பதிலிருந்து: நோட்டரி சாட்சியமளிப்பது போல, சொந்தக் கையால் எழுதி கையொப்பமிடப்பட்டது. பதினேழாம் நூற்றாண்டுக் கடிதப் பரிமாற்ற வலைப்பிணைப்புகளின் பாணியில், பிரஷ்யன் நீலத்திலும் முத்திரை மெழுகிலும் அமைக்கப்பட்டது.',
+      phTitle: 'தலைப்பு — «… குறித்து»',
+      phBody: 'எண்ணிமப் படியெடுப்பு — உங்கள் புகைப்படம் வாசிக்கப்பட்ட பிறகு இங்கே தோன்றும், நீங்கள் திருத்துவதற்கு (பிரிவு I: நீங்கள் பதிலளிக்கும் கருத்தின் வலிமையான வடிவத்துடன் தொடங்குங்கள்)…',
+      phName: 'கையொப்பம் — உங்கள் பெயர் (பிரிவு II)',
+      phReason: 'நீங்கள் மறுக்கும் வலிமையான கருத்தையும் உங்கள் காரணத்தையும் சொல்லுங்கள்…',
+      phSigner: 'கையொப்பம் — உங்கள் பெயர்',
+      balanced: 'சமநிலை', unbalanced: 'சமநிலையின்மை', youOwe: 'நீங்கள் தர வேண்டியது',
+      endorsementN: 'ஆதரவு', endorsementsN: 'ஆதரவுகள்',
+      marginN: 'விளிம்புக் குறிப்பு', marginaliaN: 'விளிம்புக் குறிப்புகள்',
+      endorse: 'ஆதரி', marginalia: 'விளிம்புக் குறிப்பு', replyByLetter: 'கடிதத்தால் பதிலளி',
+      noteUnbalanced: 'உங்கள் முத்திரை சமநிலையில் இல்லை (பிரிவு IV) — மீண்டும் ஆதரிப்பதற்கு முன், நீங்கள் உண்மையாக மறுக்கும் ஒரு கடிதத்தில் விளிம்புக் குறிப்பு எழுதுங்கள்.',
+      noteNeedsReason: 'பிரிவு V — முத்திரை பிடிப்பதற்கு முன் விளிம்புக் குறிப்புக்கு உண்மையான காரணம் (குறைந்தது ஒரு வாக்கியம்) தேவை.',
+      noteMarginSealed: 'முத்திரையிடப்பட்டு விளிம்பில் வெளியிடப்பட்டது. உங்கள் ஏட்டில் வரவு வைக்கப்பட்டது.',
+      aCorrespondent: 'ஒரு கடிதப் பரிமாற்றர்',
+      confirmAttach: 'பிரிவு II — முத்திரையிடும் முன் உங்கள் கையெழுத்து மூலப்படியின் புகைப்படத்தை இணைக்கவும்.',
+      confirmShort: 'ஒரு கடிதம் ஒரு வரிக்கு மேல் தகுதியானது — உங்கள் முழு எண்ணத்திற்குத் தபால் காத்திருக்கும்.',
+      confirmPublic: 'பொதுவாக முத்திரையிடப்பட்டது. உங்கள் கடிதம் நாளைய தபாலுடன் குடியரசு முழுவதற்கும் செல்லும்.',
+      confirmPrivate: 'தனிப்பட்டதாக முத்திரையிடப்பட்டது. உங்கள் கடிதம் நாளைய தபாலுடன் நீங்கள் அழைத்த வட்டத்திற்கு மட்டுமே செல்லும்.',
+      ocrReading: 'உங்கள் கையெழுத்து வாசிக்கப்படுகிறது…',
+      ocrReady: 'படியெடுப்பு தயார் — கீழே கடிதத்தின் உள்ளே அதைத் திருத்துங்கள். (இந்த மாதிரியில் OCR போலியானது; உண்மையான தபால் நிலையம் இங்கே உங்கள் உரையை எடுக்கும்.)',
+      visNotePublic: 'இந்தக் கடிதம் பொதுவாக முத்திரையிடப்படும்{via} — குடியரசு முழுவதற்கும் வழங்கப்பட்டு அடைவில் பட்டியலிடப்படும்.',
+      visNotePrivate: 'இந்தக் கடிதம் தனிப்பட்டதாக முத்திரையிடப்படும்{via} — நீங்கள் அழைத்த வட்டத்திற்கு மட்டுமே வழங்கப்படும். முழு தபால் நிலையத்தில் தனிப்பட்ட பரிமாற்றம் ஆதரவாளர் வசதி.',
+      viaDefault: ' (உங்கள் பொது அமைப்பின்படி)', viaOverride: ' (உங்கள் பொது அமைப்பை மீறி)',
+      catCount: '{m} கடிதங்களில் {n}',
+      emptyShelf: 'இந்த வடிகட்டிகளில் உங்கள் அலமாரி வெறுமையாக உள்ளது — அட்டைகளிலிருந்து நட்சத்திரமிடுங்கள் அல்லது சந்தா செய்யுங்கள்.',
+      emptyTopic: 'இந்தப் பொருளில் இன்னும் கடிதங்கள் இல்லை — உங்களுடையது முதலாவதாக இருக்கலாம்.',
+      letterWord: 'கடிதம்', ansAbbrev: 'பதில்',
+      readInPost: 'இன்றைய தபாலில் வாசி ↓',
+      subscribe: 'சந்தா செய்', subscribed: 'சந்தா செய்யப்பட்டது ✓',
+      viewManuscript: 'கையெழுத்துப் படியைப் பார்', viewTranscription: 'படியெடுப்பைப் பார்',
+      transRead: 'தமிழில் வாசி',
+      transOriginal: 'மூலத்தைக் காட்டு',
+      transNote: 'இயந்திர மொழிபெயர்ப்பு (மூலம்: {orig}), படியெடுப்பிலிருந்து செய்யப்பட்டது. ஆசிரியரின் சொந்த சொற்கள் கையெழுத்துப் படியில் நிற்கின்றன.',
+      transMissing: 'தமிழில் இன்னும் தரப்படவில்லை — கேட்டால் தபால் நிலையம் மொழிபெயர்க்கும்.',
+      profileRole: 'நிறுவன கடிதப் பரிமாற்றர்',
+      popVis: 'இயல்பு தெரிவுநிலை',
+      popShelfCount: '{f} நட்சத்திரம் · {s} சந்தா',
+      popGoShelf: 'என் அலமாரியைத் திற',
+      popSignOut: 'வெளியேறு',
+      signIn: 'உள்நுழை',
+      popLang: 'மொழி',
+      popProfile: 'என் சுயவிவரத்தைத் திருத்து',
+      navProfile: 'சுயவிவரம்',
+      profTitle: 'உங்கள் சுயவிவரம்',
+      profMeta: 'உங்கள் கடிதங்களில் கையொப்பமிடுபவர்',
+      profLede: 'உங்கள் முத்திரை, உங்கள் சிறு குறிப்பு, மற்றும் ஒரு குறுகிய காணொலி அறிமுகம். மூன்றும் உங்கள் சொந்தப் படைப்பாக இருக்க வேண்டும் என்று குடியரசு கேட்கிறது — உங்களால் செய்யப்பட்டவை, உங்களுக்காக உருவாக்கப்பட்டவை அல்ல.',
+      profAvatarHead: 'உங்கள் முத்திரை',
+      profAvatarNote: 'இயல்பாக உங்கள் முத்திரை நீங்கள் கையொப்பமிட்ட பெயரின் முதல் எழுத்துகளைக் காட்டும். புகைப்படம் வரவேற்கப்படுகிறது; உங்கள் சொந்தக் கையொப்பத்தின் ஒரு துண்டு அதைவிடச் சிறந்தது, சந்தேகமின்றி உங்களுடையது.',
+      profBioHead: 'உங்கள் சிறு குறிப்பு',
+      profBioHint: 'இரண்டு அல்லது மூன்று வாக்கியங்கள், உங்கள் சொந்த சொற்களில். நீங்கள் எதைப் பற்றி வாதிடுகிறீர்கள், எங்கிருந்து வாதிடுகிறீர்கள்.',
+      phBio: 'நான் எழுதுவது… (பிரிவு III: உங்கள் சொந்த சொற்கள், மேற்கோள்களுக்கு ஆசிரியர் பெயர்)',
+      profVidHead: 'காணொலி அறிமுகம்',
+      profVidLede: 'முப்பது வினாடிகள், முகம் தெரியும்படி, ஒரே எடுப்பில். கடவுச்சொற்றொடரை உங்கள் சொந்தக் கையெழுத்தில் காட்டியபடி உரக்க வாசியுங்கள்.',
+      profVidPromptLabel: 'இன்றைய கடவுச்சொற்றொடர்',
+      profPhrase: 'கூட்டம் மறப்பதை ஏடு நினைவில் வைக்கிறது',
+      profVidPrompt: 'இதைக் கையால் எழுதி, கேமராவுக்குக் காட்டி, உரக்கச் சொல்லுங்கள். இது நாள்தோறும் மாறும் — அதனால்தான் முன்னரே தயாரித்த காணொலி இங்கு பயனற்றது.',
+      profVidRecord: 'இப்போது பதிவு செய்',
+      profVidUpload: 'காணொலியைப் பதிவேற்று',
+      profVidCaptured: 'இந்தப் பக்கத்தில் பதிவு செய்யப்பட்டது — பதிவும் கடவுச்சொற்றொடரும் பொருந்துகின்றன. மனித வாசிப்புக்குக் காத்திருக்கிறது.',
+      profVidUploaded: 'பதிவேற்றப்பட்ட கோப்பு — மூலம் தெரியவில்லை, எனவே இது கூர்ந்த மனித வாசிப்பைப் பெறும்.',
+      profStatusNone: 'இன்னும் தரப்படவில்லை',
+      profStatusPending: 'பரிசீலனையில்',
+      profVerifyHead: 'இது நீங்களே என்பதை எப்படிச் சரிபார்க்கிறோம்',
+      profVerifyLede: 'மூன்று சரிபார்ப்புகள், நாங்கள் அவற்றில் வைக்கும் நம்பிக்கையின் வரிசையில்:',
+      profVerifyHand: 'உங்கள் கை. காணொலியில் உள்ள கடவுச்சொற்றொடர் உங்கள் கடிதங்களின் கையெழுத்துடன் பொருந்த வேண்டும் — ஒரு நபர், ஒரு கை, இரு இடங்கள். இதுவே நாங்கள் மிகவும் சார்ந்திருக்கும் சரிபார்ப்பு.',
+      profVerifyProv: 'மூலம். ஒரு கோப்பில் Content Credentials (C2PA) இருந்தால், அதை வாசித்து அது சொல்வதை வெளியிடுகிறோம். இங்கே பதிவு செய்வது பதிவேற்றுவதைவிட மேலானது; மேனிலைத் தரவு நீக்கப்பட்ட கோப்பு அறியப்படாததாகவே கருதப்படும், நிரபராதியாக அல்ல.',
+      profVerifyHuman: 'மனிதக் கண்கள். ஒவ்வொரு புதிய முத்திரை, குறிப்பு, அறிமுகம் வெளிவருவதற்கு முன் குடியரசின் ஒரு கடிதப் பரிமாற்றர் அதைப் பரிசீலிக்கிறார் (பிரிவு VIII).',
+      profVerifyNoDetector: 'நாங்கள் AI கண்டறியும் கருவிகளைப் பயன்படுத்துவதில்லை. அவை நம்பத்தகுந்தவை அல்ல; அவற்றின் தவறான குற்றச்சாட்டுகள் எளிமையாக எழுதும் உண்மையான மனிதர்களையே கடுமையாகத் தாக்குகின்றன. ஒரு வகைப்படுத்தியை நம்புவதைவிட உங்களை உங்கள் சொந்தக் கையுடன் பிணைப்பதை நாங்கள் விரும்புகிறோம்.',
+      profAttestOwn: 'இந்த முத்திரை, குறிப்பு, காணொலி என்னைப் பற்றியவை, என்னால் செய்யப்பட்டவை, எந்தப் பகுதியும் உருவாக்கப்படவில்லை, கடன் பெற்ற சொற்கள் அனைத்தும் மேற்கோளிடப்பட்டு ஆசிரியர் பெயருடன் உள்ளன என்று உறுதியளிக்கிறேன் (பிரிவு II, பிரிவு III).',
+      profSave: 'சுயவிவரத்தைச் சேமி',
+      profSavedMsg: 'சேமிக்கப்பட்டது. உங்கள் அறிமுகம் நாளைய தபாலுடன் குடியரசின் பரிசீலனைக்குச் செல்கிறது.',
+      profNeedAttest: 'உறுதிமொழி கட்டாயம் — அது இல்லாமல் குடியரசு எதையும் வெளியிடாது (பிரிவு II).',
+      profNeedBio: 'ஒரு சிறு குறிப்புக்கு இன்னும் ஒரு வாக்கியமோ இரண்டோ தேவை.',
+      navCharter: 'சாசனம்', navCatalogue: 'அடைவு', navPost: 'இன்றைய தபால்', navWrite: 'எழுது',
+      navDesk: 'எழுதுமேசை',
+      navHome: 'முதற்பக்கம்',
+      navCollapse: 'பட்டியைச் சுருக்கு',
+      navExpand: 'பட்டியை விரி',
+      homePost: 'இன்று வழங்கப்பட்ட கடிதங்கள்.',
+      homeCat: 'ஒவ்வொரு பொதுக் கடிதமும், அடைவில்.',
+      homeWrite: 'உங்கள் கடிதத்தை அனுப்புங்கள்.',
+      inAnswerTo: '«{title}» க்குப் பதிலாக',
+      deskTitle: 'எழுதுமேசை',
+      deskMeta: 'நாங்கள் நம்பும் கருவிகள்',
+      deskLede: 'நாங்கள் உண்மையில் எழுதப் பயன்படுத்தும் காகிதம், பேனாக்கள், மெழுகு. குடியரசின் ஒவ்வொரு கடிதமும் இதுபோன்ற ஒரு மேசையில் பிறந்தது.',
+      deskDisclosure: 'இணைப்புக் குறிப்பு: இவை இணை இணைப்புகள் — இவற்றின் வழியாக நீங்கள் வாங்கினால், உங்களுக்குக் கூடுதல் செலவின்றி குடியரசுக்கு ஒரு சிறு தரகு கிடைக்கும். இதுவே தபால் நிலையத்தைத் திறந்து வைத்திருக்கும் வழிகளில் ஒன்று. நாங்களே பயன்படுத்தும் கருவிகளை மட்டுமே பட்டியலிடுகிறோம்.',
+      deskView: 'Amazon இல் பார் ↗',
+      authTitle: 'குடியரசில் இணையுங்கள்',
+      authLede: 'ஒரு கணக்கு, ஒரு பெயர், ஒரு கை. உங்கள் கடிதங்கள் உங்கள் கையொப்பத்தைத் தாங்கும் — de puño y letra.',
+      authGoogle: 'Google உடன் தொடர்',
+      authOr: 'அல்லது உங்கள் மின்னஞ்சலுடன்',
+      authCreate: 'கணக்கை உருவாக்கு',
+      authAgree: 'இணைவதன் மூலம் சாசனத்தில் கையொப்பமிடுகிறீர்கள் — உங்கள் கடிதங்கள் உங்கள் உண்மையான பெயரைத் தாங்கும் (பிரிவு II).',
+      authConnecting: 'Google உடன் இணைக்கப்படுகிறது…',
+      authNeedName: 'பிரிவு II — உங்கள் முழு, உண்மையான பெயர் குடியரசுக்குத் தேவை.',
+      authNeedEmail: 'சரியான மின்னஞ்சல் முகவரியை உள்ளிடுங்கள்.',
+      phAuthName: 'உங்கள் முழுப் பெயர் (பிரிவு II)',
+      phAuthEmail: 'மின்னஞ்சல்',
+      mailHead: 'மின்னஞ்சல் வழி வழங்கல்',
+      mailLede: 'குடியரசு காகிதப் பழக்கத்தைக் காக்கிறது, ஆனால் கம்பி வழியாக அனுப்புகிறது. நீங்கள் முத்திரையிடும் ஒவ்வொரு கடிதமும் உங்கள் சொந்தப் பதிவாக உங்களுக்கே அனுப்பப்படும், உங்கள் கடிதங்களுக்கான ஒவ்வொரு பதிலும் நாள்தோறும் வரும் தபாலுடன் உங்கள் அஞ்சல் பெட்டிக்கு வரும்.',
+      mailAddr: 'நாங்கள் உங்களுக்கு எங்கே எழுதுவது',
+      phMailAddr: 'ungal@example.com',
+      mailOwn: 'நான் முத்திரையிடும் ஒவ்வொரு கடிதத்தின் நகலையும் எனக்கு அனுப்பு',
+      mailReplies: 'என் கடிதங்களுக்கான ஒவ்வொரு பதிலையும் எனக்கு அனுப்பு',
+      mailDigest: 'நாள்தோறும் வரும் தபாலை, எல்லாக் கடிதங்களையும் ஒன்றாக, எனக்கு அனுப்பு',
+      mailNote: 'இந்த மாதிரியிலிருந்து உண்மையில் எதுவும் அனுப்பப்படவில்லை — தபாலைச் சுமக்க ஒரு சேவையகம் தேவை. மேலே உள்ள வழங்கல் விதிகளையே அது பின்பற்றும்.',
+      mailCopySent: 'ஒரு நகல் {email} க்குச் செல்கிறது.',
+      mailAuthorNotified: 'பதில் காத்திருக்கிறது என்று ஆசிரியருக்கு மின்னஞ்சலில் தெரிவிக்கப்படும்.',
+      quoteBtn: 'பதிலில் மேற்கோளிடு',
+      quotesHead: 'மேற்கோள்',
+      quotePassageHead: 'இந்தப் பகுதியை மேற்கோளிடும் பதில்கள்',
+      quoteOnlyOriginal: 'மேற்கோள்கள் மூலப் படியெடுப்பில் நங்கூரமிடப்படுகின்றன — தேர்ந்தெடுக்கவும் அடிக்கோடுகளைக் காணவும் அதற்குத் திரும்புங்கள்.',
+      quoteCarried: 'அது பதிலளிக்கும் கடிதத்திலிருந்து {n} மேற்கோளைத் தாங்குகிறது.',
+      topics: { 'All': 'அனைத்தும்', 'Judgment': 'தீர்ப்பு', 'Accountability': 'பொறுப்புக்கூறல்', 'Machine feeling': 'இயந்திர உணர்வு', 'Labor': 'உழைப்பு', 'Governance': 'ஆட்சிமுறை' }
     }
   };
 
@@ -2795,6 +2947,7 @@
     try { localStorage.setItem('pyl-lang', lang); } catch (e) {}
     var wrap = document.querySelector('.wrap');
     if (wrap) wrap.setAttribute('lang', lang);
+    document.documentElement.setAttribute('lang', lang);
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       el.innerHTML = T(el.getAttribute('data-i18n'));
     });
@@ -3854,7 +4007,7 @@
   (function () {
     var NAMES = {
       en: 'English', es: 'Español', pt: 'Português', fr: 'Français',
-      it: 'Italiano', de: 'Deutsch', la: 'Latin', eo: 'Esperanto'
+      it: 'Italiano', de: 'Deutsch', la: 'Latin', eo: 'Esperanto', ta: 'தமிழ்'
     };
 
     var TEXT = {
@@ -3883,6 +4036,10 @@
         la: { t: 'De iudicio mutuato', s: 'Viri doctissimi,', g: 'Bona fide scriptum et correctioni apertum,', p: [
           'Sine fine disputamus num machinae responsa falsa nobis dent, et fere numquam quid responsa earum vera nobis faciant. Ubi consiliarius plerumque recte sentit, obsequium consuetudo rationalis fit — et iudicium, ut omnis facultas, tantum marcescit quantum raro exercetur. Periculum non est machinam errare; periculum est nos oblivisci quomodo animadvertamus.',
           'Abstinentiam non suadeo. Suadeo ut iudicium delegatum tractemus sicut Res Publica vetus librum mutuatum tractabat: licet eum aliquantum tenere, sed adnotatum reddere debes. Omne systema fide dignum opus suum ea forma monstrare debet quae nobis dissentire permittat — et omnis institutio quae tale adhibet non solum accurationem eius metiri debet, sed etiam num homines sui sine eo adhuc decernere possint.'
+        ] },
+        ta: { t: 'கடன் பெற்ற தீர்ப்பு குறித்து', s: 'மாண்புமிகு கடிதப் பரிமாற்றர்களே,', g: 'நல்லெண்ணத்துடன் எழுதப்பட்டது, திருத்தத்திற்குத் திறந்தது,', p: [
+          'இயந்திரங்கள் நமக்குத் தவறான பதில்களைத் தருமா என்று முடிவில்லாமல் வாதிடுகிறோம், ஆனால் அவற்றின் சரியான பதில்கள் நமக்கு என்ன செய்கின்றன என்பதைப் பற்றி கிட்டத்தட்ட ஒருபோதும் வாதிடுவதில்லை. ஒரு ஆலோசகர் பொதுவாகச் சரியாக இருக்கும்போது, அவரை ஏற்றுக்கொள்வதே அறிவார்ந்த வழக்கமாகிறது — தீர்ப்பும், எந்தத் திறனைப் போலவே, எவ்வளவு அரிதாகப் பயன்படுத்தப்படுகிறதோ அதற்கு நேர்விகிதத்தில் தேய்கிறது. ஆபத்து இயந்திரம் தவறுவது அல்ல; அதைக் கவனிக்கும் திறனை நாம் மறப்பதே.',
+          'நான் முழுத் தவிர்ப்பை முன்மொழியவில்லை. ஒப்படைக்கப்பட்ட தீர்ப்பை, பழைய குடியரசு கடன் பெற்ற புத்தகத்தை நடத்தியது போல நடத்த வேண்டும் என்கிறேன்: அதைச் சிறிது காலம் வைத்திருக்கலாம், ஆனால் குறிப்புகளுடன் திரும்பத் தர வேண்டும் என்று எதிர்பார்க்கப்படுகிறது. நம்பிக்கைக்குத் தகுதியான எந்த அமைப்பும், நாம் அதனுடன் மறுத்துப் பேச முடியும் என்ற வடிவத்தில் தன் வேலையைக் காட்ட வேண்டும் — அத்தகைய அமைப்பை ஏற்கும் எந்த நிறுவனமும் அதன் துல்லியத்தை மட்டுமல்ல, அது இல்லாமல் தன் மனிதர்கள் இன்னும் முடிவெடுக்க முடிகிறதா என்பதையும் அளக்க வேண்டும்.'
         ] },
         eo: { t: 'Pri pruntita juĝo', s: 'Estimataj korespondantoj,', g: 'Skribita bonfide kaj malferma al korekto,', p: [
           'Ni senfine disputas ĉu maŝinoj donos al ni malĝustajn respondojn, kaj preskaŭ neniam pri tio, kion iliaj ĝustaj respondoj faras al ni. Kiam konsilanto kutime pravas, cedo fariĝas la racia kutimo — kaj juĝo, kiel ĉiu kapablo, atrofias ĝuste proporcie al tio, kiel malofte ĝi estas ekzercata. La danĝero ne estas, ke la maŝino eraras; ĝi estas, ke ni forgesas kiel rimarki.',
@@ -3915,6 +4072,10 @@
           'Validissimam epistulae tuae sententiam — facultates non exercitas marcescere, et institutiones marcorem metiri debere — libenter comprobo. Dissentimus de desiderio veterum quod subest. Nulla fuit aetas aurea iudicii sine adiumento: medicus pharmacopoeae cedebat, iudex exemplo, nauta tabulis ab ignotis computatis. Cognitio semper adiumento nixa est; novum est quod adiumentum nunc respondet.',
           'Quaeritur igitur non quomodo iudicium domi teneamus, sed quomodo ne responsio cum eo emigret. Instrumentum pro me cogitare potest; pro me respondere non debet. Instituta ita fingamus ut subscriptio humana ibi semper requiratur ubi homo damnum ferret — et ea subscriptio id significet quod tua sub epistula significat: haec legi, haec defendere possum, et scis ubi me invenias.'
         ] },
+        ta: { t: 'தீர்ப்பு எப்போதும் துணைக்கருவியே', s: 'அன்புள்ள திரு. மரின்,', g: 'மரியாதையுடனும் கூர்மையான பேனாவுடனும்,', p: [
+          'உங்கள் கடிதத்தின் வலிமையான கூற்று — திறன்கள் பயன்படுத்தப்படாதபோது தேய்கின்றன, அந்தத் தேய்மானத்தை நிறுவனங்கள் அளக்க வேண்டும் — அதை நான் மனமுவந்து ஆதரிக்கிறேன். நாம் பிரிவது அதற்கு அடியில் உள்ள பழைய நினைவேக்கத்தில். துணையின்றி இயங்கிய தீர்ப்பின் பொற்காலம் ஒருபோதும் இருந்ததில்லை: மருத்துவர் மருந்தியல் நூலுக்கு அடிபணிந்தார், நீதிபதி முன்வழக்குக்கு, மாலுமி அறியாதவர்கள் கணக்கிட்ட அட்டவணைகளுக்கு. அறிதல் எப்போதும் துணைக்கருவியால் இயங்கியது; மாறியது என்னவென்றால், புதிய துணைக்கருவி பதிலும் பேசுகிறது.',
+          'எனவே கேள்வி தீர்ப்பை வீட்டிலேயே வைத்திருப்பது எப்படி என்பதல்ல, பொறுப்பு அதனுடன் வெளியேறாமல் தடுப்பது எப்படி என்பதே. ஒரு கருவி எனக்காகச் சிந்திக்கலாம்; ஆனால் எனக்காகப் பதில் சொல்லக்கூடாது. ஒரு மனிதன் தீங்கைச் சுமப்பான் என்ற இடத்தில் மனிதக் கையொப்பம் இன்னும் தேவைப்படும்படி நம் நிறுவனங்களை வடிவமைப்போம் — அந்தக் கையொப்பம் உங்கள் கடிதத்தின் அடியில் உங்களுடையது எதைக் குறிக்கிறதோ அதையே குறிக்கட்டும்: இதை நான் வாசித்தேன், இதை நான் நியாயப்படுத்த முடியும், என்னை எங்கே காணலாம் என்று உங்களுக்குத் தெரியும்.'
+        ] },
         eo: { t: 'Juĝo ĉiam estis protezo', s: 'Estimata s-ro Marin,', g: 'Kun respekto kaj akrigita plumo,', p: [
           'La plej forta aserto de via letero — ke kapabloj malkreskas kiam ne ekzercataj, kaj ke institucioj mezuru tiun malkreskon — mi volonte aprobas. Kie ni disiĝas, estas la nostalgio sub ĝi. Ne estis ora epoko de senhelpa juĝo: la kuracisto cedis al la farmakopeo, la juĝisto al precedento, la navigisto al tabeloj kalkulitaj de nekonatoj. Kogno ĉiam estis proteza; kio ŝanĝiĝis, estas ke la nova protezo respondas.',
           'Do la demando ne estas kiel teni la juĝon hejme, sed kiel malhelpi, ke la respondeco elmigru kun ĝi. Ilo povas pensi por mi; ĝi ne devas respondi por mi. Ni desegnu niajn instituciojn tiel, ke homa subskribo restu postulata ĉie, kie homo portus la damaĝon — kaj ke tiu subskribo signifu tion, kion la via signifas ĉe la piedo de via letero: mi legis ĉi tion, mi povas defendi ĝin, kaj vi scias kie trovi min.'
@@ -3945,6 +4106,10 @@
         la: { t: 'De excusationibus machinarum', s: 'Socii carissimi,', g: 'Tuus in hilari suspicione,', p: [
           'Heri systema quoddam mihi excusationem obtulit. Bona erat, fateor — paenitens, distincta, melior quam pleraeque ab hominibus acceptae. Et prorsus nihil valebat, quia excusatio syngrapha est in mores futuros scripta, et machina rationem non habet unde solvat. Nihil periclitatur venia mea nec quicquam ira mea amittit.',
           'Parvam disciplinam arti nostrae propono: machinae referant, non affectent. «Hoc responsum falsum fuit; ecce quid mutatum est» me honorat. «Confusionem sincere doleo» vestem paenitentiae mutuatur ut vigilantiam meam molliat. Vocabula sensus moralis ab iis solis expendenda sunt qui ipsi expendi possunt.'
+        ] },
+        ta: { t: 'இயந்திரங்களின் மன்னிப்புகள் குறித்து', s: 'சக உறுப்பினர்களே,', g: 'மகிழ்வான ஐயத்துடன் உங்களுடையவன்,', p: [
+          'நேற்று ஒரு அமைப்பு என்னிடம் மன்னிப்பு கேட்டது. அது — ஒப்புக்கொள்கிறேன் — ஒரு நல்ல மன்னிப்பு; வருத்தமானது, குறிப்பானது, மனிதர்களிடமிருந்து நான் பெற்ற பெரும்பாலானவற்றைவிடச் சிறந்தது. அதற்கு மதிப்பு சரியாக ஒன்றுமில்லை, ஏனெனில் மன்னிப்பு என்பது எதிர்கால நடத்தையின் மீது எழுதப்பட்ட ஒரு உறுதிச்சீட்டு, செலுத்துவதற்கு இயந்திரத்திற்கு எந்தக் கணக்கும் இல்லை. என் மன்னிப்பால் அது எதையும் பணயம் வைக்கவில்லை, என் கோபத்தால் எதையும் இழக்காது.',
+          'நம் தொழிலுக்கு ஒரு சிறு ஒழுக்கத்தை முன்மொழிகிறேன்: இயந்திரங்கள் அறிவிக்க வேண்டும், உணர்ச்சி காட்டக் கூடாது. «இந்தப் பதில் தவறு; மாறியது இதுவே» என்பது என்னை மதிக்கிறது. «குழப்பத்திற்கு மனமார்ந்த வருத்தம்» என்பது என் விழிப்புணர்வை மென்மையாக்க வருத்தத்தின் ஆடையைக் கடன் வாங்குகிறது. ஒழுக்க உணர்வின் சொல்வளத்தை, அதனால் தாங்களே செலவாகக்கூடியவர்கள் மட்டுமே செலவழிக்க வேண்டும்.'
         ] },
         eo: { t: 'Pri pardonpetoj de maŝinoj', s: 'Karaj membroj,', g: 'Via en gaja suspekto,', p: [
           'Hieraŭ sistemo pardonpetis al mi. Ĝi estis, mi konfesas, bona pardonpeto — pentoplena, preciza, pli bona ol la plej multaj, kiujn mi ricevis de homoj. Kaj ĝi valoris precize nenion, ĉar pardonpeto estas kambio tirita kontraŭ estonta konduto, kaj la maŝino havas nenian konton, el kiu pagi. Ĝi riskas nenion per mia pardono kaj perdas nenion per mia kolero.',
