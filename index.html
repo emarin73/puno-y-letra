@@ -3563,16 +3563,22 @@
       if (!document.getElementById('attachPreview').classList.contains('show')) {
         confirmEl.textContent = T('confirmAttach');
         confirmEl.classList.add('show');
+        if (PYL.toast) PYL.toast(T('confirmAttach'));
+        confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
       }
       if (body.value.trim().length < 40) {
         confirmEl.textContent = T('confirmShort');
         confirmEl.classList.add('show');
+        if (PYL.toast) PYL.toast(T('confirmShort'));
+        confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
       }
-      var postChoice = document.querySelector('#segPost .active').getAttribute('data-v');
+      var postChoiceEl = document.querySelector('#segPost .active');
+      var postChoice = postChoiceEl ? postChoiceEl.getAttribute('data-v') : 'default';
+      var defChoiceEl = document.querySelector('#segDefault .active');
       var vis = postChoice === 'default'
-        ? document.querySelector('#segDefault .active').getAttribute('data-v')
+        ? (defChoiceEl ? defChoiceEl.getAttribute('data-v') : 'public')
         : postChoice;
       var msg = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
       var composeSec = document.getElementById('compose');
@@ -3589,6 +3595,8 @@
       }
       confirmEl.textContent = msg;
       confirmEl.classList.add('show');
+      if (PYL.toast) PYL.toast(msg, 6000);
+      confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       document.getElementById('composeTitle').value = '';
       body.value = '';
       document.getElementById('composeName').value = '';
