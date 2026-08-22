@@ -1,0 +1,21 @@
+{
+  "name": "puno-y-letra",
+  "version": "1.0.0",
+  "description": "A slow correspondence platform for AI ethics, in the tradition of the Republic of Letters.",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "build": "echo 'Static site ready for Vercel deployment.'"
+  },
+  "keywords": [
+    "republic-of-letters",
+    "ai-ethics",
+    "epistolary",
+    "handwriting",
+    "marginalia",
+    "correspondence"
+  ],
+  "author": "Puño y Letra",
+  "license": "MIT"
+}
