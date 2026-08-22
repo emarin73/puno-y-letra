@@ -1273,10 +1273,77 @@
   .attach-btn:hover { background: var(--prussian-tint); }
   .attach-btn svg { display: block; flex: none; }
   .attach-hint { font-size: 0.82rem; color: var(--graphite); margin: 0; line-height: 1.45; }
-  .attach-preview { display: none; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .attach-preview { display: none; flex-direction: column; gap: 0.75rem; width: 100%; }
   .attach-preview.show { display: flex; }
-  .attach-preview img { max-height: 75px; max-width: 125px; border: 1px solid var(--rule); border-radius: 3px; }
-  .attach-name { font-size: 0.85rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .attach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+    width: 100%;
+  }
+  .attach-item {
+    position: relative;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .attach-item img {
+    width: 100%;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: 1px solid var(--rule-soft);
+  }
+  .attach-item-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .attach-page-badge {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--prussian);
+    background: var(--prussian-tint);
+    padding: 0.08rem 0.4rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .attach-item-name {
+    font-size: 0.72rem;
+    color: var(--graphite);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .attach-item-remove {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: rgba(30, 39, 50, 0.8);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s;
+  }
+  .attach-item-remove:hover {
+    background: var(--wax);
+  }
   .ocr-status { font-size: 0.85rem; color: var(--prussian); margin: 0; display: none; font-weight: 500; }
   .ocr-status.show { display: block; }
 
@@ -1836,12 +1903,14 @@
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><path d="M5.5 4.5 6.7 2.5h2.6l1.2 2"/><circle cx="8" cy="9" r="2.4"/></svg>
             <span class="lbl" data-i18n="attachCamera">Take a picture</span>
           </button>
-          <input type="file" id="attachInput" accept="image/*" hidden />
+          <input type="file" id="attachInput" accept="image/*" multiple hidden />
         </div>
         <div class="attach-preview" id="attachPreview">
-          <img id="attachImg" alt="Preview of your handwritten letter" />
-          <span class="attach-name" id="attachName"></span>
-          <button class="btn-quiet" id="attachRemove" data-i18n="attachRemove">Remove</button>
+          <div class="attach-grid" id="attachGrid"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.25rem;">
+            <span class="meta" id="attachCount"></span>
+            <button class="btn-quiet" id="attachRemoveAll" data-i18n="attachRemove">Remove all</button>
+          </div>
         </div>
         <p class="ocr-status" id="ocrStatus" role="status"></p>
         <p class="attach-hint" data-i18n="attachHint"></p>
@@ -3523,7 +3592,12 @@
       document.getElementById('composeTitle').value = '';
       body.value = '';
       document.getElementById('composeName').value = '';
-      document.getElementById('attachRemove').click();
+      if (PYL.clearAttachments) {
+        PYL.clearAttachments();
+      } else {
+        var remAll = document.getElementById('attachRemoveAll');
+        if (remAll) remAll.click();
+      }
     });
 
     PYL.onLang.push(function () {
@@ -3729,16 +3803,80 @@
     render();
   })();
 
-  /* ---------- compose: handwritten original + visibility ---------- */
+  /* ---------- compose: handwritten original (multi-file) + visibility ---------- */
   (function () {
     var input = document.getElementById('attachInput');
     var preview = document.getElementById('attachPreview');
-    var img = document.getElementById('attachImg');
-    var nameEl = document.getElementById('attachName');
+    var grid = document.getElementById('attachGrid');
+    var countEl = document.getElementById('attachCount');
+    var removeAllBtn = document.getElementById('attachRemoveAll');
     var ocr = document.getElementById('ocrStatus');
     var body = document.getElementById('composeBody');
     var ocrTimer = null;
-    var objectUrl = null;
+    var attachedItems = []; // { file: File, url: string }
+
+    function renderAttachments() {
+      if (!grid) return;
+      grid.innerHTML = '';
+      if (attachedItems.length === 0) {
+        preview.classList.remove('show');
+        ocr.classList.remove('show');
+        clearTimeout(ocrTimer);
+        return;
+      }
+
+      preview.classList.add('show');
+      if (countEl) {
+        countEl.textContent = attachedItems.length === 1 ? '1 page attached' : attachedItems.length + ' pages attached';
+      }
+
+      attachedItems.forEach(function (item, index) {
+        var card = document.createElement('div');
+        card.className = 'attach-item';
+
+        var img = document.createElement('img');
+        img.src = item.url;
+        img.alt = 'Handwritten letter page ' + (index + 1);
+        card.appendChild(img);
+
+        var meta = document.createElement('div');
+        meta.className = 'attach-item-meta';
+        var badge = document.createElement('span');
+        badge.className = 'attach-page-badge';
+        badge.textContent = 'p. ' + (index + 1);
+        meta.appendChild(badge);
+
+        var nameSpan = document.createElement('span');
+        nameSpan.className = 'attach-item-name';
+        nameSpan.textContent = item.file.name || ('Page ' + (index + 1));
+        meta.appendChild(nameSpan);
+        card.appendChild(meta);
+
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'attach-item-remove';
+        removeBtn.setAttribute('type', 'button');
+        removeBtn.setAttribute('aria-label', 'Remove page ' + (index + 1));
+        removeBtn.innerHTML = '✕';
+        removeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          URL.revokeObjectURL(item.url);
+          attachedItems.splice(index, 1);
+          renderAttachments();
+        });
+        card.appendChild(removeBtn);
+
+        grid.appendChild(card);
+      });
+
+      ocr.textContent = attachedItems.length === 1 ? T('ocrReading') : ('Reading ' + attachedItems.length + ' handwritten pages…');
+      ocr.classList.add('show');
+      clearTimeout(ocrTimer);
+      ocrTimer = setTimeout(function () {
+        ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
+        body.focus();
+      }, 1200);
+    }
 
     document.getElementById('attachUpload').addEventListener('click', function () {
       input.removeAttribute('capture');
@@ -3750,30 +3888,34 @@
     });
 
     input.addEventListener('change', function () {
-      var file = input.files && input.files[0];
-      if (!file) return;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-      objectUrl = URL.createObjectURL(file);
-      img.src = objectUrl;
-      nameEl.textContent = file.name;
-      preview.classList.add('show');
-      ocr.textContent = T('ocrReading');
-      ocr.classList.add('show');
-      clearTimeout(ocrTimer);
-      ocrTimer = setTimeout(function () {
-        ocr.textContent = T('ocrReady');
-        body.focus();
-      }, 1200);
+      var files = input.files;
+      if (!files || files.length === 0) return;
+      for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        attachedItems.push({
+          file: f,
+          url: URL.createObjectURL(f)
+        });
+      }
+      input.value = '';
+      renderAttachments();
     });
 
-    document.getElementById('attachRemove').addEventListener('click', function () {
+    if (removeAllBtn) {
+      removeAllBtn.addEventListener('click', function () {
+        input.value = '';
+        attachedItems.forEach(function (item) { URL.revokeObjectURL(item.url); });
+        attachedItems = [];
+        renderAttachments();
+      });
+    }
+
+    PYL.clearAttachments = function () {
       input.value = '';
-      if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
-      img.removeAttribute('src');
-      preview.classList.remove('show');
-      ocr.classList.remove('show');
-      clearTimeout(ocrTimer);
-    });
+      attachedItems.forEach(function (item) { URL.revokeObjectURL(item.url); });
+      attachedItems = [];
+      renderAttachments();
+    };
 
     /* visibility: general setting + per-letter override */
     var segDefault = document.getElementById('segDefault');
