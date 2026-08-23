@@ -1275,6 +1275,46 @@
     font-family: inherit;
     cursor: pointer;
   }
+  .compose-sig-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem 0.95rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+  }
+  .compose-sig-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .sig-author-info {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .sig-author-name {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .sig-author-role {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .sig-edit-link {
+    font-size: 0.82rem;
+    color: var(--prussian);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .sig-edit-link:hover { text-decoration: underline; }
   .attach-btn {
     display: inline-flex;
     align-items: center;
@@ -2116,7 +2156,20 @@
       </div>
       <input id="composeTitle" type="text" aria-label="Letter title" />
       <textarea id="composeBody" aria-label="Letter body / transcription"></textarea>
-      <input id="composeName" type="text" aria-label="Your name" />
+      <div class="compose-sig-block">
+        <span class="meta" data-i18n="sigLabel">Author signature (drawn directly from your profile — Art. II)</span>
+        <div class="compose-sig-card" id="composeSigCard">
+          <div class="sig-author-info">
+            <span class="avatar mini" id="composeSigAvatar">EM</span>
+            <div>
+              <strong class="sig-author-name" id="composeSigName">Euclides Marin</strong>
+              <span class="sig-author-role" data-i18n="profileRole">Founding correspondent</span>
+            </div>
+          </div>
+          <a class="sig-edit-link" href="#profile" data-i18n="popProfile">Edit my profile ✎</a>
+        </div>
+        <input id="composeName" type="hidden" value="Euclides Marin" />
+      </div>
       <div class="vis-row">
         <div class="vis-group">
           <span class="meta" data-i18n="visGeneral">Your general setting</span>
@@ -2357,6 +2410,7 @@
       mgSubmit: 'Affix marginal seal', mgCancel: 'Withdraw',
       mgHint: 'Published in the margin under your name.',
       composeHead: 'Write to the Republic', composeMeta: 'Next delivery · tomorrow, 08:00',
+      sigLabel: 'Author signature (drawn directly from your profile — Art. II)',
       attachLabel: 'Your handwritten original — required (Art. II)',
       attachUpload: 'Upload a Letter', attachCamera: 'Take a picture', attachRemove: 'Remove',
       attachHint: 'The posting house transcribes your hand to editable text — you correct the transcription below before sealing.',
@@ -2509,6 +2563,7 @@
       mgSubmit: 'Estampar sello marginal', mgCancel: 'Retirar',
       mgHint: 'Se publica al margen bajo tu nombre.',
       composeHead: 'Escribe a la República', composeMeta: 'Próxima entrega · mañana, 08:00',
+      sigLabel: 'Firma de autor (tomada directamente de tu perfil — Art. II)',
       attachLabel: 'Tu original manuscrito — obligatorio (Art. II)',
       attachUpload: 'Subir una carta', attachCamera: 'Tomar una foto', attachRemove: 'Quitar',
       attachHint: 'La casa de postas transcribe tu mano a texto editable — corriges la transcripción abajo antes de sellar.',
@@ -4753,15 +4808,28 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
 
     function signIn(name) {
+      if (!name) return;
       var parts = name.trim().split(/\s+/);
       var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
-      document.querySelectorAll('#profile .avatar').forEach(function (a) { a.textContent = initials; });
-      document.querySelector('.profile-name').textContent = name;
-      document.querySelector('#profilePop .pop-head strong').textContent = name;
-      signInBtn.style.display = 'none';
-      avatarBtn.style.display = 'inline-flex';
+      document.querySelectorAll('#profile .avatar, #composeSigAvatar').forEach(function (a) { a.textContent = initials; });
+      var profNameEl = document.querySelector('.profile-name');
+      if (profNameEl) profNameEl.textContent = name;
+      var popHeadEl = document.querySelector('#profilePop .pop-head strong');
+      if (popHeadEl) popHeadEl.textContent = name;
+      var sigNameEl = document.getElementById('composeSigName');
+      if (sigNameEl) sigNameEl.textContent = name;
+      var compNameEl = document.getElementById('composeName');
+      if (compNameEl) compNameEl.value = name;
+      try { localStorage.setItem('pyl-profile-name', name); } catch(e) {}
+      if (signInBtn) signInBtn.style.display = 'none';
+      if (avatarBtn) avatarBtn.style.display = 'inline-flex';
       close();
     }
+
+    try {
+      var savedName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+      signIn(savedName);
+    } catch (e) {}
 
     document.getElementById('googleBtn').addEventListener('click', function () {
       status.classList.remove('err');
