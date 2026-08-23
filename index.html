@@ -5584,9 +5584,22 @@
       loadCalib();
     }
 
+    function getActiveEmail() {
+      var inputVal = document.getElementById('mailAddr') ? document.getElementById('mailAddr').value.trim() : '';
+      if (inputVal) return inputVal;
+      var storedProfileEmail = localStorage.getItem('pyl-profile-email');
+      if (storedProfileEmail) return storedProfileEmail;
+      try {
+        var mailObj = JSON.parse(localStorage.getItem('pyl-mail') || '{}');
+        if (mailObj && mailObj.addr) return mailObj.addr;
+      } catch (e) {}
+      return 'correspondent@punoyletra.org';
+    }
+
     function fetchBackendProfile(email) {
-      if (!email) return;
-      fetch('/api/profile?email=' + encodeURIComponent(email)).then(function (r) {
+      var targetEmail = email || getActiveEmail();
+      if (!targetEmail) return;
+      fetch('/api/profile?email=' + encodeURIComponent(targetEmail)).then(function (r) {
         if (r.ok) return r.json();
       }).then(function (data) {
         if (data && data.success && data.profile) {
@@ -5594,9 +5607,10 @@
           if (p.avatar_image) {
             applyAvatar(p.avatar_image);
           }
-          if (p.bio && bio && !bio.value.trim()) {
+          if (p.bio && bio) {
             bio.value = p.bio;
             try { localStorage.setItem('pyl-profile-bio', p.bio); } catch (e) {}
+            renderCount();
           }
           if (p.primary_lang && profLang) {
             profLang.value = p.primary_lang;
@@ -5625,13 +5639,23 @@
       }).catch(function (e) {});
     }
 
+    window.PYL = window.PYL || {};
+    window.PYL.fetchBackendProfile = function () {
+      fetchBackendProfile(getActiveEmail());
+    };
+
+    window.addEventListener('focus', function () {
+      if (window.PYL && window.PYL.fetchBackendProfile) {
+        window.PYL.fetchBackendProfile();
+      }
+    });
+
     try {
       var savedBio = localStorage.getItem('pyl-profile-bio');
       if (savedBio && bio) bio.value = savedBio;
     } catch (e) {}
 
-    var activeEmail = (document.getElementById('mailAddr') ? document.getElementById('mailAddr').value.trim() : '') || localStorage.getItem('pyl-profile-email');
-    if (activeEmail) fetchBackendProfile(activeEmail);
+    fetchBackendProfile(getActiveEmail());
 
     document.getElementById('profSave').addEventListener('click', function () {
       saved.classList.remove('show', 'err');
@@ -5795,6 +5819,9 @@
       if (PAGES.indexOf(id) === -1) id = 'top';
       page = id;
       render();
+      if (id === 'profile' && window.PYL && window.PYL.fetchBackendProfile) {
+        window.PYL.fetchBackendProfile();
+      }
       try {
         if (history.replaceState) { history.replaceState(null, '', '#' + id); }
       } catch (e) {}
