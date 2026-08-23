@@ -1439,9 +1439,18 @@
     padding: 0.6rem 1.5rem;
     font-size: 0.95rem;
     font-weight: 600;
-    transition: background 0.15s;
+    transition: background 0.15s, opacity 0.15s;
   }
   .btn-post:hover { background: var(--prussian-hover); }
+  .btn-post:disabled, .btn-post[disabled] {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    background: var(--rule) !important;
+    border-color: var(--rule) !important;
+    color: var(--graphite) !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+  }
   .post-note { font-size: 0.85rem; color: var(--graphite); margin: 0; }
   .posted-confirm { color: var(--prussian); font-size: 0.9rem; display: none; font-weight: 500; }
   .posted-confirm.show { display: inline; }
@@ -5299,13 +5308,47 @@
     /* 'captured' means recorded through this page; 'uploaded' files carry unknown provenance */
     var vidOrigin = null;
 
+    var profSaveBtn = document.getElementById('profSave');
+    var initialProfileSnapshot = null;
+
+    function getProfileSnapshot() {
+      return JSON.stringify({
+        bio: (bio ? bio.value.trim() : ''),
+        lang: (profLang ? profLang.value : 'spa'),
+        calibText: (calibText ? calibText.value.trim() : ''),
+        calibImg: calibDataUrl || '',
+        avaImg: avaDataUrl || '',
+        attest: (attest ? attest.checked : false)
+      });
+    }
+
+    function checkProfileDirty() {
+      if (!initialProfileSnapshot) return;
+      var currentSnapshot = getProfileSnapshot();
+      var isDirty = (currentSnapshot !== initialProfileSnapshot);
+      if (profSaveBtn) {
+        profSaveBtn.disabled = !isDirty;
+      }
+    }
+
+    function resetProfileSnapshot() {
+      initialProfileSnapshot = getProfileSnapshot();
+      checkProfileDirty();
+    }
+
     var LIMIT = 400;
     function renderCount() {
       var n = bio.value.length;
       bioCount.textContent = n + ' / ' + LIMIT;
       bioCount.classList.toggle('over', n >= LIMIT);
     }
-    bio.addEventListener('input', renderCount);
+    bio.addEventListener('input', function () {
+      renderCount();
+      checkProfileDirty();
+    });
+    if (attest) {
+      attest.addEventListener('change', checkProfileDirty);
+    }
 
     /* the seal: a photograph, or the initials drawn from the signed name */
     var avaDataUrl = null;
@@ -5328,6 +5371,7 @@
           a.classList.remove('has-photo');
         }
       });
+      checkProfileDirty();
     }
 
     try {
@@ -5434,6 +5478,7 @@
       profLang.addEventListener('change', function () {
         updateCalibSampleByLang();
         saveCalib();
+        checkProfileDirty();
       });
     }
 
@@ -5479,6 +5524,7 @@
         } else {
           localStorage.removeItem('pyl-calib-data');
           if (calibStatus) calibStatus.textContent = '';
+        }
         var activeEmail = (document.getElementById('mailAddr') ? document.getElementById('mailAddr').value.trim() : '') || localStorage.getItem('pyl-profile-email');
         if (activeEmail) {
           fetch('/api/profile', {
@@ -5495,6 +5541,7 @@
             })
           }).catch(function (e) {});
         }
+        checkProfileDirty();
       } catch (e) {}
     }
 
@@ -5504,22 +5551,6 @@
         calibUp.addEventListener('click', function () {
           calibInput.removeAttribute('capture');
           calibInput.click();
-        });
-      }
-      var calibCam = document.getElementById('calibCamera');
-      if (calibCam) {
-        calibCam.addEventListener('click', function () {
-          if (window.PYL && window.PYL.openCamera) {
-            window.PYL.openCamera(function (dataUrl) {
-              calibDataUrl = dataUrl;
-              if (calibImg) calibImg.src = calibDataUrl;
-              if (calibPreview) calibPreview.style.display = 'block';
-              saveCalib();
-            }, calibInput);
-          } else {
-            calibInput.setAttribute('capture', 'environment');
-            calibInput.click();
-          }
         });
       }
       calibInput.addEventListener('change', function () {
@@ -5545,7 +5576,10 @@
         });
       }
       if (calibText) {
-        calibText.addEventListener('input', saveCalib);
+        calibText.addEventListener('input', function () {
+          saveCalib();
+          checkProfileDirty();
+        });
       }
       loadCalib();
     }
@@ -5586,6 +5620,7 @@
               calibStatus.textContent = '✓ Calibration reference active (Synced from Backend DB) — AI Vision OCR is calibrated to your cursive.';
             }
           }
+          resetProfileSnapshot();
         }
       }).catch(function (e) {});
     }
@@ -5648,7 +5683,10 @@
 
       saved.textContent = T('profSavedMsg');
       saved.classList.add('show');
+      resetProfileSnapshot();
     });
+
+    setTimeout(resetProfileSnapshot, 100);
 
     PYL.onLang.push(function () {
       renderCount();
