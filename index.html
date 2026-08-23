@@ -2388,16 +2388,7 @@
         <img id="calibImg" src="" alt="Handwriting calibration reference" style="max-height:160px; border-radius:4px; border:1px solid var(--rule); cursor:pointer;" />
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem; flex-wrap:wrap; gap:0.5rem;">
-        <span class="meta">Exact transcription of your calibration sample:</span>
-        <div style="display:flex; gap:0.4rem;">
-          <button type="button" id="btnCalibSampleEs" class="btn-quiet" style="font-size:0.75rem; padding:0.15rem 0.4rem;">🇪🇸 Insert Spanish Sample</button>
-          <button type="button" id="btnCalibSampleEn" class="btn-quiet" style="font-size:0.75rem; padding:0.15rem 0.4rem;">🇬🇧 Insert English Sample</button>
-        </div>
-      </div>
-      <textarea id="calibText" style="min-height:95px; font-family:var(--f-serif); width:100%; padding:0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink); line-height:1.5;" placeholder="Write this paragraph by hand on paper, then snap a photo above...">El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?</textarea>
-
-      <div style="margin-top:0.75rem;">
+      <div style="margin-bottom:0.75rem;">
         <span class="meta" style="display:block; margin-bottom:0.25rem;">Primary Manuscript Writing Language:</span>
         <select id="profPrimaryLang" class="attach-select" style="max-width:240px; padding:0.35rem 0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink);">
           <option value="spa">Spanish (Español)</option>
@@ -2409,6 +2400,9 @@
           <option value="epo">Esperanto</option>
         </select>
       </div>
+
+      <span class="meta" style="display:block; margin-bottom:0.35rem;">Exact transcription of your calibration sample:</span>
+      <textarea id="calibText" style="min-height:95px; font-family:var(--f-serif); width:100%; padding:0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink); line-height:1.5;" placeholder="Write this paragraph by hand on paper, then snap a photo above...">El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?</textarea>
 
       <span class="prof-note quiet" id="calibStatus" style="margin-top:0.35rem; display:block;"></span>
     </div>
@@ -5391,20 +5385,27 @@
 
     var profLang = document.getElementById('profPrimaryLang');
 
-    var sampleEs = "El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?";
-    var sampleEn = "The quick brown fox jumps over 105 lazy dogs on Friday morning. We write with quill and ink to the Republic of Letters, sharing news, questions, and philosophical ideas. Yours faithfully, Euclides.";
+    var langSamples = {
+      spa: "El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?",
+      eng: "The quick brown fox jumps over 105 lazy dogs on Friday morning. We write with quill and ink to the Republic of Letters, sharing news, questions, and philosophical ideas. Yours faithfully, Euclides.",
+      fra: "Portez ce vieux whisky au juge blond qui fume sur son île intérieure, 108 fois. Nous écrivons à la République des Lettres le 28 août avec foi, amitié et dévouement. Qu'en pensez-vous?",
+      por: "O sapo cururu e a rápida raposa saltaram sobre 105 cães na manhã de sexta-feira. Escrevemos com carinho e fé à República das Letras. O que você acha?",
+      deu: "Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich. Wir schreiben 104 Briefe an die Republik der Briefe mit Freude und Hingabe. Was meinen Sie?",
+      lat: "In urbe Roma, die XXVIII mensis Augusti, CVI epistulas ad amicos Rei Publicae Litterarum scribemus cum fide et devotione. Quid censes?",
+      epo: "Eble ĵaŭde eĥoŝanĝo ĉiuĵaŭde gajnos 105 poŝtkartojn en la Respubliko de Leteroj kun amikeco kaj devoteco. Kion vi pensas?"
+    };
 
-    var btnEs = document.getElementById('btnCalibSampleEs');
-    if (btnEs) {
-      btnEs.addEventListener('click', function () {
-        if (calibText) calibText.value = sampleEs;
-        saveCalib();
-      });
+    function updateCalibSampleByLang() {
+      var l = (profLang && profLang.value) || 'spa';
+      var sampleText = langSamples[l] || langSamples.spa;
+      if (calibText) {
+        calibText.value = sampleText;
+      }
     }
-    var btnEn = document.getElementById('btnCalibSampleEn');
-    if (btnEn) {
-      btnEn.addEventListener('click', function () {
-        if (calibText) calibText.value = sampleEn;
+
+    if (profLang) {
+      profLang.addEventListener('change', function () {
+        updateCalibSampleByLang();
         saveCalib();
       });
     }
@@ -5429,8 +5430,8 @@
             calibText.value = parsed.text;
           }
           if (calibStatus) calibStatus.textContent = '✓ Calibration reference active — AI Vision OCR is calibrated to your cursive.';
-        } else if (calibText && !calibText.value.trim()) {
-          calibText.value = sampleEs;
+        } else {
+          updateCalibSampleByLang();
         }
       } catch (e) {}
     }
