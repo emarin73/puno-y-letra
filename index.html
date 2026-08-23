@@ -2112,8 +2112,8 @@
       </div>
       <p class="vis-note" id="visNote"></p>
       <div class="compose-actions">
-        <button class="attach-btn" id="reviewLetterBtn" data-i18n="reviewBtn">Review &amp; inspect OCR</button>
-        <button class="btn-post" id="postLetter" data-i18n="postBtn">Seal &amp; post</button>
+        <button class="attach-btn" id="reviewLetterBtn" type="button" data-i18n="reviewBtn">Review &amp; inspect OCR</button>
+        <button class="btn-post" id="postLetter" type="button" data-i18n="postBtn">Seal &amp; post</button>
         <span class="posted-confirm" id="postedConfirm"></span>
         <p class="post-note" data-i18n="postNote"></p>
       </div>
@@ -3850,33 +3850,38 @@
       }
     }
 
-    PYL.reviewLetter = function () {
+    PYL.reviewLetter = function (strict) {
       var body = document.getElementById('composeBody');
       var confirmEl = document.getElementById('postedConfirm');
       if (confirmEl) confirmEl.classList.remove('show');
       
-      if (!document.getElementById('attachPreview').classList.contains('show')) {
-        if (confirmEl) {
-          confirmEl.textContent = T('confirmAttach');
-          confirmEl.classList.add('show');
-          confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      var hasAttachment = document.getElementById('attachPreview').classList.contains('show');
+      var bodyText = body ? body.value.trim() : '';
+
+      if (strict) {
+        if (!hasAttachment) {
+          if (confirmEl) {
+            confirmEl.textContent = T('confirmAttach');
+            confirmEl.classList.add('show');
+            confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          if (PYL.toast) PYL.toast(T('confirmAttach'));
+          return false;
         }
-        if (PYL.toast) PYL.toast(T('confirmAttach'));
-        return false;
-      }
-      if (body.value.trim().length < 40) {
-        if (confirmEl) {
-          confirmEl.textContent = T('confirmShort');
-          confirmEl.classList.add('show');
-          confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (bodyText.length < 40) {
+          if (confirmEl) {
+            confirmEl.textContent = T('confirmShort');
+            confirmEl.classList.add('show');
+            confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          if (PYL.toast) PYL.toast(T('confirmShort'));
+          return false;
         }
-        if (PYL.toast) PYL.toast(T('confirmShort'));
-        return false;
       }
 
-      var titleVal = document.getElementById('composeTitle').value.trim() || 'Untitled Letter';
-      var bodyVal = body.value.trim();
-      var nameVal = document.getElementById('composeName').value.trim() || T('aCorrespondent');
+      var titleVal = (document.getElementById('composeTitle').value || '').trim() || 'Untitled Letter';
+      var bodyVal = bodyText || '(Your letter text will appear here once written...)';
+      var nameVal = (document.getElementById('composeName').value || '').trim() || T('aCorrespondent');
       
       var postChoiceEl = document.querySelector('#segPost .active');
       var postChoice = postChoiceEl ? postChoiceEl.getAttribute('data-v') : 'default';
@@ -3898,7 +3903,7 @@
         visPill.className = 'pill ' + (vis === 'private' ? 'private' : '');
       }
 
-      var words = bodyVal.split(/\s+/).filter(Boolean).length;
+      var words = bodyText.split(/\s+/).filter(Boolean).length;
       var mins = Math.max(1, Math.round(words / 200));
       var wEl = document.getElementById('reviewWordsMeta');
       if (wEl) wEl.textContent = words + ' words · ' + mins + ' min read';
@@ -3916,16 +3921,16 @@
             pagesPreview.appendChild(img);
           });
         } else {
-          pagesPreview.innerHTML = '<span class="prof-note quiet">Attached manuscript photo</span>';
+          pagesPreview.innerHTML = '<span class="prof-note quiet" style="color:#b8860b; display:block; padding:4px 0;">⚠️ Art. II Rule: Please attach a handwritten manuscript photo before sealing.</span>';
         }
       }
 
       var ocrTextEl = document.getElementById('reviewOcrText');
       if (ocrTextEl) ocrTextEl.textContent = bodyVal;
       
-      var matchScore = 96 + (words % 4);
+      var matchScore = hasAttachment ? (96 + (words % 4)) : 0;
       var scoreEl = document.getElementById('reviewOcrScore');
-      if (scoreEl) scoreEl.textContent = matchScore + '% Alignment Match';
+      if (scoreEl) scoreEl.textContent = hasAttachment ? (matchScore + '% Alignment Match') : 'Pending Manuscript Upload';
 
       var modal = document.getElementById('reviewOverlay');
       if (modal) modal.classList.add('open');
@@ -3934,15 +3939,17 @@
 
     var revBtn = document.getElementById('reviewLetterBtn');
     if (revBtn) {
-      revBtn.addEventListener('click', function () {
-        PYL.reviewLetter();
+      revBtn.addEventListener('click', function (e) {
+        if (e) e.preventDefault();
+        PYL.reviewLetter(false);
       });
     }
 
     var postBtn = document.getElementById('postLetter');
     if (postBtn) {
-      postBtn.addEventListener('click', function () {
-        PYL.reviewLetter();
+      postBtn.addEventListener('click', function (e) {
+        if (e) e.preventDefault();
+        PYL.reviewLetter(true);
       });
     }
 
@@ -3950,12 +3957,14 @@
     var revEdit = document.getElementById('reviewEditBtn');
     var revModal = document.getElementById('reviewOverlay');
     if (revClose) {
-      revClose.addEventListener('click', function () {
+      revClose.addEventListener('click', function (e) {
+        if (e) e.preventDefault();
         if (revModal) revModal.classList.remove('open');
       });
     }
     if (revEdit) {
-      revEdit.addEventListener('click', function () {
+      revEdit.addEventListener('click', function (e) {
+        if (e) e.preventDefault();
         if (revModal) revModal.classList.remove('open');
       });
     }
@@ -3967,7 +3976,15 @@
 
     var revConfirm = document.getElementById('reviewConfirmBtn');
     if (revConfirm) {
-      revConfirm.addEventListener('click', function () {
+      revConfirm.addEventListener('click', function (e) {
+        if (e) e.preventDefault();
+        var hasAttachment = document.getElementById('attachPreview').classList.contains('show');
+        var bodyText = (document.getElementById('composeBody').value || '').trim();
+        if (!hasAttachment || bodyText.length < 40) {
+          if (revModal) revModal.classList.remove('open');
+          PYL.reviewLetter(true);
+          return;
+        }
         if (revModal) revModal.classList.remove('open');
         executePostSequence();
       });
