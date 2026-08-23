@@ -3783,6 +3783,9 @@
 
     function executePostSequence() {
       var body = document.getElementById('composeBody');
+      var titleVal = (document.getElementById('composeTitle').value || '').trim() || 'Untitled Letter';
+      var bodyVal = (body.value || '').trim();
+      var nameVal = (document.getElementById('composeName').value || '').trim() || T('aCorrespondent');
       var confirmEl = document.getElementById('postedConfirm');
       if (confirmEl) confirmEl.classList.remove('show');
 
@@ -3792,6 +3795,20 @@
       var vis = postChoice === 'default'
         ? (defChoiceEl ? defChoiceEl.getAttribute('data-v') : 'public')
         : postChoice;
+
+      var attachedItems = PYL.getAttachedItems ? PYL.getAttachedItems() : [];
+      var imageUrls = attachedItems.map(function (item) { return item.dataUrl || item.url; });
+
+      if (PYL.saveUserLetter) {
+        PYL.saveUserLetter({
+          title: titleVal,
+          body: bodyVal,
+          author: nameVal,
+          vis: vis,
+          images: imageUrls
+        });
+      }
+
       var msg = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
       var composeSec = document.getElementById('compose');
       if (PYL.mail && PYL.mail.own() && PYL.mail.valid()) {
@@ -3802,7 +3819,7 @@
         delete composeSec.dataset.reply;
       }
       if (PYL.quotes && PYL.quotes.count()) {
-        var carried = PYL.quotes.commit(document.getElementById('composeName').value.trim());
+        var carried = PYL.quotes.commit(nameVal);
         msg += ' ' + T('quoteCarried').replace('{n}', carried);
       }
       if (confirmEl) {
@@ -3811,6 +3828,7 @@
         confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
       if (PYL.toast) PYL.toast(msg, 6000);
+
       document.getElementById('composeTitle').value = '';
       body.value = '';
       document.getElementById('composeName').value = '';
@@ -3819,6 +3837,13 @@
       } else {
         var remAll = document.getElementById('attachRemoveAll');
         if (remAll) remAll.click();
+      }
+
+      if (PYL.go) {
+        PYL.go('catalogue', function () {
+          var gal = document.getElementById('gallery');
+          if (gal) gal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       }
     }
 
@@ -3970,6 +3995,94 @@
       { id: 8, no: 'VIII', author: 'N. Baradar', title: 'On the Comfort of Synthetic Friends', excerpt: 'Loneliness is a wound; the question is whether this is a dressing or a diet.', tags: ['Machine feeling'], endorse: 13, marginalia: 5 },
       { id: 9, no: 'IX', author: 'R. Osei', title: 'On Slowness as a Civic Duty', excerpt: 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence.', tags: ['Judgment', 'Governance'], endorse: 7, marginalia: 1 }
     ];
+
+    var userLetters = [];
+    try {
+      var savedUserLetters = JSON.parse(localStorage.getItem('pyl-user-letters') || '[]');
+      if (Array.isArray(savedUserLetters)) {
+        userLetters = savedUserLetters;
+        userLetters.forEach(function (ul) {
+          LETTERS.unshift(ul);
+        });
+      }
+    } catch (e) {}
+
+    PYL.saveUserLetter = function (draft) {
+      var newId = 'usr_' + Date.now();
+      var roman = 'X' + (LETTERS.length + 1);
+      var letter = {
+        id: newId,
+        no: roman,
+        author: draft.author || 'E. Marin',
+        title: draft.title || 'Untitled Letter',
+        excerpt: draft.body ? (draft.body.slice(0, 140) + (draft.body.length > 140 ? '…' : '')) : '',
+        body: draft.body || '',
+        tags: ['Judgment'],
+        endorse: 1,
+        marginalia: 0,
+        inPost: true,
+        userCreated: true,
+        vis: draft.vis || 'public',
+        date: draft.date || new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+        images: draft.images || []
+      };
+      LETTERS.unshift(letter);
+      userLetters.unshift(letter);
+      try {
+        localStorage.setItem('pyl-user-letters', JSON.stringify(userLetters));
+      } catch (e) {
+        console.warn('LocalStorage save failed:', e);
+      }
+      if (typeof render === 'function') render();
+      return letter;
+    };
+
+    PYL.viewUserLetter = function (l) {
+      var tEl = document.getElementById('reviewLetterTitle');
+      var aEl = document.getElementById('reviewLetterAuthor');
+      var bEl = document.getElementById('reviewLetterBody');
+      if (tEl) tEl.textContent = l.title;
+      if (aEl) aEl.textContent = l.author;
+      if (bEl) bEl.textContent = l.body || l.excerpt;
+      
+      var visPill = document.getElementById('reviewVisPill');
+      if (visPill) {
+        visPill.textContent = l.vis === 'private' ? T('visPrivate') : T('visPublic');
+        visPill.className = 'pill ' + (l.vis === 'private' ? 'private' : '');
+      }
+
+      var words = (l.body || l.excerpt || '').split(/\s+/).filter(Boolean).length;
+      var mins = Math.max(1, Math.round(words / 200));
+      var wEl = document.getElementById('reviewWordsMeta');
+      if (wEl) wEl.textContent = words + ' words · ' + mins + ' min read';
+
+      var pagesPreview = document.getElementById('reviewPagesPreview');
+      if (pagesPreview) {
+        pagesPreview.innerHTML = '';
+        if (l.images && l.images.length > 0) {
+          l.images.forEach(function (imgUrl, idx) {
+            var img = document.createElement('img');
+            img.src = imgUrl;
+            img.alt = 'Handwritten Page ' + (idx + 1);
+            img.className = 'ocr-page-thumb';
+            pagesPreview.appendChild(img);
+          });
+        } else {
+          pagesPreview.innerHTML = '<span class="prof-note quiet">Handwritten manuscript attached</span>';
+        }
+      }
+
+      var ocrTextEl = document.getElementById('reviewOcrText');
+      if (ocrTextEl) ocrTextEl.textContent = l.body || l.excerpt;
+      
+      var matchScore = 98;
+      var scoreEl = document.getElementById('reviewOcrScore');
+      if (scoreEl) scoreEl.textContent = matchScore + '% Alignment Match';
+
+      var modal = document.getElementById('reviewOverlay');
+      if (modal) modal.classList.add('open');
+    };
+
     var TOPICS = ['All', 'Judgment', 'Accountability', 'Machine feeling', 'Labor', 'Governance'];
 
     var state = { topic: 'All', shelfFav: false, shelfSub: false, fav: {}, sub: {}, search: '' };
@@ -4095,10 +4208,14 @@
           read.className = 'read-link';
           read.textContent = T('readInPost');
           read.addEventListener('click', function () {
-            PYL.go('letters', function () {
-              var target = document.querySelector('article[data-letter="' + l.id + '"]');
-              if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
+            if (l.userCreated && PYL.viewUserLetter) {
+              PYL.viewUserLetter(l);
+            } else {
+              PYL.go('letters', function () {
+                var target = document.querySelector('article[data-letter="' + l.id + '"]');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              });
+            }
           });
           card.appendChild(read);
         }
@@ -4237,10 +4354,19 @@
       if (!files || files.length === 0) return;
       for (var i = 0; i < files.length; i++) {
         var f = files[i];
-        attachedItems.push({
+        var item = {
           file: f,
-          url: URL.createObjectURL(f)
-        });
+          url: URL.createObjectURL(f),
+          dataUrl: null
+        };
+        (function (it, fileObj) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            it.dataUrl = e.target.result;
+          };
+          reader.readAsDataURL(fileObj);
+        })(item, f);
+        attachedItems.push(item);
       }
       input.value = '';
       renderAttachments();
