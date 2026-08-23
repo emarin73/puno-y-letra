@@ -5358,6 +5358,34 @@
       });
     }
 
+    function compressImageDataUrl(src, maxW, maxH, quality, callback) {
+      if (!src) return callback(null);
+      var img = new Image();
+      img.onload = function () {
+        var canvas = document.createElement('canvas');
+        var w = img.width;
+        var h = img.height;
+        if (w > maxW || h > maxH) {
+          if (w / h > maxW / maxH) {
+            h = Math.round((h * maxW) / w);
+            w = maxW;
+          } else {
+            w = Math.round((w * maxH) / h);
+            h = maxH;
+          }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        callback(canvas.toDataURL('image/jpeg', quality || 0.8));
+      };
+      img.onerror = function () {
+        callback(src);
+      };
+      img.src = src;
+    }
+
     /* the seal: a photograph, or the initials drawn from the signed name */
     var avaDataUrl = null;
 
@@ -5400,7 +5428,9 @@
       if (!f) return;
       var reader = new FileReader();
       reader.onload = function (e) {
-        applyAvatar(e.target.result);
+        compressImageDataUrl(e.target.result, 400, 400, 0.8, function (compressed) {
+          applyAvatar(compressed);
+        });
       };
       reader.readAsDataURL(f);
     });
@@ -5567,10 +5597,12 @@
         if (!f) return;
         var reader = new FileReader();
         reader.onload = function (e) {
-          calibDataUrl = e.target.result;
-          if (calibImg) calibImg.src = calibDataUrl;
-          if (calibPreview) calibPreview.style.display = 'block';
-          saveCalib();
+          compressImageDataUrl(e.target.result, 1200, 1200, 0.78, function (compressed) {
+            calibDataUrl = compressed;
+            if (calibImg) calibImg.src = calibDataUrl;
+            if (calibPreview) calibPreview.style.display = 'block';
+            saveCalib();
+          });
         };
         reader.readAsDataURL(f);
       });

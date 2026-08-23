@@ -1,7 +1,10 @@
-// Vercel Serverless Function: /api/profile.js
-// Persistent Correspondent Profile & Handwriting Calibration API powered by Supabase DB
-
-import { createClient } from '@supabase/supabase-js';
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb'
+    }
+  }
+};
 
 export default async function handler(req, res) {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://eualuswwyosllmnumemt.supabase.co';
@@ -77,15 +80,33 @@ export default async function handler(req, res) {
     }
 
     try {
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from('correspondents')
         .upsert(payload, { onConflict: 'email' })
         .select()
         .single();
 
       if (error) {
-        console.error('Error upserting profile in Supabase:', error);
-        return res.status(500).json({ error: error.message });
+        console.warn('First profile upsert error, attempting fallback payload:', error.message);
+        // Fallback: omit new image columns if schema was not migrated
+        const fallbackPayload = {
+          email: payload.email,
+          name: payload.name,
+          bio: payload.bio,
+          primary_lang: payload.primary_lang,
+          updated_at: payload.updated_at
+        };
+        const fbRes = await supabase
+          .from('correspondents')
+          .upsert(fallbackPayload, { onConflict: 'email' })
+          .select()
+          .single();
+        
+        if (fbRes.error) {
+          console.error('Fallback profile upsert error:', fbRes.error.message);
+          return res.status(500).json({ error: error.message || fbRes.error.message });
+        }
+        data = fbRes.data;
       }
 
       return res.status(200).json({
