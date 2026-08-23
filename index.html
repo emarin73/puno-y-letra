@@ -28,6 +28,9 @@
   <!-- Google Fonts Preconnect & Serifs -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Supabase JS Client for Safe Backend Storage -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Tamil:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -4007,6 +4010,41 @@
       }
     } catch (e) {}
 
+  /* ---------- Supabase Backend Safe Storage ---------- */
+  (function () {
+    var SUPABASE_URL = 'https://eualuswwyosllmnumemt.supabase.co';
+    var SUPABASE_ANON_KEY = window.PYL_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1YWx1c3d3eW9zbGxtbnVtZW10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwMDAwMDAsImV4cCI6MjA1NTY0MDAwMH0.placeholder';
+
+    var client = null;
+    try {
+      if (window.supabase && typeof window.supabase.createClient === 'function') {
+        client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        PYL.supabase = client;
+      }
+    } catch (e) {
+      console.warn('Supabase init note:', e);
+    }
+
+    PYL.syncToBackend = async function (letter) {
+      if (!client) return false;
+      try {
+        var payload = {
+          title: letter.title,
+          transcription: letter.body,
+          manuscript_url: (letter.images && letter.images[0]) ? letter.images[0] : '',
+          visibility: letter.vis || 'public',
+          sealed_at: new Date().toISOString()
+        };
+        var res = await client.from('letters').insert([payload]).select();
+        if (res.data) console.log('Letter saved safely to Supabase backend!', res.data);
+        return res.data;
+      } catch (err) {
+        console.warn('Backend safe storage sync note:', err);
+        return false;
+      }
+    };
+  })();
+
     PYL.saveUserLetter = function (draft) {
       var newId = 'usr_' + Date.now();
       var roman = 'X' + (LETTERS.length + 1);
@@ -4032,6 +4070,9 @@
         localStorage.setItem('pyl-user-letters', JSON.stringify(userLetters));
       } catch (e) {
         console.warn('LocalStorage save failed:', e);
+      }
+      if (PYL.syncToBackend) {
+        PYL.syncToBackend(letter);
       }
       if (typeof render === 'function') render();
       return letter;
