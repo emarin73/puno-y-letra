@@ -2388,8 +2388,14 @@
         <img id="calibImg" src="" alt="Handwriting calibration reference" style="max-height:160px; border-radius:4px; border:1px solid var(--rule); cursor:pointer;" />
       </div>
 
-      <span class="meta" style="display:block; margin-bottom:0.35rem;">Exact transcription of your calibration sample:</span>
-      <textarea id="calibText" style="min-height:90px; font-family:var(--f-serif); width:100%; padding:0.5rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink);" placeholder="Type the exact text written in your sample photo above..."></textarea>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem; flex-wrap:wrap; gap:0.5rem;">
+        <span class="meta">Exact transcription of your calibration sample:</span>
+        <div style="display:flex; gap:0.4rem;">
+          <button type="button" id="btnCalibSampleEs" class="btn-quiet" style="font-size:0.75rem; padding:0.15rem 0.4rem;">🇪🇸 Insert Spanish Sample</button>
+          <button type="button" id="btnCalibSampleEn" class="btn-quiet" style="font-size:0.75rem; padding:0.15rem 0.4rem;">🇬🇧 Insert English Sample</button>
+        </div>
+      </div>
+      <textarea id="calibText" style="min-height:95px; font-family:var(--f-serif); width:100%; padding:0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink); line-height:1.5;" placeholder="Write this paragraph by hand on paper, then snap a photo above...">El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?</textarea>
 
       <div style="margin-top:0.75rem;">
         <span class="meta" style="display:block; margin-bottom:0.25rem;">Primary Manuscript Writing Language:</span>
@@ -5385,6 +5391,24 @@
 
     var profLang = document.getElementById('profPrimaryLang');
 
+    var sampleEs = "El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?";
+    var sampleEn = "The quick brown fox jumps over 105 lazy dogs on Friday morning. We write with quill and ink to the Republic of Letters, sharing news, questions, and philosophical ideas. Yours faithfully, Euclides.";
+
+    var btnEs = document.getElementById('btnCalibSampleEs');
+    if (btnEs) {
+      btnEs.addEventListener('click', function () {
+        if (calibText) calibText.value = sampleEs;
+        saveCalib();
+      });
+    }
+    var btnEn = document.getElementById('btnCalibSampleEn');
+    if (btnEn) {
+      btnEn.addEventListener('click', function () {
+        if (calibText) calibText.value = sampleEn;
+        saveCalib();
+      });
+    }
+
     function loadCalib() {
       try {
         if (profLang) {
@@ -5405,6 +5429,8 @@
             calibText.value = parsed.text;
           }
           if (calibStatus) calibStatus.textContent = '✓ Calibration reference active — AI Vision OCR is calibrated to your cursive.';
+        } else if (calibText && !calibText.value.trim()) {
+          calibText.value = sampleEs;
         }
       } catch (e) {}
     }
