@@ -6784,9 +6784,10 @@
     if (googleAuthBtn) {
       googleAuthBtn.addEventListener('click', function () {
         if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+          var redirectUri = window.location.href.split('#')[0].replace(/\/$/, '');
           window.PYL.supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: window.location.origin }
+            options: { redirectTo: redirectUri }
           }).catch(function (err) {
             if (authStatus) {
               authStatus.textContent = err.message || 'Google Auth Error';
