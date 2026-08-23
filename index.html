@@ -4448,7 +4448,36 @@
         (function (it, fileObj) {
           var reader = new FileReader();
           reader.onload = function (e) {
-            it.dataUrl = e.target.result;
+            var rawUrl = e.target.result;
+            var img = new Image();
+            img.onload = function () {
+              try {
+                var canvas = document.createElement('canvas');
+                var maxDim = 1600;
+                var w = img.width;
+                var h = img.height;
+                if (w > maxDim || h > maxDim) {
+                  if (w > h) {
+                    h = Math.round((h * maxDim) / w);
+                    w = maxDim;
+                  } else {
+                    w = Math.round((w * maxDim) / h);
+                    h = maxDim;
+                  }
+                }
+                canvas.width = w;
+                canvas.height = h;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                it.dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+              } catch (err) {
+                it.dataUrl = rawUrl;
+              }
+            };
+            img.onerror = function () {
+              it.dataUrl = rawUrl;
+            };
+            img.src = rawUrl;
           };
           reader.readAsDataURL(fileObj);
         })(item, f);
