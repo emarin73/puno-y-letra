@@ -12,6 +12,7 @@ create table if not exists correspondents (
   email        citext not null unique,
   bio          text,                          -- author introduction / bio
   primary_lang text default 'spa',            -- primary manuscript writing language
+  avatar_image text,                          -- base64 profile avatar seal
   calib_image  text,                          -- handwriting calibration sample base64/URL
   calib_text   text,                          -- exact ground truth calibration key
   updated_at   timestamptz not null default now(),

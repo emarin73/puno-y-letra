@@ -697,6 +697,9 @@
     font-weight: 600;
     box-shadow: inset 0 0 0 1.5px var(--sheet), 0 0 0 1px var(--prussian);
     flex: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
   .avatar.big { width: 2.7rem; height: 2.7rem; font-size: 0.98rem; }
   .profile-name { font-size: 0.9rem; color: var(--ink); font-weight: 500; }
@@ -5305,6 +5308,33 @@
     bio.addEventListener('input', renderCount);
 
     /* the seal: a photograph, or the initials drawn from the signed name */
+    var avaDataUrl = null;
+
+    function applyAvatar(dataUrl) {
+      avaDataUrl = dataUrl || null;
+      if (dataUrl) {
+        try { localStorage.setItem('pyl-avatar-data', dataUrl); } catch (e) {}
+      } else {
+        try { localStorage.removeItem('pyl-avatar-data'); } catch (e) {}
+      }
+      document.querySelectorAll('.avatar, #profAvatar, #composeSigAvatar').forEach(function (a) {
+        if (dataUrl) {
+          a.style.backgroundImage = 'url("' + dataUrl + '")';
+          a.style.backgroundSize = 'cover';
+          a.style.backgroundPosition = 'center';
+          a.classList.add('has-photo');
+        } else {
+          a.style.backgroundImage = '';
+          a.classList.remove('has-photo');
+        }
+      });
+    }
+
+    try {
+      var savedAva = localStorage.getItem('pyl-avatar-data');
+      if (savedAva) applyAvatar(savedAva);
+    } catch (e) {}
+
     document.getElementById('avaUpload').addEventListener('click', function () {
       avaInput.removeAttribute('capture');
       avaInput.click();
@@ -5316,20 +5346,15 @@
     avaInput.addEventListener('change', function () {
       var f = avaInput.files && avaInput.files[0];
       if (!f) return;
-      if (avaUrl) URL.revokeObjectURL(avaUrl);
-      avaUrl = URL.createObjectURL(f);
-      document.querySelectorAll('.avatar').forEach(function (a) {
-        a.style.backgroundImage = 'url("' + avaUrl + '")';
-        a.classList.add('has-photo');
-      });
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        applyAvatar(e.target.result);
+      };
+      reader.readAsDataURL(f);
     });
     document.getElementById('avaRemove').addEventListener('click', function () {
       avaInput.value = '';
-      if (avaUrl) { URL.revokeObjectURL(avaUrl); avaUrl = null; }
-      document.querySelectorAll('.avatar').forEach(function (a) {
-        a.style.backgroundImage = '';
-        a.classList.remove('has-photo');
-      });
+      applyAvatar(null);
     });
 
     /* the video introduction */
@@ -5517,6 +5542,9 @@
       }).then(function (data) {
         if (data && data.success && data.profile) {
           var p = data.profile;
+          if (p.avatar_image) {
+            applyAvatar(p.avatar_image);
+          }
           if (p.bio && bio && !bio.value.trim()) {
             bio.value = p.bio;
             try { localStorage.setItem('pyl-profile-bio', p.bio); } catch (e) {}
@@ -5591,6 +5619,7 @@
           name: currentName,
           bio: currentBio,
           primary_lang: currentLang,
+          avatar_image: avaDataUrl,
           calib_image: calibImgVal,
           calib_text: calibTxtVal
         })
