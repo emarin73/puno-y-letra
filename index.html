@@ -5930,10 +5930,6 @@
 
     PYL.go = function (id, then) {
       if (PAGES.indexOf(id) === -1) id = 'top';
-      var user = window.PYL ? window.PYL.authUser : null;
-      if (!user && (id === 'letters' || id === 'catalogue' || id === 'compose' || id === 'desk' || id === 'profile')) {
-        id = 'charter';
-      }
       page = id;
       render();
       if (id === 'profile' && window.PYL && window.PYL.fetchBackendProfile) {
@@ -6705,21 +6701,9 @@
       var signInBtn = document.getElementById('signInBtn');
       var navAuthLabel = document.getElementById('navAuthLabel');
 
-      // Update side navigation links visibility
-      var sidenavLinks = document.querySelectorAll('#sidenav a');
-      sidenavLinks.forEach(function (a) {
-        var href = a.getAttribute('href');
-        if (user) {
-          // Signed in: show all navigation links
-          a.style.display = '';
-        } else {
-          // Signed out: show ONLY Charter and Sign In (and Home)
-          if (href === '#charter' || href === '#auth' || href === '#top') {
-            a.style.display = '';
-          } else {
-            a.style.display = 'none';
-          }
-        }
+      // Ensure all navigation links remain visible and accessible
+      document.querySelectorAll('#sidenav a').forEach(function (a) {
+        a.style.display = '';
       });
 
       if (user) {
