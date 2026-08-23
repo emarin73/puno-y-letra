@@ -10,6 +10,11 @@ create table if not exists correspondents (
   id           uuid primary key default gen_random_uuid(),
   name         text not null,                 -- real name, Art. II
   email        citext not null unique,
+  bio          text,                          -- author introduction / bio
+  primary_lang text default 'spa',            -- primary manuscript writing language
+  calib_image  text,                          -- handwriting calibration sample base64/URL
+  calib_text   text,                          -- exact ground truth calibration key
+  updated_at   timestamptz not null default now(),
   created_at   timestamptz not null default now()
 );
 

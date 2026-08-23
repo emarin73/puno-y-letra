@@ -5514,6 +5514,51 @@
       loadCalib();
     }
 
+    function fetchBackendProfile(email) {
+      if (!email) return;
+      fetch('/api/profile?email=' + encodeURIComponent(email)).then(function (r) {
+        if (r.ok) return r.json();
+      }).then(function (data) {
+        if (data && data.success && data.profile) {
+          var p = data.profile;
+          if (p.bio && bio && !bio.value.trim()) {
+            bio.value = p.bio;
+            try { localStorage.setItem('pyl-profile-bio', p.bio); } catch (e) {}
+          }
+          if (p.primary_lang && profLang) {
+            profLang.value = p.primary_lang;
+            try { localStorage.setItem('pyl-primary-lang', p.primary_lang); } catch (e) {}
+            var composeLang = document.getElementById('attachLang');
+            if (composeLang) composeLang.value = p.primary_lang;
+          }
+          if (p.calib_image) {
+            calibDataUrl = p.calib_image;
+            if (calibImg) calibImg.src = p.calib_image;
+            if (calibPreview) calibPreview.style.display = 'block';
+          }
+          if (p.calib_text && calibText) {
+            calibText.value = p.calib_text;
+          }
+          if (p.calib_image && p.calib_text) {
+            try {
+              localStorage.setItem('pyl-calib-data', JSON.stringify({ image: p.calib_image, text: p.calib_text }));
+            } catch (e) {}
+            if (calibStatus) {
+              calibStatus.textContent = '✓ Calibration reference active (Synced from Backend DB) — AI Vision OCR is calibrated to your cursive.';
+            }
+          }
+        }
+      }).catch(function (e) {});
+    }
+
+    try {
+      var savedBio = localStorage.getItem('pyl-profile-bio');
+      if (savedBio && bio) bio.value = savedBio;
+    } catch (e) {}
+
+    var activeEmail = (document.getElementById('mailAddr') ? document.getElementById('mailAddr').value.trim() : '') || localStorage.getItem('pyl-profile-email');
+    if (activeEmail) fetchBackendProfile(activeEmail);
+
     document.getElementById('profSave').addEventListener('click', function () {
       saved.classList.remove('show', 'err');
       saveCalib();
@@ -5527,6 +5572,40 @@
         saved.classList.add('show', 'err');
         return;
       }
+
+      var mailInput = document.getElementById('mailAddr');
+      var currentEmail = (mailInput ? mailInput.value.trim() : '') || localStorage.getItem('pyl-profile-email') || 'correspondent@punoyletra.org';
+      var currentName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+      var currentBio = bio.value.trim();
+      var currentLang = (profLang ? profLang.value : 'spa');
+      var calibImgVal = calibDataUrl;
+      var calibTxtVal = calibText ? calibText.value.trim() : '';
+
+      try {
+        localStorage.setItem('pyl-profile-bio', currentBio);
+        localStorage.setItem('pyl-profile-email', currentEmail);
+      } catch (e) {}
+
+      // Persist Profile & Handwriting Calibration to Backend Supabase DB
+      fetch('/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: currentEmail,
+          name: currentName,
+          bio: currentBio,
+          primary_lang: currentLang,
+          calib_image: calibImgVal,
+          calib_text: calibTxtVal
+        })
+      }).then(function (res) { return res.json(); }).then(function (data) {
+        if (data && data.success) {
+          console.log('✓ Profile & calibration persisted to backend database');
+        }
+      }).catch(function (err) {
+        console.warn('Backend profile persistence warning:', err);
+      });
+
       saved.textContent = T('profSavedMsg');
       saved.classList.add('show');
     });
