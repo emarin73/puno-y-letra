@@ -1,5 +1,5 @@
 // Vercel Serverless Function: /api/ocr.js
-// Multimodal Language-Aware Handwritten OCR powered by Gemini 1.5 Flash Vision (Multi-Page Support)
+// Multimodal Language-Aware Handwritten OCR powered by Gemini 1.5 Flash Vision (Few-Shot Calibration Support)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, images, lang } = req.body || {};
+    const { image, images, lang, calibImage, calibText } = req.body || {};
     const imageList = Array.isArray(images) && images.length > 0 ? images : (image ? [image] : []);
 
     if (imageList.length === 0) {
@@ -34,12 +34,38 @@ export default async function handler(req, res) {
     };
     const targetLang = langMap[lang] || 'Spanish or English';
 
-    const promptText = `You are a master paleographer transcribing a handwritten letter. 
-Carefully read the handwriting in each page of these ${imageList.length} manuscript photos and transcribe the full text in ${targetLang}.
+    const parts = [];
+
+    if (calibImage && calibText && calibText.trim()) {
+      let cMime = 'image/jpeg';
+      let cData = calibImage;
+      if (cData.startsWith('data:')) {
+        const cParts = cData.split(';base64,');
+        cMime = cParts[0].replace('data:', '');
+        cData = cParts[1];
+      }
+
+      parts.push({
+        text: `You are a master paleographer transcribing handwritten letters.
+Below is a verified HANDWRITING CALIBRATION REFERENCE from the author's personal handwriting style.
+Study the author's letter loops, cursive joins, slants, and character strokes in this sample image:`
+      });
+      parts.push({
+        inline_data: { mime_type: cMime, data: cData }
+      });
+      parts.push({
+        text: `The exact verified transcription for this author's calibration sample is:
+"${calibText.trim()}"
+
+Use this calibration reference to accurately decipher the author's handwriting style in the new manuscript photo(s) below.`
+      });
+    }
+
+    const promptText = `Now, carefully read the handwriting in each of the ${imageList.length} new manuscript photo(s) below and transcribe the full text in ${targetLang}.
 If there are multiple pages, transcribe them page by page in order, labeling each page clearly with '[Page 1]', '[Page 2]', etc.
 Return ONLY the raw transcribed letter text. Do NOT include markdown backticks (\`\`\`), greetings to the user, or conversational preambles.`;
 
-    const parts = [{ text: promptText }];
+    parts.push({ text: promptText });
 
     for (let i = 0; i < imageList.length; i++) {
       let mimeType = 'image/jpeg';
@@ -85,6 +111,7 @@ Return ONLY the raw transcribed letter text. Do NOT include markdown backticks (
       success: true,
       text: extractedText,
       pageCount: imageList.length,
+      calibrated: !!(calibImage && calibText),
       lang: lang
     });
   } catch (err) {
