@@ -5087,85 +5087,9 @@
       });
     });
 
-    document.getElementById('popSignOut').addEventListener('click', function () {
-      close();
-      btn.style.display = 'none';
-      signInBtn.style.display = 'inline-flex';
-    });
-    signInBtn.addEventListener('click', function () {
-      if (window.PYL.openAuth) window.PYL.openAuth();
-    });
-
     /* the language toggle lives inside this popover — refresh its dynamic rows on switch */
     PYL.onLang.push(function () {
       if (pop.classList.contains('open')) fill();
-    });
-  })();
-
-  /* ---------- auth: signup with Google (simulated) ---------- */
-  (function () {
-    var overlay = document.getElementById('authOverlay');
-    var status = document.getElementById('authStatus');
-    var avatarBtn = document.getElementById('avatarBtn');
-    var signInBtn = document.getElementById('signInBtn');
-
-    function open() {
-      overlay.classList.add('open');
-      status.textContent = '';
-      status.classList.remove('err');
-    }
-    function close() { overlay.classList.remove('open'); }
-    window.PYL.openAuth = open;
-
-    document.getElementById('authClose').addEventListener('click', close);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
-
-    function signIn(name) {
-      if (!name) return;
-      var parts = name.trim().split(/\s+/);
-      var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
-      document.querySelectorAll('#profile .avatar, #composeSigAvatar').forEach(function (a) { a.textContent = initials; });
-      var profNameEl = document.querySelector('.profile-name');
-      if (profNameEl) profNameEl.textContent = name;
-      var popHeadEl = document.querySelector('#profilePop .pop-head strong');
-      if (popHeadEl) popHeadEl.textContent = name;
-      var sigNameEl = document.getElementById('composeSigName');
-      if (sigNameEl) sigNameEl.textContent = name;
-      var compNameEl = document.getElementById('composeName');
-      if (compNameEl) compNameEl.value = name;
-      try { localStorage.setItem('pyl-profile-name', name); } catch(e) {}
-      if (signInBtn) signInBtn.style.display = 'none';
-      if (avatarBtn) avatarBtn.style.display = 'inline-flex';
-      close();
-    }
-
-    try {
-      var savedName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
-      signIn(savedName);
-    } catch (e) {}
-
-    document.getElementById('googleBtn').addEventListener('click', function () {
-      status.classList.remove('err');
-      status.textContent = T('authConnecting');
-      /* prototype: the real flow hands off to Google OAuth and returns the verified name */
-      setTimeout(function () { signIn('Euclides Marin'); }, 900);
-    });
-
-    document.getElementById('authCreate').addEventListener('click', function () {
-      var name = document.getElementById('authName').value.trim();
-      var email = document.getElementById('authEmail').value.trim();
-      if (name.split(/\s+/).length < 2) {
-        status.textContent = T('authNeedName');
-        status.classList.add('err');
-        return;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        status.textContent = T('authNeedEmail');
-        status.classList.add('err');
-        return;
-      }
-      signIn(name);
     });
   })();
 
@@ -6707,15 +6631,21 @@
       });
 
       if (user) {
-        if (avatarBtn) avatarBtn.style.display = 'flex';
+        if (avatarBtn) avatarBtn.style.display = 'inline-flex';
         if (signInBtn) {
           signInBtn.style.display = 'inline-block';
           signInBtn.textContent = 'Sign Out';
+          signInBtn.removeAttribute('data-i18n');
         }
         if (navAuthLabel) navAuthLabel.textContent = 'Sign Out';
 
         var userEmail = user.email || '';
         var userName = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || userEmail.split('@')[0];
+
+        var parts = userName.trim().split(/\s+/);
+        var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
+        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) { a.textContent = initials; });
+        document.querySelectorAll('.profile-name, #profilePop strong').forEach(function (el) { el.textContent = userName; });
 
         var mailAddrElem = document.getElementById('mailAddr');
         if (mailAddrElem && !mailAddrElem.value) {
