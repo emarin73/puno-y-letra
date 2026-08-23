@@ -1538,6 +1538,61 @@
   .auth-status { font-size: 0.85rem; color: var(--prussian); margin: 0; min-height: 1.2em; }
   .auth-status.err { color: var(--wax); }
 
+  /* ---------- lightbox modal ---------- */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(18, 16, 14, 0.88);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-content {
+    position: relative;
+    max-width: 92vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .lightbox-content img {
+    max-width: 100%;
+    max-height: 82vh;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: -2.5rem;
+    right: 0;
+    background: none;
+    border: none;
+    color: #f5f0eb;
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 0.2rem 0.6rem;
+  }
+  .lightbox-caption {
+    margin-top: 0.75rem;
+    color: #e5dec9;
+    font-family: var(--f-serif);
+    font-size: 0.92rem;
+    text-align: center;
+  }
+  .attach-item img {
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .attach-item img:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+
   /* ---------- review modal ---------- */
   .review-overlay {
     position: fixed;
@@ -2354,6 +2409,15 @@
       <button class="attach-btn" id="reviewEditBtn" data-i18n="reviewReviseBtn">Back to editing</button>
       <button class="btn-post" id="reviewConfirmBtn" data-i18n="reviewSealBtn">Confirm &amp; Seal Letter</button>
     </div>
+  </div>
+</div>
+
+<!-- Fullscreen Image Lightbox Modal -->
+<div class="lightbox-overlay" id="imgLightboxOverlay" role="dialog" aria-modal="true" aria-label="Manuscript image preview">
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="imgLightboxClose" type="button" aria-label="Close image preview">✕</button>
+    <img id="imgLightboxImg" src="" alt="Manuscript full preview" />
+    <p class="lightbox-caption" id="imgLightboxCaption"></p>
   </div>
 </div>
 
@@ -3997,6 +4061,13 @@
             img.src = item.url;
             img.alt = 'Handwritten Page ' + (idx + 1);
             img.className = 'ocr-page-thumb';
+            img.style.cursor = 'pointer';
+            img.title = 'Click to view full manuscript picture';
+            img.addEventListener('click', function () {
+              if (window.PYL && window.PYL.openLightbox) {
+                window.PYL.openLightbox(item.dataUrl || item.url, 'Handwritten Page ' + (idx + 1));
+              }
+            });
             pagesPreview.appendChild(img);
           });
         } else {
@@ -4436,6 +4507,14 @@
         var img = document.createElement('img');
         img.src = item.url;
         img.alt = 'Handwritten letter page ' + (index + 1);
+        img.title = 'Click to view manuscript picture in full screen';
+        img.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (window.PYL && window.PYL.openLightbox) {
+            window.PYL.openLightbox(item.dataUrl || item.url, (item.file && item.file.name) ? item.file.name : ('Handwritten manuscript — Page ' + (index + 1)));
+          }
+        });
         card.appendChild(img);
 
         var meta = document.createElement('div');
@@ -5887,6 +5966,37 @@
         return;
       }
     });
+  })();
+
+  /* ---------- image lightbox modal ---------- */
+  (function () {
+    var overlay = document.getElementById('imgLightboxOverlay');
+    var closeBtn = document.getElementById('imgLightboxClose');
+    var imgEl = document.getElementById('imgLightboxImg');
+    var capEl = document.getElementById('imgLightboxCaption');
+
+    if (!overlay) return;
+
+    function open(src, caption) {
+      if (imgEl) imgEl.src = src;
+      if (capEl) capEl.textContent = caption || '';
+      overlay.classList.add('open');
+    }
+
+    function close() {
+      overlay.classList.remove('open');
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay || e.target === closeBtn) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+
+    window.PYL = window.PYL || {};
+    window.PYL.openLightbox = open;
   })();
 </script>
 </body>
