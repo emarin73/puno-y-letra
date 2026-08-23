@@ -329,6 +329,36 @@
   .main section[data-page] { border-bottom: none; padding: 2.5rem 0 0; }
   .main header.masthead { border-bottom: none; }
 
+  /* ---------- topbar ---------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 25;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.65rem 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+  .topbar-inner {
+    max-width: 44rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar-meta {
+    font-family: Cinzel, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
   @media (max-width: 820px) {
     .shell { flex-direction: column; }
     .sidebar {
@@ -2023,20 +2053,6 @@
       </a>
     </nav>
     <div class="sidebar-foot">
-      <div class="theme-switcher" role="radiogroup" aria-label="Visual Theme">
-        <button class="theme-btn active" data-theme-val="auto" title="System preference" aria-label="System preference">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2v12a6 6 0 0 0 0-12"/></svg>
-          <span>Auto</span>
-        </button>
-        <button class="theme-btn" data-theme-val="light" title="Handcrafted paper theme" aria-label="Light paper theme">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5 13 13M3 13l1.5-1.5M11.5 4.5 13 3"/></svg>
-          <span>Paper</span>
-        </button>
-        <button class="theme-btn" data-theme-val="dark" title="Candlelight nocturnal theme" aria-label="Candlelight dark theme">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 10.5A6 6 0 1 1 5.5 2.5a4.8 4.8 0 0 0 8 8z"/></svg>
-          <span>Candle</span>
-        </button>
-      </div>
       <div class="ledger" role="status" aria-live="polite">
         <svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true">
           <line x1="30" y1="14" x2="30" y2="34" stroke="var(--graphite)" stroke-width="2"/>
@@ -2053,47 +2069,60 @@
           <span class="ledger-status" id="ledgerStatus"></span>
         </div>
       </div>
-      <div class="profile" id="profile">
-        <button class="avatar-btn" id="avatarBtn" aria-haspopup="true" aria-expanded="false">
-          <span class="avatar" aria-hidden="true">EM</span>
-          <span class="profile-name">Euclides Marin</span>
-        </button>
-        <button class="signin-btn" id="signInBtn" data-i18n="signIn" style="display:none;">Sign in</button>
-        <div class="profile-pop" id="profilePop">
-          <div class="pop-head">
-            <span class="avatar big" aria-hidden="true">EM</span>
-            <div>
-              <strong>Euclides Marin</strong>
-              <span class="pop-role" data-i18n="profileRole">Founding correspondent</span>
-            </div>
-          </div>
-          <div class="pop-row"><span class="meta" data-i18n="popVis">Default visibility</span><span id="popVisVal"></span></div>
-          <div class="pop-row"><span class="meta" data-i18n="shelfLabel">Shelf</span><span id="popShelfVal"></span></div>
-          <div class="pop-row">
-            <span class="meta" data-i18n="popLang">Language</span>
-            <select class="lang-select" id="langSel" aria-label="Language / Idioma / Langue / Lingua / Sprache">
-              <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="pt">Português</option>
-              <option value="fr">Français</option>
-              <option value="it">Italiano</option>
-              <option value="de">Deutsch</option>
-              <option value="la">Latin</option>
-              <option value="eo">Esperanto</option>
-              <option value="ta">தமிழ்</option>
-            </select>
-          </div>
-          <div class="pop-actions">
-            <a class="pop-link" href="#profile" data-i18n="popProfile">Edit my profile</a>
-            <button class="pop-link" id="popGoShelf" data-i18n="popGoShelf">Open my shelf</button>
-            <button class="pop-link danger" id="popSignOut" data-i18n="popSignOut">Sign out</button>
-          </div>
-        </div>
-      </div>
     </div>
 </aside>
 
 <main class="main" id="main-content">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <span class="topbar-meta">Vol. I · No. 1 — MMXXVI</span>
+      </div>
+      <div class="topbar-right">
+        <div class="profile" id="profile">
+          <button class="avatar-btn" id="avatarBtn" aria-haspopup="true" aria-expanded="false" style="display:none;">
+            <span class="avatar" aria-hidden="true">EM</span>
+            <span class="profile-name">Euclides Marin</span>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.75;"><path d="m4 6 4 4 4-4"/></svg>
+          </button>
+          <button class="signin-btn" id="signInBtn">Sign In</button>
+          <div class="profile-pop" id="profilePop">
+            <div class="pop-head">
+              <span class="avatar big" aria-hidden="true">EM</span>
+              <div>
+                <strong id="popName">Euclides Marin</strong>
+                <span class="pop-role" data-i18n="profileRole">Founding correspondent</span>
+              </div>
+            </div>
+            <div class="pop-row">
+              <span class="meta" data-i18n="popLang">Language</span>
+              <select class="lang-select" id="langSel" aria-label="Language / Idioma / Langue / Lingua / Sprache">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="pt">Português</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+                <option value="de">Deutsch</option>
+                <option value="la">Latin</option>
+                <option value="eo">Esperanto</option>
+                <option value="ta">தமிழ்</option>
+              </select>
+            </div>
+            <div class="pop-actions">
+              <a class="pop-link" href="#profile" id="popGoProfile" style="display:flex; align-items:center; gap:0.55rem; padding:0.4rem 0.2rem; text-decoration:none; color:var(--ink); font-weight:500;">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="5.5" r="2.6"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg>
+                <span>Profile</span>
+              </a>
+              <button class="pop-link danger" id="popSignOut" style="display:flex; align-items:center; gap:0.55rem; width:100%; padding:0.4rem 0.2rem; text-decoration:none; color:var(--wax); font-weight:500; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M10 12l4-4-4-4"/><path d="M14 8H6"/></svg>
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 <div class="wrap">
   <header class="masthead" id="top" data-page="top">
     <div class="masthead-top">
@@ -2530,6 +2559,25 @@
       <label class="check-row"><input type="checkbox" id="mailReplies" checked /><span data-i18n="mailReplies"></span></label>
       <label class="check-row"><input type="checkbox" id="mailDigest" /><span data-i18n="mailDigest"></span></label>
       <p class="prof-note quiet" data-i18n="mailNote"></p>
+    </div>
+
+    <div class="prof-block">
+      <h3 class="display">Atmosphere & Visual Theme</h3>
+      <p class="prof-note">Select your ambient reading and writing lighting.</p>
+      <div class="theme-switcher" role="radiogroup" aria-label="Visual Theme" style="display:inline-flex; margin-top:0.5rem;">
+        <button class="theme-btn active" data-theme-val="auto" title="System preference" aria-label="System preference">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 2v12a6 6 0 0 0 0-12"/></svg>
+          <span>Auto</span>
+        </button>
+        <button class="theme-btn" data-theme-val="light" title="Handcrafted paper theme" aria-label="Light paper theme">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5 13 13M3 13l1.5-1.5M11.5 4.5 13 3"/></svg>
+          <span>Paper</span>
+        </button>
+        <button class="theme-btn" data-theme-val="dark" title="Candlelight nocturnal theme" aria-label="Candlelight dark theme">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 10.5A6 6 0 1 1 5.5 2.5a4.8 4.8 0 0 0 8 8z"/></svg>
+          <span>Candle</span>
+        </button>
+      </div>
     </div>
 
     <div class="prof-block">
@@ -5094,35 +5142,48 @@
     }
 
     function close() {
-      pop.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
+      if (pop) pop.classList.remove('open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
 
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = pop.classList.toggle('open');
-      btn.setAttribute('aria-expanded', String(open));
-      if (open) fill();
-    });
+    if (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!pop) return;
+        var open = pop.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    }
+
     document.addEventListener('click', function (e) {
-      if (!profile.contains(e.target)) close();
+      if (profile && !profile.contains(e.target)) close();
     });
+
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') close();
     });
 
-    document.getElementById('popGoShelf').addEventListener('click', function () {
-      close();
-      PYL.go('catalogue', function () {
-        var fav = document.getElementById('filterFav');
-        if (!fav.classList.contains('active')) fav.click();
+    var popGoProfile = document.getElementById('popGoProfile');
+    if (popGoProfile) {
+      popGoProfile.addEventListener('click', function (e) {
+        e.preventDefault();
+        close();
+        if (window.PYL && window.PYL.go) window.PYL.go('profile');
       });
-    });
+    }
 
-    /* the language toggle lives inside this popover — refresh its dynamic rows on switch */
-    PYL.onLang.push(function () {
-      if (pop.classList.contains('open')) fill();
-    });
+    var popGoShelf = document.getElementById('popGoShelf');
+    if (popGoShelf) {
+      popGoShelf.addEventListener('click', function () {
+        close();
+        if (window.PYL && window.PYL.go) {
+          window.PYL.go('catalogue', function () {
+            var fav = document.getElementById('filterFav');
+            if (fav && !fav.classList.contains('active')) fav.click();
+          });
+        }
+      });
+    }
   })();
 
   /* ---------- writing desk: recommended tools (affiliate) ---------- */
@@ -6693,20 +6754,25 @@
 
       if (user) {
         if (avatarBtn) avatarBtn.style.display = 'inline-flex';
-        if (signInBtn) {
-          signInBtn.style.display = 'inline-block';
-          signInBtn.textContent = 'Sign Out';
-          signInBtn.removeAttribute('data-i18n');
-        }
+        if (signInBtn) signInBtn.style.display = 'none';
         if (navAuthLabel) navAuthLabel.textContent = 'Sign Out';
 
         var userEmail = user.email || '';
         var userName = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || userEmail.split('@')[0];
+        var avatarUrl = (user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture)) || '';
 
         var parts = userName.trim().split(/\s+/);
         var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
-        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) { a.textContent = initials; });
-        document.querySelectorAll('.profile-name, #profilePop strong').forEach(function (el) { el.textContent = userName; });
+        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) {
+          if (avatarUrl) {
+            a.style.backgroundImage = 'url(' + avatarUrl + ')';
+            a.textContent = '';
+          } else {
+            a.style.backgroundImage = '';
+            a.textContent = initials;
+          }
+        });
+        document.querySelectorAll('.profile-name, #profilePop strong, #popName').forEach(function (el) { el.textContent = userName; });
 
         var mailAddrElem = document.getElementById('mailAddr');
         if (mailAddrElem && !mailAddrElem.value) {
@@ -6727,6 +6793,10 @@
           signInBtn.textContent = 'Sign In';
         }
         if (navAuthLabel) navAuthLabel.textContent = 'Sign In';
+        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) {
+          a.style.backgroundImage = '';
+          a.textContent = 'EM';
+        });
       }
     }
 
@@ -6893,6 +6963,11 @@
     }
 
     function executeSignOut() {
+      var pop = document.getElementById('profilePop');
+      if (pop) pop.classList.remove('open');
+      var btn = document.getElementById('avatarBtn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+
       if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
         window.PYL.supabase.auth.signOut().then(function () {
           updateAuthUI(null);
