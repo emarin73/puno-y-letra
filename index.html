@@ -2304,6 +2304,20 @@
 
       <span class="meta" style="display:block; margin-bottom:0.35rem;">Exact transcription of your calibration sample:</span>
       <textarea id="calibText" style="min-height:90px; font-family:var(--f-serif); width:100%; padding:0.5rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink);" placeholder="Type the exact text written in your sample photo above..."></textarea>
+
+      <div style="margin-top:0.75rem;">
+        <span class="meta" style="display:block; margin-bottom:0.25rem;">Primary Manuscript Writing Language:</span>
+        <select id="profPrimaryLang" class="attach-select" style="max-width:240px; padding:0.35rem 0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink);">
+          <option value="spa">Spanish (Español)</option>
+          <option value="eng">English</option>
+          <option value="fra">French (Français)</option>
+          <option value="por">Portuguese (Português)</option>
+          <option value="deu">German (Deutsch)</option>
+          <option value="lat">Latin</option>
+          <option value="epo">Esperanto</option>
+        </select>
+      </div>
+
       <span class="prof-note quiet" id="calibStatus" style="margin-top:0.35rem; display:block;"></span>
     </div>
 
@@ -5256,8 +5270,16 @@
     var calibStatus = document.getElementById('calibStatus');
     var calibDataUrl = null;
 
+    var profLang = document.getElementById('profPrimaryLang');
+
     function loadCalib() {
       try {
+        if (profLang) {
+          var savedPrimary = localStorage.getItem('pyl-primary-lang') || 'spa';
+          profLang.value = savedPrimary;
+          var composeLang = document.getElementById('attachLang');
+          if (composeLang) composeLang.value = savedPrimary;
+        }
         var raw = localStorage.getItem('pyl-calib-data');
         if (raw) {
           var parsed = JSON.parse(raw);
@@ -5276,6 +5298,11 @@
 
     function saveCalib() {
       try {
+        if (profLang) {
+          localStorage.setItem('pyl-primary-lang', profLang.value);
+          var composeLang = document.getElementById('attachLang');
+          if (composeLang) composeLang.value = profLang.value;
+        }
         var txt = calibText ? calibText.value.trim() : '';
         if (calibDataUrl && txt) {
           localStorage.setItem('pyl-calib-data', JSON.stringify({ image: calibDataUrl, text: txt }));
