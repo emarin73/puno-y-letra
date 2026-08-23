@@ -26,10 +26,12 @@ export default async function handler(req, res) {
       spa: 'Spanish (Español)',
       eng: 'English',
       fra: 'French (Français)',
+      ita: 'Italian (Italiano)',
       por: 'Portuguese (Português)',
       deu: 'German (Deutsch)',
       lat: 'Latin',
       epo: 'Esperanto',
+      tam: 'Tamil (தமிழ்)',
       auto: 'auto-detected language'
     };
     const targetLang = langMap[lang] || 'Spanish or English';
