@@ -1593,6 +1593,92 @@
     transform: scale(1.02);
   }
 
+  /* ---------- live camera viewfinder modal ---------- */
+  .camera-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(12, 10, 8, 0.92);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .camera-modal-overlay.open { display: flex; }
+  .camera-modal-sheet {
+    position: relative;
+    width: 100%;
+    max-width: 32rem;
+    background: #1a1714;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  }
+  .camera-modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #f5f0eb;
+    font-size: 1.25rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .camera-viewfinder {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .camera-viewfinder video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .camera-shutter-bar {
+    position: absolute;
+    bottom: 0.8rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .camera-shutter-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 3px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  .camera-shutter-btn:active { transform: scale(0.92); }
+  .shutter-circle {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #ffffff;
+  }
+
   /* ---------- review modal ---------- */
   .review-overlay {
     position: fixed;
@@ -2459,6 +2545,22 @@
     <button class="lightbox-close" id="imgLightboxClose" type="button" aria-label="Close image preview">✕</button>
     <img id="imgLightboxImg" src="" alt="Manuscript full preview" />
     <p class="lightbox-caption" id="imgLightboxCaption"></p>
+  </div>
+</div>
+
+<!-- Live WebRTC Camera Viewfinder Modal -->
+<div class="camera-modal-overlay" id="cameraModal" role="dialog" aria-modal="true" aria-label="Camera viewfinder">
+  <div class="camera-modal-sheet">
+    <button class="camera-modal-close" id="cameraModalClose" type="button" aria-label="Close camera">✕</button>
+    <div class="camera-viewfinder">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <div class="camera-shutter-bar">
+        <button class="camera-shutter-btn" id="cameraSnapBtn" type="button" aria-label="Snap photo">
+          <span class="shutter-circle"></span>
+        </button>
+      </div>
+    </div>
+    <span class="meta" style="color:#e5dec9; margin-top:0.6rem; text-align:center; display:block;" id="cameraModalStatus">Position your manuscript page in the frame</span>
   </div>
 </div>
 
@@ -4671,8 +4773,19 @@
       input.click();
     });
     document.getElementById('attachCamera').addEventListener('click', function () {
-      input.setAttribute('capture', 'environment');
-      input.click();
+      if (window.PYL && window.PYL.openCamera) {
+        window.PYL.openCamera(function (dataUrl) {
+          fetch(dataUrl).then(function (r) { return r.blob(); }).then(function (blob) {
+            var f = new File([blob], 'Camera Page ' + (attachedItems.length + 1) + '.jpg', { type: 'image/jpeg' });
+            var item = { file: f, url: URL.createObjectURL(f), dataUrl: dataUrl };
+            attachedItems.push(item);
+            renderAttachments();
+          });
+        }, input);
+      } else {
+        input.setAttribute('capture', 'environment');
+        input.click();
+      }
     });
 
     input.addEventListener('change', function () {
@@ -5327,8 +5440,17 @@
       var calibCam = document.getElementById('calibCamera');
       if (calibCam) {
         calibCam.addEventListener('click', function () {
-          calibInput.setAttribute('capture', 'environment');
-          calibInput.click();
+          if (window.PYL && window.PYL.openCamera) {
+            window.PYL.openCamera(function (dataUrl) {
+              calibDataUrl = dataUrl;
+              if (calibImg) calibImg.src = calibDataUrl;
+              if (calibPreview) calibPreview.style.display = 'block';
+              saveCalib();
+            }, calibInput);
+          } else {
+            calibInput.setAttribute('capture', 'environment');
+            calibInput.click();
+          }
         });
       }
       calibInput.addEventListener('change', function () {
@@ -6124,6 +6246,86 @@
         return;
       }
     });
+  })();
+
+  /* ---------- live camera viewfinder modal ---------- */
+  (function () {
+    var overlay = document.getElementById('cameraModal');
+    var closeBtn = document.getElementById('cameraModalClose');
+    var videoEl = document.getElementById('cameraVideo');
+    var snapBtn = document.getElementById('cameraSnapBtn');
+    var statusEl = document.getElementById('cameraModalStatus');
+
+    var currentStream = null;
+    var activeCallback = null;
+
+    function stopStream() {
+      if (currentStream) {
+        currentStream.getTracks().forEach(function (track) { track.stop(); });
+        currentStream = null;
+      }
+      if (videoEl) videoEl.srcObject = null;
+    }
+
+    function closeCamera() {
+      stopStream();
+      if (overlay) overlay.classList.remove('open');
+      activeCallback = null;
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeCamera);
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeCamera();
+      });
+    }
+
+    function openCamera(onPhotoCaptured, fallbackInput) {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        activeCallback = onPhotoCaptured;
+        if (statusEl) statusEl.textContent = 'Position your manuscript page in the frame';
+        if (overlay) overlay.classList.add('open');
+
+        navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+        }).then(function (stream) {
+          currentStream = stream;
+          if (videoEl) videoEl.srcObject = stream;
+        }).catch(function (err) {
+          console.warn('WebRTC camera unavailable, using direct camera input:', err);
+          closeCamera();
+          if (fallbackInput) fallbackInput.click();
+        });
+      } else if (fallbackInput) {
+        fallbackInput.click();
+      }
+    }
+
+    if (snapBtn) {
+      snapBtn.addEventListener('click', function () {
+        if (!videoEl || !videoEl.videoWidth || !activeCallback) return;
+        var canvas = document.createElement('canvas');
+        var maxDim = 1600;
+        var w = videoEl.videoWidth;
+        var h = videoEl.videoHeight;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          else { w = Math.round((w * maxDim) / h); h = maxDim; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(videoEl, 0, 0, w, h);
+
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.84);
+        var cb = activeCallback;
+        closeCamera();
+        if (cb) cb(dataUrl);
+      });
+    }
+
+    window.PYL = window.PYL || {};
+    window.PYL.openCamera = openCamera;
   })();
 
   /* ---------- image lightbox modal ---------- */
