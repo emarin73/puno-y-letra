@@ -5347,7 +5347,15 @@
       checkProfileDirty();
     });
     if (attest) {
-      attest.addEventListener('change', checkProfileDirty);
+      try {
+        if (localStorage.getItem('pyl-profile-attested') === 'true') {
+          attest.checked = true;
+        }
+      } catch (e) {}
+      attest.addEventListener('change', function () {
+        try { localStorage.setItem('pyl-profile-attested', attest.checked ? 'true' : 'false'); } catch (e) {}
+        checkProfileDirty();
+      });
     }
 
     /* the seal: a photograph, or the initials drawn from the signed name */
@@ -5537,7 +5545,8 @@
               primary_lang: (profLang ? profLang.value : 'spa'),
               avatar_image: avaDataUrl,
               calib_image: calibDataUrl || null,
-              calib_text: txt || null
+              calib_text: txt || null,
+              attested: (attest ? attest.checked : false)
             })
           }).catch(function (e) {});
         }
@@ -5626,6 +5635,10 @@
           if (p.calib_text && calibText) {
             calibText.value = p.calib_text;
           }
+          if (p.attested !== undefined && p.attested !== null && attest) {
+            attest.checked = Boolean(p.attested);
+            try { localStorage.setItem('pyl-profile-attested', p.attested ? 'true' : 'false'); } catch (e) {}
+          }
           if (p.calib_image && p.calib_text) {
             try {
               localStorage.setItem('pyl-calib-data', JSON.stringify({ image: p.calib_image, text: p.calib_text }));
@@ -5682,6 +5695,7 @@
       try {
         localStorage.setItem('pyl-profile-bio', currentBio);
         localStorage.setItem('pyl-profile-email', currentEmail);
+        localStorage.setItem('pyl-profile-attested', 'true');
       } catch (e) {}
 
       // Persist Profile & Handwriting Calibration to Backend Supabase DB
@@ -5695,7 +5709,8 @@
           primary_lang: currentLang,
           avatar_image: avaDataUrl,
           calib_image: calibImgVal,
-          calib_text: calibTxtVal
+          calib_text: calibTxtVal,
+          attested: true
         })
       }).then(function (res) { return res.json(); }).then(function (data) {
         if (data && data.success) {

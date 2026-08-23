@@ -15,6 +15,7 @@ create table if not exists correspondents (
   avatar_image text,                          -- base64 profile avatar seal
   calib_image  text,                          -- handwriting calibration sample base64/URL
   calib_text   text,                          -- exact ground truth calibration key
+  attested     boolean default false,         -- Art. II attestation
   updated_at   timestamptz not null default now(),
   created_at   timestamptz not null default now()
 );
