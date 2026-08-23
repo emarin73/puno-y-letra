@@ -54,7 +54,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { email, name, bio, primary_lang, avatar_image, calib_image, calib_text, attested } = req.body || {};
+    const { email, name, bio, primary_lang, avatar_image, calib_image, calib_text, attested, user_id } = req.body || {};
 
     if (!email) {
       return res.status(400).json({ error: 'Missing required email field' });
@@ -69,6 +69,7 @@ export default async function handler(req, res) {
       calib_image: calib_image || null,
       calib_text: calib_text ? calib_text.trim() : null,
       attested: Boolean(attested),
+      user_id: user_id || null,
       updated_at: new Date().toISOString()
     };
 

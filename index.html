@@ -1985,6 +1985,10 @@
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="5.5" r="2.6"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg>
         <span class="lbl" data-i18n="navProfile">Profile</span>
       </a>
+      <a href="#auth" id="navAuthLink">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M10 12l4-4-4-4"/><path d="M14 8H6"/></svg>
+        <span class="lbl" id="navAuthLabel">Sign In</span>
+      </a>
     </nav>
     <div class="sidebar-foot">
       <div class="theme-switcher" role="radiogroup" aria-label="Visual Theme">
@@ -2349,6 +2353,52 @@
         <span class="posted-confirm" id="postedConfirm"></span>
         <p class="post-note" data-i18n="postNote"></p>
       </div>
+    </div>
+  </section>
+
+  <section class="catalogue" id="authPage" data-page="auth">
+    <div class="section-head">
+      <h2 class="display" data-i18n="authTitle">Sign In or Register</h2>
+      <span class="meta" data-i18n="authMeta">Republic of Letters Correspondent Account</span>
+    </div>
+    
+    <div class="prof-block" style="max-width:480px; margin:2rem auto;">
+      <div class="auth-tabs" style="display:flex; gap:1rem; border-bottom:1px solid var(--rule); margin-bottom:1.5rem; padding-bottom:0.5rem;">
+        <button class="auth-tab-btn active" id="authTabLogin" type="button" style="background:none; border:none; font-family:var(--serif); font-size:1.1rem; font-weight:600; cursor:pointer; padding:0.25rem 0.5rem; border-bottom:2px solid var(--ink); color:var(--ink);">Sign In</button>
+        <button class="auth-tab-btn" id="authTabRegister" type="button" style="background:none; border:none; font-family:var(--serif); font-size:1.1rem; font-weight:600; cursor:pointer; color:var(--demink); padding:0.25rem 0.5rem;">Register</button>
+      </div>
+
+      <!-- Google OAuth Button -->
+      <button class="btn-post" id="googleAuthBtn" type="button" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.75rem; background:var(--paper); color:var(--ink); border:1px solid var(--rule); margin-bottom:1.5rem; cursor:pointer; padding:0.75rem; font-weight:600; border-radius:4px;">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.900 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        <span>Sign in with Google</span>
+      </button>
+
+      <div style="text-align:center; position:relative; margin:1.5rem 0;">
+        <span style="background:var(--paper); padding:0 0.75rem; font-size:0.85rem; color:var(--demink); position:relative; z-index:1;">OR EMAIL</span>
+        <hr style="position:absolute; top:50%; left:0; right:0; border:none; border-top:1px solid var(--rule); margin:0;">
+      </div>
+
+      <!-- Email Auth Form -->
+      <form id="authForm" onsubmit="return false;">
+        <div id="regNameBlock" style="display:none; margin-bottom:1rem;">
+          <label class="meta" for="authName">Full Name / Signature Name</label>
+          <input type="text" id="authName" placeholder="e.g. Euclides Marín" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule);" />
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label class="meta" for="authEmail">Email Address</label>
+          <input type="email" id="authEmail" required autocomplete="email" placeholder="your.email@example.com" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule);" />
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+          <label class="meta" for="authPassword">Password</label>
+          <input type="password" id="authPassword" required autocomplete="current-password" placeholder="••••••••" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule);" />
+        </div>
+
+        <button type="submit" class="btn-post" id="authSubmitBtn" style="width:100%; padding:0.75rem; font-size:1rem;">Sign In</button>
+        <div class="prof-saved" id="authStatus" style="margin-top:1rem; text-align:center;"></div>
+      </form>
     </div>
   </section>
 
@@ -5853,7 +5903,7 @@
      the document when the hash changes, which would wipe the session. The hash is
      kept in sync only as a best effort, so deep links still work where they can. */
   (function () {
-    var PAGES = ['top', 'charter', 'catalogue', 'letters', 'compose', 'desk', 'profile'];
+    var PAGES = ['top', 'charter', 'catalogue', 'letters', 'compose', 'desk', 'profile', 'auth'];
     var page = 'top';
 
     try {
@@ -6637,6 +6687,224 @@
 
     window.PYL = window.PYL || {};
     window.PYL.openLightbox = open;
+  })();
+
+  /* ---------- Supabase Auth Integration ---------- */
+  (function () {
+    var authUser = null;
+
+    function updateAuthUI(user) {
+      authUser = user || null;
+      var avatarBtn = document.getElementById('avatarBtn');
+      var signInBtn = document.getElementById('signInBtn');
+      var navAuthLabel = document.getElementById('navAuthLabel');
+
+      if (user) {
+        if (avatarBtn) avatarBtn.style.display = 'flex';
+        if (signInBtn) signInBtn.style.display = 'none';
+        if (navAuthLabel) navAuthLabel.textContent = 'Account';
+
+        var userEmail = user.email || '';
+        var userName = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || userEmail.split('@')[0];
+
+        var mailAddrElem = document.getElementById('mailAddr');
+        if (mailAddrElem && !mailAddrElem.value) {
+          mailAddrElem.value = userEmail;
+        }
+        try {
+          localStorage.setItem('pyl-profile-email', userEmail);
+          if (userName) localStorage.setItem('pyl-profile-name', userName);
+        } catch (e) {}
+
+        if (window.PYL && window.PYL.fetchBackendProfile) {
+          window.PYL.fetchBackendProfile();
+        }
+      } else {
+        if (avatarBtn) avatarBtn.style.display = 'none';
+        if (signInBtn) signInBtn.style.display = 'inline-block';
+        if (navAuthLabel) navAuthLabel.textContent = 'Sign In';
+      }
+    }
+
+    function initSupabaseAuth() {
+      if (!window.PYL || !window.PYL.supabase || !window.PYL.supabase.auth) return;
+
+      window.PYL.supabase.auth.getSession().then(function (res) {
+        if (res && res.data && res.data.session) {
+          updateAuthUI(res.data.session.user);
+        } else {
+          updateAuthUI(null);
+        }
+      });
+
+      window.PYL.supabase.auth.onAuthStateChange(function (event, session) {
+        if (session && session.user) {
+          updateAuthUI(session.user);
+        } else {
+          updateAuthUI(null);
+        }
+      });
+    }
+
+    setTimeout(initSupabaseAuth, 300);
+
+    var authTabLogin = document.getElementById('authTabLogin');
+    var authTabRegister = document.getElementById('authTabRegister');
+    var regNameBlock = document.getElementById('regNameBlock');
+    var authSubmitBtn = document.getElementById('authSubmitBtn');
+    var authForm = document.getElementById('authForm');
+    var authStatus = document.getElementById('authStatus');
+    var googleAuthBtn = document.getElementById('googleAuthBtn');
+    var isRegisterMode = false;
+
+    if (authTabLogin && authTabRegister) {
+      authTabLogin.addEventListener('click', function () {
+        isRegisterMode = false;
+        authTabLogin.style.borderBottom = '2px solid var(--ink)';
+        authTabLogin.style.color = 'var(--ink)';
+        authTabRegister.style.borderBottom = 'none';
+        authTabRegister.style.color = 'var(--demink)';
+        if (regNameBlock) regNameBlock.style.display = 'none';
+        if (authSubmitBtn) authSubmitBtn.textContent = 'Sign In';
+        if (authStatus) authStatus.textContent = '';
+      });
+
+      authTabRegister.addEventListener('click', function () {
+        isRegisterMode = true;
+        authTabRegister.style.borderBottom = '2px solid var(--ink)';
+        authTabRegister.style.color = 'var(--ink)';
+        authTabLogin.style.borderBottom = 'none';
+        authTabLogin.style.color = 'var(--demink)';
+        if (regNameBlock) regNameBlock.style.display = 'block';
+        if (authSubmitBtn) authSubmitBtn.textContent = 'Register Account';
+        if (authStatus) authStatus.textContent = '';
+      });
+    }
+
+    if (googleAuthBtn) {
+      googleAuthBtn.addEventListener('click', function () {
+        if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+          window.PYL.supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+          }).catch(function (err) {
+            if (authStatus) {
+              authStatus.textContent = err.message || 'Google Auth Error';
+              authStatus.classList.add('show', 'err');
+            }
+          });
+        } else {
+          if (authStatus) {
+            authStatus.textContent = 'Supabase client unavailable';
+            authStatus.classList.add('show', 'err');
+          }
+        }
+      });
+    }
+
+    if (authForm) {
+      authForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var emailInput = document.getElementById('authEmail');
+        var passInput = document.getElementById('authPassword');
+        var nameInput = document.getElementById('authName');
+
+        var email = emailInput ? emailInput.value.trim() : '';
+        var password = passInput ? passInput.value : '';
+        var fullName = nameInput ? nameInput.value.trim() : '';
+
+        if (!email || !password) return;
+        if (authStatus) {
+          authStatus.textContent = 'Processing...';
+          authStatus.classList.remove('err');
+          authStatus.classList.add('show');
+        }
+
+        if (!window.PYL || !window.PYL.supabase || !window.PYL.supabase.auth) {
+          if (authStatus) {
+            authStatus.textContent = 'Supabase client unavailable';
+            authStatus.classList.add('show', 'err');
+          }
+          return;
+        }
+
+        if (isRegisterMode) {
+          window.PYL.supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+              data: { full_name: fullName || 'Correspondent' }
+            }
+          }).then(function (res) {
+            if (res.error) {
+              if (authStatus) {
+                authStatus.textContent = res.error.message;
+                authStatus.classList.add('show', 'err');
+              }
+            } else {
+              if (authStatus) {
+                authStatus.textContent = '✓ Registration successful! Please check your email or sign in.';
+                authStatus.classList.remove('err');
+                authStatus.classList.add('show');
+              }
+              if (fullName) {
+                try { localStorage.setItem('pyl-profile-name', fullName); } catch (e) {}
+              }
+            }
+          }).catch(function (err) {
+            if (authStatus) {
+              authStatus.textContent = err.message;
+              authStatus.classList.add('show', 'err');
+            }
+          });
+        } else {
+          window.PYL.supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          }).then(function (res) {
+            if (res.error) {
+              if (authStatus) {
+                authStatus.textContent = res.error.message;
+                authStatus.classList.add('show', 'err');
+              }
+            } else {
+              if (authStatus) {
+                authStatus.textContent = '✓ Signed in successfully!';
+                authStatus.classList.remove('err');
+                authStatus.classList.add('show');
+              }
+              setTimeout(function () {
+                if (window.PYL && window.PYL.go) window.PYL.go('profile');
+              }, 500);
+            }
+          }).catch(function (err) {
+            if (authStatus) {
+              authStatus.textContent = err.message;
+              authStatus.classList.add('show', 'err');
+            }
+          });
+        }
+      });
+    }
+
+    var popSignOut = document.getElementById('popSignOut');
+    if (popSignOut) {
+      popSignOut.addEventListener('click', function () {
+        if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+          window.PYL.supabase.auth.signOut().then(function () {
+            updateAuthUI(null);
+            if (authStatus) authStatus.textContent = 'Signed out';
+          });
+        }
+      });
+    }
+
+    var signInBtnTop = document.getElementById('signInBtn');
+    if (signInBtnTop) {
+      signInBtnTop.addEventListener('click', function () {
+        if (window.PYL && window.PYL.go) window.PYL.go('auth');
+      });
+    }
   })();
 </script>
 </body>
