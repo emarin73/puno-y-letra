@@ -31,6 +31,8 @@
 
   <!-- Supabase JS Client for Safe Backend Storage -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Tesseract.js for 100% Local In-Browser Handwritten OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Tamil:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -4389,13 +4391,39 @@
         grid.appendChild(card);
       });
 
-      ocr.textContent = attachedItems.length === 1 ? T('ocrReading') : ('Reading ' + attachedItems.length + ' handwritten pages…');
+      ocr.textContent = attachedItems.length === 1 ? 'Reading handwritten page locally in browser...' : ('Reading ' + attachedItems.length + ' handwritten pages locally in browser...');
       ocr.classList.add('show');
       clearTimeout(ocrTimer);
-      ocrTimer = setTimeout(function () {
-        ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
-        body.focus();
-      }, 1200);
+
+      if (window.Tesseract && attachedItems.length > 0) {
+        var firstItem = attachedItems[0];
+        var imageSrc = firstItem.dataUrl || firstItem.url;
+        window.Tesseract.recognize(imageSrc, 'eng', {
+          logger: function (m) {
+            if (m.status === 'recognizing text' && m.progress) {
+              ocr.textContent = 'Locally reading handwriting in browser (' + Math.round(m.progress * 100) + '%)...';
+            }
+          }
+        }).then(function (result) {
+          if (result && result.data && result.data.text && result.data.text.trim()) {
+            var extractedText = result.data.text.trim();
+            if (!body.value.trim()) {
+              body.value = extractedText;
+            }
+            ocr.textContent = 'Local in-browser OCR complete ✓ — correct or edit below.';
+          } else {
+            ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
+          }
+        }).catch(function (err) {
+          console.warn('Local OCR note:', err);
+          ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
+        });
+      } else {
+        ocrTimer = setTimeout(function () {
+          ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
+          body.focus();
+        }, 1200);
+      }
     }
 
     document.getElementById('attachUpload').addEventListener('click', function () {
