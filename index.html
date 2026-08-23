@@ -5613,29 +5613,29 @@
       }).then(function (data) {
         if (data && data.success && data.profile) {
           var p = data.profile;
-          if (p.avatar_image) {
+          if (p.avatar_image && p.avatar_image !== avaDataUrl) {
             applyAvatar(p.avatar_image);
           }
-          if (p.bio && bio) {
+          if (p.bio && bio && document.activeElement !== bio) {
             bio.value = p.bio;
             try { localStorage.setItem('pyl-profile-bio', p.bio); } catch (e) {}
             renderCount();
           }
-          if (p.primary_lang && profLang) {
+          if (p.primary_lang && profLang && document.activeElement !== profLang) {
             profLang.value = p.primary_lang;
             try { localStorage.setItem('pyl-primary-lang', p.primary_lang); } catch (e) {}
             var composeLang = document.getElementById('attachLang');
             if (composeLang) composeLang.value = p.primary_lang;
           }
-          if (p.calib_image) {
+          if (p.calib_image && p.calib_image !== calibDataUrl) {
             calibDataUrl = p.calib_image;
             if (calibImg) calibImg.src = p.calib_image;
             if (calibPreview) calibPreview.style.display = 'block';
           }
-          if (p.calib_text && calibText) {
+          if (p.calib_text && calibText && document.activeElement !== calibText) {
             calibText.value = p.calib_text;
           }
-          if (p.attested !== undefined && p.attested !== null && attest) {
+          if (p.attested !== undefined && p.attested !== null && attest && document.activeElement !== attest) {
             attest.checked = Boolean(p.attested);
             try { localStorage.setItem('pyl-profile-attested', p.attested ? 'true' : 'false'); } catch (e) {}
           }
@@ -5662,6 +5662,18 @@
         window.PYL.fetchBackendProfile();
       }
     });
+
+    // Real-time Reactive Profile Sync across devices (5s active polling loop)
+    var profilePollInterval = null;
+    function startProfilePolling() {
+      if (profilePollInterval) clearInterval(profilePollInterval);
+      profilePollInterval = setInterval(function () {
+        if (!document.hidden && window.PYL && window.PYL.fetchBackendProfile) {
+          window.PYL.fetchBackendProfile();
+        }
+      }, 5000);
+    }
+    startProfilePolling();
 
     try {
       var savedBio = localStorage.getItem('pyl-profile-bio');
