@@ -5930,6 +5930,10 @@
 
     PYL.go = function (id, then) {
       if (PAGES.indexOf(id) === -1) id = 'top';
+      var user = window.PYL ? window.PYL.authUser : null;
+      if (!user && (id === 'letters' || id === 'catalogue' || id === 'compose' || id === 'desk' || id === 'profile')) {
+        id = 'charter';
+      }
       page = id;
       render();
       if (id === 'profile' && window.PYL && window.PYL.fetchBackendProfile) {
@@ -6695,14 +6699,36 @@
 
     function updateAuthUI(user) {
       authUser = user || null;
+      if (window.PYL) window.PYL.authUser = authUser;
+
       var avatarBtn = document.getElementById('avatarBtn');
       var signInBtn = document.getElementById('signInBtn');
       var navAuthLabel = document.getElementById('navAuthLabel');
 
+      // Update side navigation links visibility
+      var sidenavLinks = document.querySelectorAll('#sidenav a');
+      sidenavLinks.forEach(function (a) {
+        var href = a.getAttribute('href');
+        if (user) {
+          // Signed in: show all navigation links
+          a.style.display = '';
+        } else {
+          // Signed out: show ONLY Charter and Sign In (and Home)
+          if (href === '#charter' || href === '#auth' || href === '#top') {
+            a.style.display = '';
+          } else {
+            a.style.display = 'none';
+          }
+        }
+      });
+
       if (user) {
         if (avatarBtn) avatarBtn.style.display = 'flex';
-        if (signInBtn) signInBtn.style.display = 'none';
-        if (navAuthLabel) navAuthLabel.textContent = 'Account';
+        if (signInBtn) {
+          signInBtn.style.display = 'inline-block';
+          signInBtn.textContent = 'Sign Out';
+        }
+        if (navAuthLabel) navAuthLabel.textContent = 'Sign Out';
 
         var userEmail = user.email || '';
         var userName = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || userEmail.split('@')[0];
@@ -6721,7 +6747,10 @@
         }
       } else {
         if (avatarBtn) avatarBtn.style.display = 'none';
-        if (signInBtn) signInBtn.style.display = 'inline-block';
+        if (signInBtn) {
+          signInBtn.style.display = 'inline-block';
+          signInBtn.textContent = 'Sign In';
+        }
         if (navAuthLabel) navAuthLabel.textContent = 'Sign In';
       }
     }
@@ -6888,23 +6917,41 @@
       });
     }
 
+    function executeSignOut() {
+      if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+        window.PYL.supabase.auth.signOut().then(function () {
+          updateAuthUI(null);
+          if (authStatus) authStatus.textContent = 'Signed out';
+          if (window.PYL && window.PYL.go) window.PYL.go('charter');
+        });
+      } else {
+        updateAuthUI(null);
+        if (window.PYL && window.PYL.go) window.PYL.go('charter');
+      }
+    }
+
     var popSignOut = document.getElementById('popSignOut');
     if (popSignOut) {
-      popSignOut.addEventListener('click', function () {
-        if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
-          window.PYL.supabase.auth.signOut().then(function () {
-            updateAuthUI(null);
-            if (authStatus) authStatus.textContent = 'Signed out';
-          });
-        }
-      });
+      popSignOut.addEventListener('click', executeSignOut);
+    }
+
+    function handleAuthButtonClick(e) {
+      if (e) e.preventDefault();
+      if (authUser) {
+        executeSignOut();
+      } else {
+        if (window.PYL && window.PYL.go) window.PYL.go('auth');
+      }
     }
 
     var signInBtnTop = document.getElementById('signInBtn');
     if (signInBtnTop) {
-      signInBtnTop.addEventListener('click', function () {
-        if (window.PYL && window.PYL.go) window.PYL.go('auth');
-      });
+      signInBtnTop.addEventListener('click', handleAuthButtonClick);
+    }
+
+    var navAuthLink = document.getElementById('navAuthLink');
+    if (navAuthLink) {
+      navAuthLink.addEventListener('click', handleAuthButtonClick);
     }
   })();
 </script>
