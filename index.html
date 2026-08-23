@@ -5563,23 +5563,6 @@
           localStorage.removeItem('pyl-calib-data');
           if (calibStatus) calibStatus.textContent = '';
         }
-        var activeEmail = (document.getElementById('mailAddr') ? document.getElementById('mailAddr').value.trim() : '') || localStorage.getItem('pyl-profile-email');
-        if (activeEmail) {
-          fetch('/api/profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: activeEmail,
-              name: localStorage.getItem('pyl-profile-name') || 'Euclides Marin',
-              bio: (document.getElementById('profBio') ? document.getElementById('profBio').value.trim() : ''),
-              primary_lang: (profLang ? profLang.value : 'spa'),
-              avatar_image: avaDataUrl,
-              calib_image: calibDataUrl || null,
-              calib_text: txt || null,
-              attested: (attest ? attest.checked : false)
-            })
-          }).catch(function (e) {});
-        }
         checkProfileDirty();
       } catch (e) {}
     }
@@ -5635,6 +5618,18 @@
         if (mailObj && mailObj.addr) return mailObj.addr;
       } catch (e) {}
       return 'correspondent@punoyletra.org';
+    }
+
+    var mailInputElem = document.getElementById('mailAddr');
+    if (mailInputElem) {
+      mailInputElem.addEventListener('change', function () {
+        var em = mailInputElem.value.trim();
+        if (em) {
+          try { localStorage.setItem('pyl-profile-email', em); } catch (e) {}
+          fetchBackendProfile(em);
+          checkProfileDirty();
+        }
+      });
     }
 
     function fetchBackendProfile(email) {
@@ -5717,6 +5712,7 @@
     document.getElementById('profSave').addEventListener('click', function () {
       saved.classList.remove('show', 'err');
       saveCalib();
+
       if (!attest.checked) {
         saved.textContent = T('profNeedAttest');
         saved.classList.add('show', 'err');
@@ -5728,8 +5724,7 @@
         return;
       }
 
-      var mailInput = document.getElementById('mailAddr');
-      var currentEmail = (mailInput ? mailInput.value.trim() : '') || localStorage.getItem('pyl-profile-email') || 'correspondent@punoyletra.org';
+      var currentEmail = getActiveEmail();
       var currentName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
       var currentBio = bio.value.trim();
       var currentLang = (profLang ? profLang.value : 'spa');
@@ -5741,6 +5736,9 @@
         localStorage.setItem('pyl-profile-email', currentEmail);
         localStorage.setItem('pyl-profile-attested', 'true');
       } catch (e) {}
+
+      var saveBtn = document.getElementById('profSave');
+      if (saveBtn) saveBtn.disabled = true;
 
       // Persist Profile & Handwriting Calibration to Backend Supabase DB
       fetch('/api/profile', {
@@ -5759,14 +5757,20 @@
       }).then(function (res) { return res.json(); }).then(function (data) {
         if (data && data.success) {
           console.log('✓ Profile & calibration persisted to backend database');
+          saved.textContent = T('profSavedMsg');
+          saved.classList.add('show');
+          resetProfileSnapshot();
+        } else {
+          saved.textContent = (data && data.error) ? data.error : 'Save failed';
+          saved.classList.add('show', 'err');
+          if (saveBtn) saveBtn.disabled = false;
         }
       }).catch(function (err) {
         console.warn('Backend profile persistence warning:', err);
+        saved.textContent = 'Network error saving profile';
+        saved.classList.add('show', 'err');
+        if (saveBtn) saveBtn.disabled = false;
       });
-
-      saved.textContent = T('profSavedMsg');
-      saved.classList.add('show');
-      resetProfileSnapshot();
     });
 
     setTimeout(resetProfileSnapshot, 100);
