@@ -3968,10 +3968,12 @@
         var carried = PYL.quotes.commit(nameVal);
         msg += ' ' + T('quoteCarried').replace('{n}', carried);
       }
+      var revOverlay = document.getElementById('reviewOverlay');
+      if (revOverlay) revOverlay.classList.remove('open');
+
       if (confirmEl) {
         confirmEl.textContent = msg;
         confirmEl.classList.add('show');
-        confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
       if (PYL.toast) PYL.toast(msg, 6000);
 
@@ -3986,9 +3988,10 @@
       }
 
       if (PYL.go) {
-        PYL.go('catalogue', function () {
-          var gal = document.getElementById('gallery');
-          if (gal) gal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        PYL.go('desk', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          var deskEl = document.getElementById('deskPage') || document.getElementById('desk');
+          if (deskEl) deskEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       }
     }
@@ -4549,53 +4552,59 @@
 
       var selectedLang = (document.getElementById('attachLang') ? document.getElementById('attachLang').value : 'spa') || 'spa';
       var tessLang = selectedLang === 'auto' ? 'spa' : selectedLang;
+      var allImages = attachedItems.map(function (item) { return item.dataUrl || item.url; });
 
-      ocr.textContent = 'Transcribing handwritten manuscript (' + selectedLang.toUpperCase() + ')...';
+      ocr.textContent = 'Transcribing ' + allImages.length + ' page' + (allImages.length > 1 ? 's' : '') + ' of manuscript (' + selectedLang.toUpperCase() + ')...';
       ocr.classList.add('show');
       clearTimeout(ocrTimer);
 
-      if (attachedItems.length > 0) {
-        var firstItem = attachedItems[0];
-        var imageSrc = firstItem.dataUrl || firstItem.url;
-
-        // Try Serverless Gemini Vision OCR API first
+      if (allImages.length > 0) {
+        // Try Serverless Gemini Vision OCR API first (multi-page)
         fetch('/api/ocr', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: imageSrc, lang: selectedLang })
+          body: JSON.stringify({ images: allImages, lang: selectedLang })
         }).then(function (res) {
           if (res.ok) return res.json();
           throw new Error('Serverless OCR unavailable');
         }).then(function (data) {
           if (data && data.success && data.text) {
             body.value = data.text;
-            ocr.textContent = 'AI Vision OCR Transcription Complete ✓ (' + selectedLang.toUpperCase() + ') — correct below.';
+            ocr.textContent = 'AI Vision OCR Transcription Complete ✓ (' + allImages.length + ' page' + (allImages.length > 1 ? 's' : '') + ') — correct below.';
           } else {
             throw new Error(data.note || 'Fallback to client engine');
           }
         }).catch(function () {
-          // Fallback to Language-Aware Local Tesseract.js Engine
+          // Fallback to Language-Aware Local Tesseract.js Engine (Per-Page Loop)
           if (window.Tesseract) {
-            window.Tesseract.recognize(imageSrc, tessLang, {
-              logger: function (m) {
-                if (m.status === 'recognizing text' && m.progress) {
-                  ocr.textContent = 'Locally transcribing ' + tessLang.toUpperCase() + ' handwriting (' + Math.round(m.progress * 100) + '%)...';
-                }
+            var pageResults = [];
+            var processPage = function (pageIndex) {
+              if (pageIndex >= allImages.length) {
+                body.value = pageResults.join('\n\n');
+                ocr.textContent = 'Local Language-Aware OCR complete ✓ (' + allImages.length + ' page' + (allImages.length > 1 ? 's' : '') + ') — edit below.';
+                return;
               }
-            }).then(function (result) {
-              if (result && result.data && result.data.text && result.data.text.trim()) {
-                var extractedText = result.data.text.trim();
-                if (!body.value.trim()) {
-                  body.value = extractedText;
+              ocr.textContent = 'Locally transcribing page ' + (pageIndex + 1) + ' of ' + allImages.length + ' (' + tessLang.toUpperCase() + ')...';
+              window.Tesseract.recognize(allImages[pageIndex], tessLang, {
+                logger: function (m) {
+                  if (m.status === 'recognizing text' && m.progress) {
+                    ocr.textContent = 'Locally reading page ' + (pageIndex + 1) + ' of ' + allImages.length + ' (' + Math.round(m.progress * 100) + '%)...';
+                  }
                 }
-                ocr.textContent = 'Local Language-Aware OCR complete ✓ (' + tessLang.toUpperCase() + ') — edit below.';
-              } else {
-                ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
-              }
-            }).catch(function (err) {
-              console.warn('Local OCR note:', err);
-              ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
-            });
+              }).then(function (result) {
+                var txt = result && result.data && result.data.text ? result.data.text.trim() : '';
+                if (allImages.length > 1) {
+                  pageResults.push('--- Page ' + (pageIndex + 1) + ' ---\n' + txt);
+                } else {
+                  pageResults.push(txt);
+                }
+                processPage(pageIndex + 1);
+              }).catch(function (err) {
+                console.warn('Page ' + (pageIndex + 1) + ' OCR note:', err);
+                processPage(pageIndex + 1);
+              });
+            };
+            processPage(0);
           } else {
             ocrTimer = setTimeout(function () {
               ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
