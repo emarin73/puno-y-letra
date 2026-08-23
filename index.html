@@ -5654,7 +5654,7 @@
             var composeLang = document.getElementById('attachLang');
             if (composeLang) composeLang.value = p.primary_lang;
           }
-          if (p.calib_image && p.calib_image !== calibDataUrl) {
+          if (p.calib_image) {
             calibDataUrl = p.calib_image;
             if (calibImg) calibImg.src = p.calib_image;
             if (calibPreview) calibPreview.style.display = 'block';
@@ -5666,9 +5666,9 @@
             attest.checked = Boolean(p.attested);
             try { localStorage.setItem('pyl-profile-attested', p.attested ? 'true' : 'false'); } catch (e) {}
           }
-          if (p.calib_image && p.calib_text) {
+          if (p.calib_image || p.calib_text) {
             try {
-              localStorage.setItem('pyl-calib-data', JSON.stringify({ image: p.calib_image, text: p.calib_text }));
+              localStorage.setItem('pyl-calib-data', JSON.stringify({ image: calibDataUrl || '', text: calibText ? calibText.value : '' }));
             } catch (e) {}
             if (calibStatus) {
               calibStatus.textContent = '✓ Calibration reference active (Synced from Backend DB) — AI Vision OCR is calibrated to your cursive.';
