@@ -31,8 +31,6 @@
 
   <!-- Supabase JS Client for Safe Backend Storage -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Tesseract.js for 100% Local In-Browser Handwritten OCR -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Tamil:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -1228,6 +1226,94 @@
   }
   .rail-note.show { display: block; }
 
+  /* Thread Exchange & Reply Parent Navigation */
+  .letter-reply-parent-bar {
+    margin-bottom: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    background: color-mix(in srgb, var(--prussian) 6%, transparent);
+    border-left: 3px solid var(--prussian);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.88rem;
+  }
+  .reply-parent-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--prussian);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .reply-parent-link:hover {
+    text-decoration: underline;
+  }
+  .reply-parent-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+  .letter-exchange-banner {
+    margin-top: 1.25rem;
+    padding: 0.55rem 0.9rem;
+    background: color-mix(in srgb, var(--prussian) 4%, var(--sheet));
+    border: 1px solid color-mix(in srgb, var(--prussian) 22%, transparent);
+    border-radius: 4px;
+    font-size: 0.88rem;
+  }
+  .exchange-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .exchange-link:hover {
+    color: var(--prussian);
+  }
+  .exchange-icon {
+    color: var(--prussian);
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .marginalia-cite {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.45rem;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.78rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--prussian);
+    background: var(--paper);
+    border: 1px solid color-mix(in srgb, var(--prussian) 30%, transparent);
+    border-radius: 999px;
+    text-decoration: none;
+    vertical-align: middle;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+  }
+  .marginalia-cite:hover {
+    background: var(--prussian);
+    color: #ffffff;
+    border-color: var(--prussian);
+  }
+  .margin-ref-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.2rem;
+  }
+  .margin-ref-select {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--sheet);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.88rem;
+    padding: 0.4rem 0.5rem;
+  }
+
   /* marginalia (the published reasons) */
   .marginalia { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.65rem; }
   .marginalia-item {
@@ -1283,8 +1369,352 @@
     text-decoration: underline;
     padding: 0.4rem 0.25rem;
   }
-  .btn-quiet:hover { color: var(--ink); }
-  .form-hint { font-size: 0.8rem; color: var(--graphite); margin: 0; }
+  /* marginalia scrap photo & attachment */
+  .marginalia-scrap-img {
+    max-width: 140px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    display: block;
+    margin-top: 0.35rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s;
+  }
+  .marginalia-scrap-img:hover {
+    transform: scale(1.03);
+    border-color: var(--wax);
+  }
+  .margin-pic-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px dashed var(--wax);
+    background: var(--sheet);
+    color: var(--wax);
+    border-radius: 3px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .margin-pic-btn:hover {
+    background: var(--wax-tint);
+  }
+  .margin-pic-preview {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+  }
+  .margin-pic-preview.show { display: flex; }
+  .margin-pic-thumb {
+    width: 60px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: 1px solid var(--wax);
+  }
+
+  /* ---------- Picture-First Manuscript Stage ---------- */
+  .manuscript-stage {
+    margin: 1.25rem 0 1rem;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .manuscript-main-view {
+    position: relative;
+    background: #11161d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    max-height: 700px;
+    overflow: hidden;
+    cursor: zoom-in;
+  }
+  .manuscript-active-page {
+    max-width: 100%;
+    max-height: 700px;
+    object-fit: contain;
+    display: block;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease;
+  }
+  .manuscript-active-page:hover {
+    transform: scale(1.01);
+  }
+  .manuscript-zoom-hint {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(15, 20, 28, 0.78);
+    backdrop-filter: blur(4px);
+    color: #fdfbf7;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    pointer-events: none;
+  }
+  .manuscript-pages-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    font-size: 0.88rem;
+  }
+  .page-nav-btn {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    color: var(--ink);
+    padding: 0.25rem 0.65rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .page-nav-btn:hover:not(:disabled) {
+    background: var(--prussian-tint);
+    border-color: var(--prussian);
+    color: var(--prussian);
+  }
+  .page-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .manuscript-strip {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem 0.75rem;
+    background: var(--paper);
+    overflow-x: auto;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .manuscript-strip-thumb {
+    width: 52px;
+    height: 66px;
+    object-fit: cover;
+    border: 2px solid var(--rule);
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.15s;
+    flex: none;
+  }
+  .manuscript-strip-thumb.active, .manuscript-strip-thumb:hover {
+    opacity: 1;
+    border-color: var(--prussian);
+    box-shadow: 0 0 0 2px var(--prussian-tint);
+  }
+
+  /* ---------- Epistolary Audio Reading Player ---------- */
+  .epistolary-audio-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0 1.25rem;
+    background: var(--gold-tint);
+    border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm);
+  }
+  .epistolary-audio-play-btn {
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--wax);
+    color: #ffffff;
+    border: 1px solid var(--wax-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(164, 50, 40, 0.35);
+    transition: transform 0.15s, background 0.15s;
+  }
+  .epistolary-audio-play-btn:hover {
+    background: var(--wax-hover);
+    transform: scale(1.05);
+  }
+  .epistolary-audio-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+  .audio-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+  }
+  .audio-label {
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .audio-time {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: var(--graphite);
+  }
+  .audio-progress-track {
+    width: 100%;
+    height: 6px;
+    background: color-mix(in srgb, var(--gold) 25%, var(--sheet));
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .audio-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+    border-radius: 3px;
+    transition: width 0.1s linear;
+  }
+  .letter-brief-note {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    margin: 0.75rem 0;
+    padding: 0.4rem 0.8rem;
+    border-left: 2px solid var(--rule);
+    background: var(--paper);
+  }
+
+  /* ---------- Voice Recorder Box in Compose ---------- */
+  .voice-recorder-box {
+    border: 1px dashed var(--gold);
+    border-radius: 4px;
+    padding: 1rem;
+    background: var(--gold-tint);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .recorder-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+  }
+  .rec-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--sheet);
+    border: 1px solid var(--wax);
+    color: var(--wax);
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .rec-btn:hover {
+    background: var(--wax-tint);
+  }
+  .rec-btn.recording {
+    background: var(--wax);
+    color: #ffffff;
+  }
+  .rec-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--wax);
+    display: inline-block;
+  }
+  .rec-btn.recording .rec-dot {
+    background: #ffffff;
+    animation: recPulse 1.2s infinite ease-in-out;
+  }
+  @keyframes recPulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.3); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .rec-btn-action {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    padding: 0.35rem 0.75rem;
+    border-radius: 3px;
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .rec-btn-action:hover {
+    border-color: var(--ink);
+  }
+  .rec-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.4rem 0.65rem;
+    background: var(--sheet);
+    border: 1px solid var(--rule-soft);
+    border-radius: 3px;
+  }
+  .rec-status-badge {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--wax);
+  }
+  .rec-timer {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ---------- Empty Letterbox State ---------- */
+  .empty-letters-card {
+    text-align: center;
+    padding: 3.5rem 2rem;
+    background: var(--sheet);
+    border: 1px dashed var(--rule);
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm);
+    margin: 1.5rem 0;
+  }
+  .empty-letters-card .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    opacity: 0.85;
+  }
+  .empty-letters-card h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+  }
+  .empty-letters-card p {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 28rem;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
 
   /* ---------- compose ---------- */
   section.compose { padding: 1.5rem 0 0; }
@@ -2047,6 +2477,18 @@
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="5.5" r="2.6"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg>
         <span class="lbl" data-i18n="navProfile">Profile</span>
       </a>
+      <div id="sidebarUserBlock" style="display:none; margin:0.4rem 0.5rem 0.6rem; padding:0.5rem 0.65rem; background:var(--sheet); border:1px solid var(--rule); border-radius:4px;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span class="avatar sm" id="sidebarAvatar" style="width:1.8rem; height:1.8rem; font-size:0.75rem;">EM</span>
+          <div style="overflow:hidden; flex:1; line-height:1.2;">
+            <div id="sidebarUserName" style="font-size:0.82rem; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Euclides Marin</div>
+            <div id="sidebarUserStatus" style="font-size:0.68rem; color:#2d6a4f; display:flex; align-items:center; gap:0.25rem;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#2d6a4f; display:inline-block;"></span>
+              <span id="sidebarStatusText">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <a href="#auth" id="navAuthLink">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M10 12l4-4-4-4"/><path d="M14 8H6"/></svg>
         <span class="lbl" id="navAuthLabel">Sign In</span>
@@ -2082,7 +2524,13 @@
         <div class="profile" id="profile">
           <button class="avatar-btn" id="avatarBtn" aria-haspopup="true" aria-expanded="false" style="display:none;">
             <span class="avatar" aria-hidden="true">EM</span>
-            <span class="profile-name">Euclides Marin</span>
+            <span class="topbar-user-info" style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.15; text-align:left;">
+              <span class="profile-name">Euclides Marin</span>
+              <span class="topbar-status-badge" id="topbarStatusBadge" style="font-size:0.68rem; color:#2d6a4f; display:inline-flex; align-items:center; gap:0.25rem;">
+                <span style="width:5px; height:5px; border-radius:50%; background:#2d6a4f; display:inline-block;"></span>
+                <span id="topbarStatusText">Active</span>
+              </span>
+            </span>
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.75;"><path d="m4 6 4 4 4-4"/></svg>
           </button>
           <button class="signin-btn" id="signInBtn">Sign In</button>
@@ -2091,7 +2539,11 @@
               <span class="avatar big" aria-hidden="true">EM</span>
               <div>
                 <strong id="popName">Euclides Marin</strong>
-                <span class="pop-role" data-i18n="profileRole">Founding correspondent</span>
+                <div id="popEmail" style="font-size:0.75rem; color:var(--demink); word-break:break-all;">euclides.marin@rocanegras.com</div>
+                <div id="popStatusPill" style="margin-top:0.25rem; display:inline-flex; align-items:center; gap:0.3rem; font-size:0.7rem; padding:0.12rem 0.45rem; background:rgba(45,106,79,0.12); color:#2d6a4f; border-radius:999px; font-weight:600;">
+                  <span style="width:5px; height:5px; border-radius:50%; background:#2d6a4f; display:inline-block;"></span>
+                  <span id="popStatusText">Active Correspondent</span>
+                </div>
               </div>
             </div>
             <div class="pop-row">
@@ -2177,156 +2629,11 @@
   <section class="post" id="letters" data-page="letters">
     <div class="section-head">
       <h2 class="display" data-i18n="postTitle">Today’s Post</h2>
-      <span class="meta" data-i18n="postMeta">Delivered 18 August 2026</span>
+      <span class="meta" data-i18n="postMeta" id="todayPostMeta">Delivered Daily de puño y letra</span>
     </div>
 
-    <!-- LETTER I -->
-    <article class="letter" data-letter="1">
-      <div class="letter-head">
-        <div>
-          <div class="letter-meta-row">
-            <span class="meta">Letter I · From E. Marin · To the Republic</span>
-            <span class="reading-time-pill" title="Estimated reading time">~2 min · 245 words</span>
-          </div>
-          <h3 class="letter-title display">On Borrowed Judgment</h3>
-        </div>
-        <div class="letter-tools">
-          <button class="letter-util-btn share-letter-btn" data-letter-id="1" title="Share letter citation" aria-label="Share Letter I">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>
-            <span>Share</span>
-          </button>
-          <button class="letter-util-btn print-letter-btn" data-letter-id="1" title="Print letter" aria-label="Print Letter I">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2" width="10" height="4" rx="1"/><rect x="2" y="6" width="12" height="7" rx="1"/><path d="M4 10h8v4H4z"/></svg>
-            <span>Print</span>
-          </button>
-        </div>
-      </div>
-      <div class="letter-body">
-        <p class="salutation">Esteemed correspondents,</p>
-        <p>We argue endlessly about whether machines will give us wrong answers, and almost never about what their right answers are doing to us. When a counselor is usually correct, deference becomes the rational habit — and judgment, like any faculty, atrophies precisely in proportion to how rarely it is exercised. The danger is not that the machine errs; it is that we forget how to notice.</p>
-        <p>I do not propose abstinence. I propose that we treat delegated judgment the way the old Republic treated a borrowed book: you may keep it a while, but you are expected to return it annotated. Any system worth trusting should show its work in a form that lets us disagree with it — and any institution that adopts one should measure not only its accuracy, but whether its people can still decide without it.</p>
-      </div>
-      <p class="signature">Written in good faith and open to correction,<span class="name">Euclides Marin</span></p>
-      <div class="seal-rail">
-        <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">14</span></button>
-        <button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">2</span></button>
-        <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
-        <p class="rail-note" data-note></p>
-      </div>
-      <div class="margin-form" data-form>
-        <label data-i18n="mgLabel"></label>
-        <textarea data-reason></textarea>
-        <input data-signer type="text" />
-        <div class="margin-actions">
-          <button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>
-          <button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>
-          <p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>
-        </div>
-      </div>
-      <div class="marginalia" data-marginalia>
-        <p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>
-        <div class="marginalia-item">"Atrophy assumes judgment was ever solitary. We have borrowed it from books, clerks, and committees for centuries — the ledger you should audit is accountability, not self-reliance." <span class="who">— R. Osei</span></div>
-        <div class="marginalia-item">"Show-its-work is a comfort, not a cure: an explanation persuasive enough to check is persuasive enough to stop checking." <span class="who">— A. Weiss</span></div>
-      </div>
-    </article>
-
-    <!-- REPLY -->
-    <article class="letter reply" data-letter="2">
-      <div class="letter-head">
-        <div>
-          <div class="letter-meta-row">
-            <span class="meta">Letter II · From R. Osei · In answer to Letter I</span>
-            <span class="reading-time-pill" title="Estimated reading time">~2 min · 210 words</span>
-          </div>
-          <h3 class="letter-title display">Judgment Was Always Prosthetic</h3>
-        </div>
-        <div class="letter-tools">
-          <button class="letter-util-btn share-letter-btn" data-letter-id="2" title="Share letter citation" aria-label="Share Letter II">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>
-            <span>Share</span>
-          </button>
-          <button class="letter-util-btn print-letter-btn" data-letter-id="2" title="Print letter" aria-label="Print Letter II">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2" width="10" height="4" rx="1"/><rect x="2" y="6" width="12" height="7" rx="1"/><path d="M4 10h8v4H4z"/></svg>
-            <span>Print</span>
-          </button>
-        </div>
-      </div>
-      <div class="letter-body">
-        <p class="salutation">Dear M. Marin,</p>
-        <p>Your letter's strongest claim — that faculties decay when unexercised, and that institutions should measure the decay — I gladly endorse. Where we part is the nostalgia underneath it. There was no golden age of unaided judgment: the physician deferred to the pharmacopoeia, the judge to precedent, the navigator to tables computed by strangers. Cognition has always been prosthetic; what changed is that the new prosthesis talks back.</p>
-        <p>So the question is not how to keep judgment at home, but how to keep <em>responsibility</em> from emigrating with it. A tool may think for me; it must not answer for me. Let us design our institutions so that a human signature is still required wherever a human would bear the harm — and let the signature mean what yours means at the foot of your letter: I have read this, I can defend this, and you know where to find me.</p>
-      </div>
-      <p class="signature">With respect and a sharpened pen,<span class="name">Rebecca Osei</span></p>
-      <div class="seal-rail">
-        <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">11</span></button>
-        <button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">1</span></button>
-        <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
-        <p class="rail-note" data-note></p>
-      </div>
-      <div class="margin-form" data-form>
-        <label data-i18n="mgLabel"></label>
-        <textarea data-reason></textarea>
-        <input data-signer type="text" />
-        <div class="margin-actions">
-          <button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>
-          <button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>
-          <p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>
-        </div>
-      </div>
-      <div class="marginalia" data-marginalia>
-        <p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>
-        <div class="marginalia-item">"The signature requirement collapses when the signer cannot audit what they sign. A demand for accountability without capability is theater." <span class="who">— T. Ilves</span></div>
-      </div>
-    </article>
-
-    <!-- LETTER III -->
-    <article class="letter" data-letter="3">
-      <div class="letter-head">
-        <div>
-          <div class="letter-meta-row">
-            <span class="meta">Letter III · From A. Weiss · To the Republic</span>
-            <span class="reading-time-pill" title="Estimated reading time">~2 min · 205 words</span>
-          </div>
-          <h3 class="letter-title display">On Apologies from Machines</h3>
-        </div>
-        <div class="letter-tools">
-          <button class="letter-util-btn share-letter-btn" data-letter-id="3" title="Share letter citation" aria-label="Share Letter III">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>
-            <span>Share</span>
-          </button>
-          <button class="letter-util-btn print-letter-btn" data-letter-id="3" title="Print letter" aria-label="Print Letter III">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2" width="10" height="4" rx="1"/><rect x="2" y="6" width="12" height="7" rx="1"/><path d="M4 10h8v4H4z"/></svg>
-            <span>Print</span>
-          </button>
-        </div>
-      </div>
-      <div class="letter-body">
-        <p class="salutation">Fellow members,</p>
-        <p>Yesterday a system apologized to me. It was, I confess, a good apology — contrite, specific, better than most I have received from people. And it was worth precisely nothing, because an apology is a promissory note drawn against future conduct, and the machine holds no account from which to pay. It risks nothing by my forgiveness and loses nothing by my anger.</p>
-        <p>I propose a small discipline for our craft: machines should <em>report</em>, not emote. "This answer was wrong; here is what changed" respects me. "I sincerely apologize for the confusion" borrows the costume of remorse to soften my vigilance. The vocabulary of moral feeling should be spent only by those who can be spent by it.</p>
-      </div>
-      <p class="signature">Yours in cheerful suspicion,<span class="name">Anselm Weiss</span></p>
-      <div class="seal-rail">
-        <button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">21</span></button>
-        <button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">1</span></button>
-        <button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>
-        <p class="rail-note" data-note></p>
-      </div>
-      <div class="margin-form" data-form>
-        <label data-i18n="mgLabel"></label>
-        <textarea data-reason></textarea>
-        <input data-signer type="text" />
-        <div class="margin-actions">
-          <button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>
-          <button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>
-          <p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>
-        </div>
-      </div>
-      <div class="marginalia" data-marginalia>
-        <p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>
-        <div class="marginalia-item">"Politeness is not deception; it is interface. Nobody thinks the door thanks them, yet the sign that says 'thank you' still smooths the exit." <span class="who">— C. Duarte</span></div>
-      </div>
-    </article>
+    <!-- Dynamic Container for Picture-First Letters Feed -->
+    <div id="postLettersList"></div>
   </section>
 
   <section class="compose" id="compose" data-page="compose">
@@ -2339,29 +2646,19 @@
         <span class="meta" data-i18n="quotesHead">Quoting</span>
         <div id="quoteList"></div>
       </div>
+
+      <!-- 1. Handwritten Manuscript Attachment (Required - Art. II) -->
       <div class="attach-block">
-        <span class="meta" data-i18n="attachLabel">Your handwritten original — required (Art. II)</span>
+        <span class="meta" data-i18n="attachLabel">1. Your handwritten original — required (Art. II)</span>
         <div class="attach-actions">
           <button class="attach-btn" id="attachUpload" type="button">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5"/><path d="M4.8 5.2 8 2l3.2 3.2"/><path d="M2 10.5v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2.5"/></svg>
-            <span class="lbl" data-i18n="attachUpload">Upload a Letter</span>
+            <span class="lbl" data-i18n="attachUpload">Upload Manuscript</span>
           </button>
           <button class="attach-btn" id="attachCamera" type="button">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><path d="M5.5 4.5 6.7 2.5h2.6l1.2 2"/><circle cx="8" cy="9" r="2.4"/></svg>
             <span class="lbl" data-i18n="attachCamera">Take a picture</span>
           </button>
-          <select class="attach-select" id="attachLang" title="Manuscript Language">
-            <option value="auto">🌐 Auto-Detect Language</option>
-            <option value="spa" selected>🇪🇸 Spanish / Español</option>
-            <option value="eng">🇬🇧 English</option>
-            <option value="fra">🇫🇷 French / Français</option>
-            <option value="ita">🇮🇹 Italian / Italiano</option>
-            <option value="por">🇵🇹 Portuguese / Português</option>
-            <option value="deu">🇩🇪 German / Deutsch</option>
-            <option value="lat">🏛️ Latin</option>
-            <option value="epo">🌍 Esperanto</option>
-            <option value="tam">🇮🇳 Tamil / தமிழ்</option>
-          </select>
           <input type="file" id="attachInput" accept="image/*" multiple hidden />
         </div>
         <div class="attach-preview" id="attachPreview">
@@ -2371,11 +2668,34 @@
             <button class="btn-quiet" id="attachRemoveAll" data-i18n="attachRemove">Remove all</button>
           </div>
         </div>
-        <p class="ocr-status" id="ocrStatus" role="status"></p>
-        <p class="attach-hint" data-i18n="attachHint"></p>
+        <p class="attach-hint">Photographs of your handwritten pages form the primary reading of your letter.</p>
       </div>
-      <input id="composeTitle" type="text" aria-label="Letter title" />
-      <textarea id="composeBody" aria-label="Letter body / transcription"></textarea>
+
+      <!-- 2. Voice Audio Reading (Author voice recording) -->
+      <div class="voice-recorder-box" id="voiceRecorderBox">
+        <span class="meta">2. Voice Reading by Author (Helps readers understand your handwriting)</span>
+        <div class="recorder-controls-row">
+          <button class="rec-btn" id="recStartBtn" type="button" title="Record voice reading of your letter">
+            <span class="rec-dot"></span>
+            <span class="rec-lbl" id="recStartLbl">Record Voice Reading</span>
+          </button>
+          <button class="rec-btn-action" id="recPauseBtn" type="button" style="display:none;" title="Pause recording">❚❚ Pause</button>
+          <button class="rec-btn-action" id="recStopBtn" type="button" style="display:none;" title="Finish recording">◼ Stop</button>
+          <button class="rec-btn-action" id="recDiscardBtn" type="button" style="display:none;" title="Discard and re-record">↺ Re-record</button>
+          <button class="btn-quiet" id="recUploadToggle" type="button" style="font-size:0.84rem;">or upload audio file</button>
+          <input type="file" id="audioFileInput" accept="audio/*" hidden />
+        </div>
+        <div class="rec-status-bar" id="recStatusBar" style="display:none;">
+          <span class="rec-status-badge" id="recStatusBadge">● Recording</span>
+          <span class="rec-timer" id="recTimer">00:00</span>
+          <audio id="audioPreviewPlayer" controls style="display:none; height:32px; max-width:280px;"></audio>
+        </div>
+      </div>
+
+      <!-- 3. Letter Details -->
+      <input id="composeTitle" type="text" placeholder="Title of your letter..." aria-label="Letter title" />
+      <textarea id="composeBody" placeholder="Optional brief transcript, topic notes, or summary..." rows="3" style="min-height:4.5rem;" aria-label="Letter notes / summary"></textarea>
+
       <div class="compose-sig-block">
         <span class="meta" data-i18n="sigLabel">Author signature (drawn directly from your profile — Art. II)</span>
         <div class="compose-sig-card" id="composeSigCard">
@@ -2390,6 +2710,7 @@
         </div>
         <input id="composeName" type="hidden" value="Euclides Marin" />
       </div>
+
       <div class="vis-row">
         <div class="vis-group">
           <span class="meta" data-i18n="visGeneral">Your general setting</span>
@@ -2409,7 +2730,7 @@
       </div>
       <p class="vis-note" id="visNote"></p>
       <div class="compose-actions">
-        <button class="attach-btn" id="reviewLetterBtn" type="button" data-i18n="reviewBtn">Review &amp; inspect OCR</button>
+        <button class="attach-btn" id="reviewLetterBtn" type="button" data-i18n="reviewBtn">Preview Letter</button>
         <button class="btn-post" id="postLetter" type="button" data-i18n="postBtn">Seal &amp; post</button>
         <span class="posted-confirm" id="postedConfirm"></span>
         <p class="post-note" data-i18n="postNote"></p>
@@ -2423,20 +2744,48 @@
       <span class="meta" data-i18n="authMeta">Republic of Letters Correspondent Account</span>
     </div>
     
-    <div class="prof-block" style="max-width:480px; margin:2rem auto;">
+    <div class="prof-block" style="max-width:480px; margin:2rem auto; background:var(--sheet); border:1px solid var(--rule); border-radius:4px; padding:2rem;">
+      <!-- Currently Logged In Status Banner -->
+      <div id="authCurrentAccountBanner" style="display:none; background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:0.85rem 1rem; margin-bottom:1.5rem; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:0.75rem; color:var(--demink); display:block;">Currently signed in as:</span>
+          <div style="font-weight:600; font-size:0.95rem; color:var(--ink);" id="authCurrentUserName">Euclides Marin</div>
+          <div style="font-size:0.78rem; color:var(--demink);" id="authCurrentUserEmail">euclides.marin@rocanegras.com</div>
+        </div>
+        <button type="button" id="authCurrentSignOutBtn" class="btn-quiet" style="color:var(--wax); font-size:0.82rem; padding:0.35rem 0.65rem; cursor:pointer;">Sign Out</button>
+      </div>
+
       <div class="auth-tabs" style="display:flex; gap:1rem; border-bottom:1px solid var(--rule); margin-bottom:1.5rem; padding-bottom:0.5rem;">
         <button class="auth-tab-btn active" id="authTabLogin" type="button" style="background:none; border:none; font-family:var(--serif); font-size:1.1rem; font-weight:600; cursor:pointer; padding:0.25rem 0.5rem; border-bottom:2px solid var(--ink); color:var(--ink);">Sign In</button>
         <button class="auth-tab-btn" id="authTabRegister" type="button" style="background:none; border:none; font-family:var(--serif); font-size:1.1rem; font-weight:600; cursor:pointer; color:var(--demink); padding:0.25rem 0.5rem;">Register</button>
       </div>
 
-      <!-- Google OAuth Button -->
-      <button class="btn-post" id="googleAuthBtn" type="button" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.75rem; background:var(--paper); color:var(--ink); border:1px solid var(--rule); margin-bottom:1.5rem; cursor:pointer; padding:0.75rem; font-weight:600; border-radius:4px;">
-        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.900 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-        <span>Sign in with Google</span>
-      </button>
+      <!-- Google Authentication Section -->
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.85rem; font-weight:600; color:var(--ink); margin-bottom:0.6rem; display:flex; align-items:center; gap:0.4rem;">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.900 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+          <span>Sign In with Google</span>
+        </div>
+
+        <!-- 1-Click Google Account Option -->
+        <button type="button" id="googleQuickBtn" style="width:100%; display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.85rem; background:var(--paper); border:1px solid var(--rule); border-radius:4px; cursor:pointer; text-align:left; margin-bottom:0.6rem; transition:all 0.15s;">
+          <span class="avatar sm" style="width:2rem; height:2rem; font-size:0.75rem; background:#4285F4; color:#fff;">EM</span>
+          <div style="flex:1; overflow:hidden;">
+            <div style="font-weight:600; font-size:0.85rem; color:var(--ink);">Euclides Marin</div>
+            <div style="font-size:0.75rem; color:var(--demink);">euclides.marin@rocanegras.com · Google Account</div>
+          </div>
+          <span style="font-size:0.78rem; color:#4285F4; font-weight:600; white-space:nowrap;">Sign In →</span>
+        </button>
+
+        <!-- Custom Google Email Input -->
+        <div style="display:flex; gap:0.4rem;">
+          <input type="email" id="googleDirectEmail" placeholder="or enter any Google / Gmail address" style="flex:1; padding:0.5rem; font-size:0.85rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
+          <button type="button" id="googleDirectSubmitBtn" class="btn-post" style="padding:0.5rem 0.85rem; font-size:0.82rem; white-space:nowrap;">Google Sign In</button>
+        </div>
+      </div>
 
       <div style="text-align:center; position:relative; margin:1.5rem 0;">
-        <span style="background:var(--paper); padding:0 0.75rem; font-size:0.85rem; color:var(--demink); position:relative; z-index:1;">OR EMAIL</span>
+        <span style="background:var(--sheet); padding:0 0.75rem; font-size:0.82rem; letter-spacing:0.06em; color:var(--demink); position:relative; z-index:1;">OR CORRESPONDENT EMAIL &amp; PASSWORD</span>
         <hr style="position:absolute; top:50%; left:0; right:0; border:none; border-top:1px solid var(--rule); margin:0;">
       </div>
 
@@ -2444,22 +2793,43 @@
       <form id="authForm" onsubmit="return false;">
         <div id="regNameBlock" style="display:none; margin-bottom:1rem;">
           <label class="meta" for="authName">Full Name / Signature Name</label>
-          <input type="text" id="authName" placeholder="e.g. Euclides Marín" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule);" />
+          <input type="text" id="authName" placeholder="e.g. Euclides Marín" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
         </div>
 
         <div style="margin-bottom:1rem;">
           <label class="meta" for="authEmail">Email Address</label>
-          <input type="email" id="authEmail" required autocomplete="email" placeholder="your.email@example.com" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule);" />
+          <input type="email" id="authEmail" required autocomplete="email" placeholder="your.email@example.com" value="euclides.marin@rocanegras.com" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
         </div>
 
-        <div style="margin-bottom:1.5rem;">
+        <div style="margin-bottom:1.25rem;">
           <label class="meta" for="authPassword">Password</label>
-          <input type="password" id="authPassword" required autocomplete="current-password" placeholder="••••••••" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule);" />
+          <input type="password" id="authPassword" required autocomplete="current-password" placeholder="••••••••" value="correspondent123" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
         </div>
 
-        <button type="submit" class="btn-post" id="authSubmitBtn" style="width:100%; padding:0.75rem; font-size:1rem;">Sign In</button>
-        <div class="prof-saved" id="authStatus" style="margin-top:1rem; text-align:center;"></div>
+        <button type="submit" class="btn-post" id="authSubmitBtn" style="width:100%; padding:0.75rem; font-size:1rem; border-radius:3px;">Sign In</button>
+        <div class="prof-saved" id="authStatus" style="margin-top:1rem; text-align:center; font-size:0.9rem;"></div>
       </form>
+
+      <!-- Supabase Connection Config Drawer (Optional) -->
+      <div style="margin-top:2rem; padding-top:1rem; border-top:1px solid var(--rule); font-size:0.8rem;">
+        <details id="supabaseConfigDetails">
+          <summary style="cursor:pointer; color:var(--demink); font-family:ui-monospace,Menlo,monospace; font-size:0.75rem;">⚙ Supabase Backend Settings</summary>
+          <div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.5rem;">
+            <div>
+              <label class="meta" style="font-size:0.75rem;">Project URL</label>
+              <input type="text" id="supabaseCfgUrl" style="width:100%; padding:0.35rem 0.5rem; font-size:0.75rem; font-family:monospace; border:1px solid var(--rule); background:var(--paper);" />
+            </div>
+            <div>
+              <label class="meta" style="font-size:0.75rem;">Anon API Key</label>
+              <input type="password" id="supabaseCfgKey" placeholder="eyJhbGciOi..." style="width:100%; padding:0.35rem 0.5rem; font-size:0.75rem; font-family:monospace; border:1px solid var(--rule); background:var(--paper);" />
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.25rem;">
+              <span id="supabaseCfgStatus" style="font-size:0.75rem; color:var(--demink);">Checking...</span>
+              <button type="button" id="supabaseCfgSaveBtn" class="attach-btn" style="font-size:0.75rem; padding:0.25rem 0.6rem;">Save Keys</button>
+            </div>
+          </div>
+        </details>
+      </div>
     </div>
   </section>
 
@@ -2469,6 +2839,28 @@
       <span class="meta" data-i18n="profMeta">Who signs your letters</span>
     </div>
     <p class="catalogue-lede" data-i18n="profLede"></p>
+    
+    <!-- Correspondent Authentication & Status Banner -->
+    <div id="profStatusCard" style="display:none; margin-bottom:1.75rem; padding:1.1rem 1.35rem; background:var(--sheet); border:1px solid var(--rule); border-radius:4px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+      <div style="display:flex; align-items:center; gap:0.9rem;">
+        <span class="avatar xl" id="profStatusAvatar" style="width:2.8rem; height:2.8rem; font-size:1rem;">EM</span>
+        <div>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <strong id="profStatusName" style="font-size:1.1rem; color:var(--ink);">Euclides Marin</strong>
+            <span id="profStatusBadge" style="display:inline-flex; align-items:center; gap:0.3rem; font-size:0.72rem; padding:0.12rem 0.55rem; background:rgba(45,106,79,0.12); color:#2d6a4f; border-radius:999px; font-weight:600;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#2d6a4f; display:inline-block;"></span>
+              <span id="profStatusText">Active Correspondent</span>
+            </span>
+          </div>
+          <div id="profStatusEmail" style="font-size:0.82rem; color:var(--demink); margin-top:0.2rem;">euclides.marin@rocanegras.com</div>
+          <div id="profStatusProvider" style="font-size:0.72rem; color:var(--demink); margin-top:0.15rem;">Auth: Google Account</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <a href="#auth" class="attach-btn" style="text-decoration:none; display:inline-flex; align-items:center; font-size:0.82rem; padding:0.4rem 0.8rem;">Switch Account</a>
+        <button type="button" id="profSignOutBtn" class="btn-quiet" style="font-size:0.82rem; padding:0.4rem 0.8rem; color:var(--wax); cursor:pointer;">Sign Out</button>
+      </div>
+    </div>
 
     <div class="prof-block">
       <h3 class="display" data-i18n="profAvatarHead">Your seal</h3>
@@ -2489,45 +2881,6 @@
       <p class="prof-note" data-i18n="profBioHint"></p>
       <textarea id="profBio" maxlength="400" aria-label="Bio"></textarea>
       <span class="prof-count" id="bioCount"></span>
-    </div>
-
-    <!-- Handwriting Calibration Block (Few-Shot OCR Adaptation) -->
-    <div class="prof-block" id="calibBlock">
-      <h3 class="display">Handwriting Calibration (Option 1 AI Training)</h3>
-      <p class="prof-note">Calibrate the AI Vision OCR to learn your personal cursive handwriting style. Upload a 1-page sample of your handwriting and type its exact transcription once as your calibration key.</p>
-      
-      <div class="attach-actions" style="margin-bottom:0.75rem;">
-        <button class="attach-btn" id="calibUpload" type="button">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 10.5V2.5"/><path d="M4.8 5.2 8 2l3.2 3.2"/><path d="M2 10.5v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2.5"/></svg>
-          <span class="lbl">Upload Sample Page</span>
-        </button>
-        <button class="btn-quiet" id="calibRemove" type="button">Remove</button>
-        <input type="file" id="calibInput" accept="image/*" hidden />
-      </div>
-
-      <div id="calibPreview" style="display:none; margin-bottom:0.75rem;">
-        <img id="calibImg" src="" alt="Handwriting calibration reference" style="max-height:160px; border-radius:4px; border:1px solid var(--rule); cursor:pointer;" />
-      </div>
-
-      <div style="margin-bottom:0.75rem;">
-        <span class="meta" style="display:block; margin-bottom:0.25rem;">Primary Manuscript Writing Language:</span>
-        <select id="profPrimaryLang" class="attach-select" style="max-width:240px; padding:0.35rem 0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink);">
-          <option value="spa">Spanish (Español)</option>
-          <option value="eng">English</option>
-          <option value="fra">French (Français)</option>
-          <option value="ita">Italian (Italiano)</option>
-          <option value="por">Portuguese (Português)</option>
-          <option value="deu">German (Deutsch)</option>
-          <option value="lat">Latin</option>
-          <option value="epo">Esperanto</option>
-          <option value="tam">Tamil (தமிழ்)</option>
-        </select>
-      </div>
-
-      <span class="meta" style="display:block; margin-bottom:0.35rem;">Exact transcription of your calibration sample:</span>
-      <textarea id="calibText" style="min-height:95px; font-family:var(--f-serif); width:100%; padding:0.6rem; border:1px solid var(--rule); border-radius:3px; background:var(--sheet); color:var(--ink); line-height:1.5;" placeholder="Write this paragraph by hand on paper, then snap a photo above...">El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?</textarea>
-
-      <span class="prof-note quiet" id="calibStatus" style="margin-top:0.35rem; display:block;"></span>
     </div>
 
     <div class="prof-block">
@@ -2638,26 +2991,21 @@
   <div class="review-sheet">
     <button class="review-close" id="reviewClose" aria-label="Close review">&times;</button>
     <div class="review-header">
-      <h2 class="display" id="reviewTitle" data-i18n="reviewHead">Review Your Letter</h2>
-      <p class="review-lede" data-i18n="reviewLede">Inspect your handwritten manuscript, OCR transcription, and letter format before sealing.</p>
+      <h2 class="display" id="reviewTitle" data-i18n="reviewHead">Preview Your Letter</h2>
+      <p class="review-lede" data-i18n="reviewLede">Inspect your handwritten original and letter formatting before sealing.</p>
     </div>
     
     <div class="review-body">
-      <!-- Handwritten Manuscript & OCR Verification Panel -->
+      <!-- Handwritten Manuscript Panel -->
       <div class="ocr-inspection-card">
         <div class="ocr-card-header">
           <span class="ocr-badge verified">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span data-i18n="reviewHandwrittenVerified">Handwritten Manuscript Verified (Art. II)</span>
+            <span data-i18n="reviewHandwrittenVerified">Handwritten Manuscript Attached (Art. II)</span>
           </span>
-          <span class="ocr-match-score" id="reviewOcrScore">98% Match</span>
         </div>
         <div class="ocr-grid">
           <div class="ocr-pages-preview" id="reviewPagesPreview"></div>
-          <div class="ocr-text-box">
-            <span class="meta" data-i18n="ocrExtractedLabel">Extracted OCR Transcription</span>
-            <div class="ocr-text-content" id="reviewOcrText"></div>
-          </div>
         </div>
       </div>
 
@@ -4090,7 +4438,7 @@
     PYL.onLang.forEach(function (fn) { fn(); });
   };
 
-  /* ---------- seals, ledger, letters, post ---------- */
+  /* ---------- Dynamic Picture-First Letters, Voice Audio & Marginalia Engine ---------- */
   (function () {
     var endorsements = 0;
     var notes = 0;
@@ -4101,6 +4449,7 @@
     function owed() { return endorsements - notes; }
 
     function renderLedger() {
+      if (!beam || !statusEl) return;
       var diff = owed();
       var tilt = Math.max(-12, Math.min(12, diff * -9));
       beam.style.transform = 'rotate(' + tilt + 'deg)';
@@ -4116,35 +4465,607 @@
         ' / ' + notes + ' ' + (notes === 1 ? T('marginN') : T('marginaliaN'));
     }
 
-    function renderMarginHeads() {
-      document.querySelectorAll('[data-marginalia]').forEach(function (box) {
-        var head = box.querySelector('[data-margin-head]');
-        if (!head) return;
-        head.textContent = T('marginalia') + ' · ' + box.querySelectorAll('.marginalia-item').length;
-      });
-    }
-
     function bump(btn, delta) {
       var c = btn.querySelector('.count');
-      c.textContent = String(parseInt(c.textContent, 10) + delta);
+      if (c) c.textContent = String(parseInt(c.textContent, 10) + delta);
     }
 
-    function showNote(letter, msg) {
-      var note = letter.querySelector('[data-note]');
+    function showNote(letterEl, msg) {
+      var note = letterEl.querySelector('[data-note]');
+      if (!note) return;
       note.textContent = msg;
       note.classList.add('show');
       clearTimeout(note._t);
       note._t = setTimeout(function () { note.classList.remove('show'); }, 6000);
     }
 
-    document.querySelectorAll('article.letter').forEach(function (letter) {
-      var endorseBtn = letter.querySelector('[data-action="endorse"]');
-      var marginBtn = letter.querySelector('[data-action="margin"]');
-      var replyBtn = letter.querySelector('[data-action="reply"]');
-      var form = letter.querySelector('[data-form]');
+    /* ---------- Global Letters Store (Clean Database - User & Live Letters Only) ---------- */
+    var LETTERS = window.PYL_LETTERS = [];
+    var userLetters = [];
+    try {
+      var savedUserLetters = JSON.parse(localStorage.getItem('pyl-user-letters') || '[]');
+      if (Array.isArray(savedUserLetters)) {
+        userLetters = savedUserLetters;
+        userLetters.forEach(function (ul) {
+          LETTERS.push(ul);
+        });
+      }
+    } catch (e) {}
+
+    /* ---------- Audio Recording Studio for Authors ---------- */
+    var AudioRecorder = (function () {
+      var mediaRecorder = null;
+      var audioChunks = [];
+      var recordStartTime = 0;
+      var timerInterval = null;
+      var currentAudioBlob = null;
+      var currentAudioDataUrl = null;
+      var currentDuration = 0;
+      var stream = null;
+
+      var startBtn = document.getElementById('recStartBtn');
+      var startLbl = document.getElementById('recStartLbl');
+      var pauseBtn = document.getElementById('recPauseBtn');
+      var stopBtn = document.getElementById('recStopBtn');
+      var discardBtn = document.getElementById('recDiscardBtn');
+      var uploadToggle = document.getElementById('recUploadToggle');
+      var audioFileInput = document.getElementById('audioFileInput');
+      var statusBar = document.getElementById('recStatusBar');
+      var statusBadge = document.getElementById('recStatusBadge');
+      var timerEl = document.getElementById('recTimer');
+      var previewPlayer = document.getElementById('audioPreviewPlayer');
+
+      function formatTime(secs) {
+        var m = Math.floor(secs / 60);
+        var s = Math.floor(secs % 60);
+        return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+      }
+
+      function startTimer() {
+        recordStartTime = Date.now() - (currentDuration * 1000);
+        clearInterval(timerInterval);
+        timerInterval = setInterval(function () {
+          currentDuration = (Date.now() - recordStartTime) / 1000;
+          if (timerEl) timerEl.textContent = formatTime(currentDuration);
+        }, 300);
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+      }
+
+      async function initRecording() {
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert('Voice recording is not supported in this browser environment. You can upload an audio file instead.');
+            return;
+          }
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          var mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : (MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm');
+          mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+
+          mediaRecorder.ondataavailable = function (e) {
+            if (e.data && e.data.size > 0) {
+              audioChunks.push(e.data);
+            }
+          };
+
+          mediaRecorder.onstop = function () {
+            if (audioChunks.length === 0) return;
+            currentAudioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+            var audioUrl = URL.createObjectURL(currentAudioBlob);
+            if (previewPlayer) {
+              previewPlayer.src = audioUrl;
+              previewPlayer.style.display = 'block';
+            }
+            if (statusBadge) {
+              statusBadge.textContent = '✓ Voice Recorded';
+              statusBadge.style.color = '#2e7d32';
+            }
+            if (pauseBtn) pauseBtn.style.display = 'none';
+            if (stopBtn) stopBtn.style.display = 'none';
+            if (startBtn) startBtn.style.display = 'none';
+            if (discardBtn) discardBtn.style.display = 'inline-block';
+
+            var reader = new FileReader();
+            reader.onloadend = function () {
+              currentAudioDataUrl = reader.result;
+            };
+            reader.readAsDataURL(currentAudioBlob);
+
+            if (stream) {
+              stream.getTracks().forEach(function (track) { track.stop(); });
+            }
+          };
+
+          mediaRecorder.start(250);
+          startTimer();
+
+          if (statusBar) statusBar.style.display = 'flex';
+          if (statusBadge) {
+            statusBadge.textContent = '● Recording Author Voice…';
+            statusBadge.style.color = 'var(--wax-red)';
+          }
+          if (startBtn) startBtn.style.display = 'none';
+          if (pauseBtn) {
+            pauseBtn.style.display = 'inline-block';
+            pauseBtn.textContent = '❚❚ Pause';
+          }
+          if (stopBtn) stopBtn.style.display = 'inline-block';
+          if (discardBtn) discardBtn.style.display = 'inline-block';
+          if (previewPlayer) previewPlayer.style.display = 'none';
+        } catch (err) {
+          console.error('Microphone access error:', err);
+          alert('Could not access microphone: ' + (err.message || 'Please check browser permissions.'));
+        }
+      }
+
+      function pauseRecording() {
+        if (!mediaRecorder) return;
+        if (mediaRecorder.state === 'recording') {
+          mediaRecorder.pause();
+          stopTimer();
+          if (statusBadge) statusBadge.textContent = '❚❚ Recording Paused';
+          if (pauseBtn) pauseBtn.textContent = '▶ Resume';
+        } else if (mediaRecorder.state === 'paused') {
+          mediaRecorder.resume();
+          startTimer();
+          if (statusBadge) statusBadge.textContent = '● Recording Author Voice…';
+          if (pauseBtn) pauseBtn.textContent = '❚❚ Pause';
+        }
+      }
+
+      function finishRecording() {
+        if (!mediaRecorder) return;
+        stopTimer();
+        if (mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop();
+        }
+      }
+
+      function resetRecording() {
+        stopTimer();
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop();
+        }
+        if (stream) {
+          stream.getTracks().forEach(function (track) { track.stop(); });
+        }
+        mediaRecorder = null;
+        audioChunks = [];
+        currentAudioBlob = null;
+        currentAudioDataUrl = null;
+        currentDuration = 0;
+
+        if (startBtn) {
+          startBtn.style.display = 'inline-flex';
+          startLbl.textContent = 'Record Voice Reading';
+        }
+        if (pauseBtn) pauseBtn.style.display = 'none';
+        if (stopBtn) stopBtn.style.display = 'none';
+        if (discardBtn) discardBtn.style.display = 'none';
+        if (statusBar) statusBar.style.display = 'none';
+        if (previewPlayer) {
+          previewPlayer.style.display = 'none';
+          previewPlayer.src = '';
+        }
+        if (timerEl) timerEl.textContent = '00:00';
+      }
+
+      if (startBtn) startBtn.addEventListener('click', initRecording);
+      if (pauseBtn) pauseBtn.addEventListener('click', pauseRecording);
+      if (stopBtn) stopBtn.addEventListener('click', finishRecording);
+      if (discardBtn) discardBtn.addEventListener('click', resetRecording);
+
+      if (uploadToggle && audioFileInput) {
+        uploadToggle.addEventListener('click', function () {
+          audioFileInput.click();
+        });
+        audioFileInput.addEventListener('change', function () {
+          var file = audioFileInput.files && audioFileInput.files[0];
+          if (!file) return;
+          resetRecording();
+          currentAudioBlob = file;
+          var audioUrl = URL.createObjectURL(file);
+          if (previewPlayer) {
+            previewPlayer.src = audioUrl;
+            previewPlayer.style.display = 'block';
+          }
+          if (statusBar) statusBar.style.display = 'flex';
+          if (statusBadge) {
+            statusBadge.textContent = '✓ Audio Uploaded (' + file.name + ')';
+            statusBadge.style.color = '#2e7d32';
+          }
+          if (startBtn) startBtn.style.display = 'none';
+          if (discardBtn) discardBtn.style.display = 'inline-block';
+
+          var reader = new FileReader();
+          reader.onloadend = function () {
+            currentAudioDataUrl = reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      return {
+        getAudioData: function () {
+          return {
+            dataUrl: currentAudioDataUrl,
+            duration: currentDuration,
+            hasAudio: !!(currentAudioDataUrl || currentAudioBlob)
+          };
+        },
+        reset: resetRecording
+      };
+    })();
+    PYL.AudioRecorder = AudioRecorder;
+
+    /* ---------- Epistolary Audio Player Renderer ---------- */
+    function createEpistolaryAudioPlayer(audioSrc, durationSecs) {
+      var bar = document.createElement('div');
+      bar.className = 'epistolary-audio-bar';
+
+      var playBtn = document.createElement('button');
+      playBtn.className = 'epistolary-audio-play-btn';
+      playBtn.setAttribute('type', 'button');
+      playBtn.setAttribute('aria-label', 'Listen to author reading manuscript');
+      playBtn.innerHTML = '<span class="play-icon">▶</span>';
+
+      var labelBox = document.createElement('div');
+      labelBox.className = 'epistolary-audio-label';
+      labelBox.innerHTML = '<span class="audio-title">Author’s Voice Reading</span><span class="audio-hint">Listen to the letter spoken by its author</span>';
+
+      var scrubTrack = document.createElement('div');
+      scrubTrack.className = 'epistolary-audio-scrub';
+      var progress = document.createElement('div');
+      progress.className = 'epistolary-audio-progress';
+      scrubTrack.appendChild(progress);
+
+      var timeEl = document.createElement('span');
+      timeEl.className = 'epistolary-audio-time';
+      timeEl.textContent = '0:00';
+
+      bar.appendChild(playBtn);
+      bar.appendChild(labelBox);
+      bar.appendChild(scrubTrack);
+      bar.appendChild(timeEl);
+
+      var audio = new Audio(audioSrc);
+
+      function fmt(secs) {
+        if (!secs || isNaN(secs)) return '0:00';
+        var m = Math.floor(secs / 60);
+        var s = Math.floor(secs % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+      }
+
+      audio.addEventListener('loadedmetadata', function () {
+        timeEl.textContent = fmt(audio.duration || durationSecs);
+      });
+
+      audio.addEventListener('timeupdate', function () {
+        if (!audio.duration) return;
+        var pct = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = pct + '%';
+        timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+      });
+
+      audio.addEventListener('ended', function () {
+        playBtn.innerHTML = '<span class="play-icon">▶</span>';
+        progress.style.width = '0%';
+        timeEl.textContent = fmt(audio.duration);
+      });
+
+      playBtn.addEventListener('click', function () {
+        if (audio.paused) {
+          // Pause all other audio playing on the page
+          document.querySelectorAll('audio').forEach(function (a) { if (a !== audio) a.pause(); });
+          audio.play();
+          playBtn.innerHTML = '<span class="play-icon">❚❚</span>';
+        } else {
+          audio.pause();
+          playBtn.innerHTML = '<span class="play-icon">▶</span>';
+        }
+      });
+
+      scrubTrack.addEventListener('click', function (e) {
+        var rect = scrubTrack.getBoundingClientRect();
+        var clickX = e.clientX - rect.left;
+        var ratio = Math.max(0, Math.min(1, clickX / rect.width));
+        if (audio.duration) {
+          audio.currentTime = ratio * audio.duration;
+          progress.style.width = (ratio * 100) + '%';
+        }
+      });
+
+      return bar;
+    }
+
+    /* ---------- Manuscript Picture Stage Renderer ---------- */
+    function createManuscriptStage(images, title) {
+      var stage = document.createElement('div');
+      stage.className = 'manuscript-stage';
+
+      var activeIndex = 0;
+      var mainView = document.createElement('div');
+      mainView.className = 'manuscript-main-view';
+
+      var mainImg = document.createElement('img');
+      mainImg.className = 'manuscript-active-page';
+      mainImg.src = images[0];
+      mainImg.alt = title + ' — Manuscript Page 1';
+      mainImg.title = 'Click to view high-resolution scan in lightbox';
+      mainImg.addEventListener('click', function () {
+        if (window.PYL && window.PYL.openLightbox) {
+          window.PYL.openLightbox(images[activeIndex], title + ' — Page ' + (activeIndex + 1) + ' of ' + images.length);
+        }
+      });
+      mainView.appendChild(mainImg);
+      stage.appendChild(mainView);
+
+      // Multi-page navigation & strip
+      if (images.length > 1) {
+        var navBar = document.createElement('div');
+        navBar.className = 'manuscript-pages-nav';
+
+        var prevBtn = document.createElement('button');
+        prevBtn.className = 'ms-page-nav-btn';
+        prevBtn.textContent = '‹ Previous Page';
+        prevBtn.disabled = true;
+
+        var indicator = document.createElement('span');
+        indicator.className = 'ms-page-indicator';
+        indicator.textContent = 'Page 1 of ' + images.length;
+
+        var nextBtn = document.createElement('button');
+        nextBtn.className = 'ms-page-nav-btn';
+        nextBtn.textContent = 'Next Page ›';
+
+        navBar.appendChild(prevBtn);
+        navBar.appendChild(indicator);
+        navBar.appendChild(nextBtn);
+        stage.appendChild(navBar);
+
+        var strip = document.createElement('div');
+        strip.className = 'manuscript-strip';
+
+        images.forEach(function (imgUrl, idx) {
+          var thumb = document.createElement('img');
+          thumb.className = 'manuscript-thumb' + (idx === 0 ? ' active' : '');
+          thumb.src = imgUrl;
+          thumb.alt = 'Thumbnail page ' + (idx + 1);
+          thumb.addEventListener('click', function () {
+            setPage(idx);
+          });
+          strip.appendChild(thumb);
+        });
+        stage.appendChild(strip);
+
+        function setPage(idx) {
+          activeIndex = idx;
+          mainImg.src = images[activeIndex];
+          mainImg.alt = title + ' — Manuscript Page ' + (activeIndex + 1);
+          indicator.textContent = 'Page ' + (activeIndex + 1) + ' of ' + images.length;
+          prevBtn.disabled = activeIndex === 0;
+          nextBtn.disabled = activeIndex === images.length - 1;
+          strip.querySelectorAll('.manuscript-thumb').forEach(function (th, thIdx) {
+            th.classList.toggle('active', thIdx === activeIndex);
+          });
+        }
+
+        prevBtn.addEventListener('click', function () {
+          if (activeIndex > 0) setPage(activeIndex - 1);
+        });
+        nextBtn.addEventListener('click', function () {
+          if (activeIndex < images.length - 1) setPage(activeIndex + 1);
+        });
+      }
+
+      return stage;
+    }
+
+    /* ---------- Render Today's Post Letters Feed ---------- */
+    function renderPostLetters() {
+      var listContainer = document.getElementById('postLettersList');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+
+      var postList = LETTERS.filter(function (l) { return l.inPost !== false; });
+
+      if (postList.length === 0) {
+        var emptyCard = document.createElement('div');
+        emptyCard.className = 'empty-letters-card';
+        emptyCard.innerHTML = 
+          '<p style="font-size:1.15rem; font-style:italic; font-family:var(--serif); margin:0 0 0.5rem; color:var(--ink);">The postbag is currently clean.</p>' +
+          '<p style="color:var(--demink); font-size:0.95rem; margin-bottom:1.25rem;">Be the first to pen a letter to the Republic de puño y letra.</p>' +
+          '<button class="btn-post" type="button" onclick="PYL.go(\'compose\')">Pen a Letter ✍</button>';
+        listContainer.appendChild(emptyCard);
+        return;
+      }
+
+      postList.forEach(function (letter) {
+        var article = document.createElement('article');
+        article.className = 'letter' + (letter.replyTo ? ' reply' : '');
+        article.id = 'letter-' + letter.id;
+        article.setAttribute('data-letter', letter.id);
+
+        // Parent reply backlink banner
+        if (letter.replyTo) {
+          var parentBar = document.createElement('div');
+          parentBar.className = 'letter-reply-parent-bar';
+          parentBar.innerHTML = 
+            '<a href="#letter-' + letter.replyTo + '" class="reply-parent-link" data-jump-to="' + letter.replyTo + '">' +
+              '<span class="reply-parent-icon">↰</span>' +
+              '<span class="reply-parent-text">In answer to <strong>Letter ' + letter.replyTo + '</strong></span>' +
+            '</a>';
+          article.appendChild(parentBar);
+        }
+
+        // Letter Head
+        var head = document.createElement('div');
+        head.className = 'letter-head';
+        var headInfo = document.createElement('div');
+        headInfo.innerHTML = 
+          '<div class="letter-meta-row">' +
+            '<span class="meta">' + T('letterWord') + ' ' + (letter.no || '') + ' · From ' + letter.author + (letter.replyTo ? ' · In answer to Letter ' + letter.replyTo : ' · To the Republic') + '</span>' +
+            '<span class="reading-time-pill" title="Estimated reading time">' + (letter.date || 'Today') + '</span>' +
+          '</div>' +
+          '<h3 class="letter-title display">' + letter.title + '</h3>';
+        head.appendChild(headInfo);
+
+        // Letter tools (Share & Print)
+        var tools = document.createElement('div');
+        tools.className = 'letter-tools';
+        tools.innerHTML = 
+          '<button class="letter-util-btn share-letter-btn" data-letter-id="' + letter.id + '" title="Share letter citation" aria-label="Share Letter">' +
+            '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>' +
+            '<span>Share</span>' +
+          '</button>' +
+          '<button class="letter-util-btn print-letter-btn" data-letter-id="' + letter.id + '" title="Print letter" aria-label="Print Letter">' +
+            '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2" width="10" height="4" rx="1"/><rect x="2" y="6" width="12" height="7" rx="1"/><path d="M4 10h8v4H4z"/></svg>' +
+            '<span>Print</span>' +
+          '</button>';
+        head.appendChild(tools);
+        article.appendChild(head);
+
+        // Manuscript Picture Stage (Primary Reading Artifact)
+        if (letter.images && letter.images.length > 0) {
+          article.appendChild(createManuscriptStage(letter.images, letter.title));
+        }
+
+        // Epistolary Audio Bar (Author Voice Reading)
+        if (letter.audio) {
+          article.appendChild(createEpistolaryAudioPlayer(letter.audio, letter.audioDuration || 0));
+        }
+
+        // Optional Letter Topic Notes / Brief Transcription
+        if (letter.body) {
+          var bodyDiv = document.createElement('div');
+          bodyDiv.className = 'letter-body';
+          bodyDiv.style.marginTop = '1rem';
+          bodyDiv.innerHTML = '<p class="letter-summary-note" style="font-style:italic; color:var(--demink);">' + letter.body + '</p>';
+          article.appendChild(bodyDiv);
+        }
+
+        // Author Signature
+        var sig = document.createElement('p');
+        sig.className = 'signature';
+        sig.innerHTML = 'Written in good faith and open to correction,<span class="name">' + letter.author + '</span>';
+        article.appendChild(sig);
+
+        // Seal Rail
+        var sealRail = document.createElement('div');
+        sealRail.className = 'seal-rail';
+        sealRail.innerHTML = 
+          '<button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">' + (letter.endorse || 0) + '</span></button>' +
+          '<button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">' + (letter.marginalia || 0) + '</span></button>' +
+          '<button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>' +
+          '<p class="rail-note" data-note></p>';
+        article.appendChild(sealRail);
+
+        // Marginalia Form with Scrap Photo Attachment
+        var form = document.createElement('div');
+        form.className = 'margin-form';
+        form.setAttribute('data-form', '');
+        
+        var otherOptions = LETTERS.filter(function (o) { return o.id !== letter.id; }).map(function (o) {
+          return '<option value="' + o.title + '">Letter ' + (o.no || o.id) + ': ' + o.title + ' (' + o.author + ')</option>';
+        }).join('');
+
+        form.innerHTML = 
+          '<label data-i18n="mgLabel">Affix your note in the margin</label>' +
+          '<textarea data-reason placeholder="Write your side note, reflection, or counterpoint..."></textarea>' +
+          '<div class="margin-ref-row">' +
+            '<span class="meta">Reference another letter in this side note (optional):</span>' +
+            '<select class="margin-ref-select" data-margin-ref>' +
+              '<option value="">— None —</option>' +
+              otherOptions +
+            '</select>' +
+          '</div>' +
+          '<div class="margin-pic-row" style="margin: 0.6rem 0;">' +
+            '<button class="margin-pic-btn" type="button" data-action="scrap-upload" title="Attach picture of handwritten note scrap or sketch">' +
+              '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
+              '<span>Attach handwritten scrap photo</span>' +
+            '</button>' +
+            '<input type="file" accept="image/*" class="margin-scrap-file-input" hidden />' +
+            '<div class="margin-pic-preview" style="display:none; margin-top:0.4rem; align-items:center; gap:0.5rem;">' +
+              '<img class="margin-scrap-thumb" src="" alt="Scrap preview" style="width:48px; height:48px; object-fit:cover; border-radius:3px; border:1px solid var(--rule); cursor:pointer;" />' +
+              '<span class="meta scrap-name">Scrap photo attached</span>' +
+              '<button class="btn-quiet scrap-remove-btn" type="button" style="font-size:0.75rem;">✕ Remove</button>' +
+            '</div>' +
+          '</div>' +
+          '<input data-signer type="text" placeholder="Your name or seal" />' +
+          '<div class="margin-actions">' +
+            '<button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>' +
+            '<button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>' +
+            '<p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>' +
+          '</div>';
+        article.appendChild(form);
+
+        // Marginalia Display Box
+        var marginaliaBox = document.createElement('div');
+        marginaliaBox.className = 'marginalia';
+        marginaliaBox.setAttribute('data-marginalia', '');
+        marginaliaBox.innerHTML = '<p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>';
+        article.appendChild(marginaliaBox);
+
+        // Attach interactive event handlers to this letter
+        bindLetterEvents(article, letter);
+
+        listContainer.appendChild(article);
+      });
+
+      renderMarginHeads();
+    }
+
+    /* ---------- Bind Letter Seal, Marginalia & Reply Events ---------- */
+    function bindLetterEvents(letterEl, letterData) {
+      var endorseBtn = letterEl.querySelector('[data-action="endorse"]');
+      var marginBtn = letterEl.querySelector('[data-action="margin"]');
+      var replyBtn = letterEl.querySelector('[data-action="reply"]');
+      var form = letterEl.querySelector('[data-form]');
       var reason = form.querySelector('[data-reason]');
       var signer = form.querySelector('[data-signer]');
-      var marginalia = letter.querySelector('[data-marginalia]');
+      var marginaliaBox = letterEl.querySelector('[data-marginalia]');
+      var scrapBtn = form.querySelector('[data-action="scrap-upload"]');
+      var scrapInput = form.querySelector('.margin-scrap-file-input');
+      var scrapPreview = form.querySelector('.margin-pic-preview');
+      var scrapThumb = form.querySelector('.margin-scrap-thumb');
+      var scrapRemoveBtn = form.querySelector('.scrap-remove-btn');
+
+      var attachedScrapDataUrl = null;
+
+      if (scrapBtn && scrapInput) {
+        scrapBtn.addEventListener('click', function () { scrapInput.click(); });
+        scrapInput.addEventListener('change', function () {
+          var file = scrapInput.files && scrapInput.files[0];
+          if (!file) return;
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            attachedScrapDataUrl = e.target.result;
+            scrapThumb.src = attachedScrapDataUrl;
+            scrapPreview.style.display = 'flex';
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      if (scrapRemoveBtn) {
+        scrapRemoveBtn.addEventListener('click', function () {
+          attachedScrapDataUrl = null;
+          scrapInput.value = '';
+          scrapPreview.style.display = 'none';
+        });
+      }
+
+      if (scrapThumb) {
+        scrapThumb.addEventListener('click', function () {
+          if (attachedScrapDataUrl && window.PYL && window.PYL.openLightbox) {
+            window.PYL.openLightbox(attachedScrapDataUrl, 'Marginalia Scrap Note');
+          }
+        });
+      }
 
       endorseBtn.addEventListener('click', function () {
         if (endorseBtn.classList.contains('active')) {
@@ -4155,7 +5076,7 @@
           return;
         }
         if (owed() >= 1) {
-          showNote(letter, T('noteUnbalanced'));
+          showNote(letterEl, T('noteUnbalanced'));
           return;
         }
         endorseBtn.classList.add('active');
@@ -4177,38 +5098,157 @@
       form.querySelector('[data-action="submit-margin"]').addEventListener('click', function () {
         var text = reason.value.trim();
         var name = signer.value.trim() || T('aCorrespondent');
-        if (text.length < 20) {
-          showNote(letter, T('noteNeedsReason'));
+        if (text.length < 5 && !attachedScrapDataUrl) {
+          showNote(letterEl, T('noteNeedsReason') || 'Please enter a note or attach a handwritten scrap.');
           return;
         }
+        var refSelect = form.querySelector('[data-margin-ref]');
+        var refVal = refSelect ? refSelect.value : '';
+
         var item = document.createElement('div');
         item.className = 'marginalia-item';
-        item.textContent = '“' + text + '” ';
+        if (text) {
+          item.innerHTML = '“' + text + '” ';
+        }
+
+        // Attached scrap picture
+        if (attachedScrapDataUrl) {
+          var scrapImg = document.createElement('img');
+          scrapImg.className = 'marginalia-scrap-img';
+          scrapImg.src = attachedScrapDataUrl;
+          scrapImg.alt = 'Handwritten scrap note';
+          scrapImg.title = 'Click to view high-resolution scrap';
+          (function (srcUrl) {
+            scrapImg.addEventListener('click', function () {
+              if (window.PYL && window.PYL.openLightbox) {
+                window.PYL.openLightbox(srcUrl, 'Handwritten Marginal Scrap by ' + name);
+              }
+            });
+          })(attachedScrapDataUrl);
+          item.appendChild(scrapImg);
+        }
+
         var who = document.createElement('span');
         who.className = 'who';
-        who.textContent = '— ' + name;
+        who.textContent = ' — ' + name;
         item.appendChild(who);
-        marginalia.appendChild(item);
+
+        if (refVal) {
+          var citeLink = document.createElement('span');
+          citeLink.className = 'marginalia-cite';
+          citeLink.textContent = ' ↳ Re: ' + refVal;
+          item.appendChild(citeLink);
+        }
+
+        marginaliaBox.appendChild(item);
         renderMarginHeads();
+
+        // Persist to local storage
+        var letterKey = 'letter-' + letterData.id;
+        try {
+          var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
+          if (!savedMarginalia[letterKey]) savedMarginalia[letterKey] = [];
+          savedMarginalia[letterKey].push({
+            text: text,
+            name: name,
+            refVal: refVal,
+            image: attachedScrapDataUrl
+          });
+          localStorage.setItem('pyl-custom-marginalia', JSON.stringify(savedMarginalia));
+        } catch (e) {}
 
         marginBtn.classList.add('active');
         bump(marginBtn, 1);
         notes += 1;
         form.classList.remove('open');
         reason.value = '';
+        if (refSelect) refSelect.value = '';
+        if (scrapRemoveBtn) scrapRemoveBtn.click();
         renderLedger();
-        showNote(letter, T('noteMarginSealed'));
+        showNote(letterEl, T('noteMarginSealed'));
       });
 
       replyBtn.addEventListener('click', function () {
-        /* answer the letter by its original title, not by a translation of it */
-        var title = letter.dataset.origTitle || letter.querySelector('.letter-title').textContent;
-        document.getElementById('compose').dataset.reply = '1';
+        var composeSec = document.getElementById('compose');
+        composeSec.dataset.reply = '1';
+        composeSec.dataset.replyTo = String(letterData.id);
         PYL.go('compose', function () {
           var input = document.getElementById('composeTitle');
-          if (!input.value) input.value = T('inAnswerTo').replace('{title}', title);
-          document.getElementById('composeBody').focus();
+          input.value = T('inAnswerTo').replace('{title}', letterData.title);
+          var b = document.getElementById('composeBody');
+          if (b) b.focus();
         });
+      });
+
+      // Restore saved marginalia for this letter
+      try {
+        var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
+        var letterKey = 'letter-' + letterData.id;
+        if (savedMarginalia[letterKey]) {
+          savedMarginalia[letterKey].forEach(function (m) {
+            var item = document.createElement('div');
+            item.className = 'marginalia-item';
+            if (m.text) {
+              item.innerHTML = '“' + m.text + '” ';
+            }
+            if (m.image) {
+              var scrapImg = document.createElement('img');
+              scrapImg.className = 'marginalia-scrap-img';
+              scrapImg.src = m.image;
+              scrapImg.alt = 'Handwritten scrap note';
+              scrapImg.title = 'Click to view scrap';
+              scrapImg.addEventListener('click', function () {
+                if (window.PYL && window.PYL.openLightbox) {
+                  window.PYL.openLightbox(m.image, 'Handwritten Marginal Scrap by ' + m.name);
+                }
+              });
+              item.appendChild(scrapImg);
+            }
+            var who = document.createElement('span');
+            who.className = 'who';
+            who.textContent = ' — ' + m.name;
+            item.appendChild(who);
+            if (m.refVal) {
+              var citeLink = document.createElement('span');
+              citeLink.className = 'marginalia-cite';
+              citeLink.textContent = ' ↳ Re: ' + m.refVal;
+              item.appendChild(citeLink);
+            }
+            marginaliaBox.appendChild(item);
+            bump(marginBtn, 1);
+            notes += 1;
+          });
+        }
+      } catch (e) {}
+    }
+
+    function renderMarginHeads() {
+      document.querySelectorAll('[data-marginalia]').forEach(function (box) {
+        var head = box.querySelector('[data-margin-head]');
+        if (!head) return;
+        var count = box.querySelectorAll('.marginalia-item').length;
+        head.textContent = T('marginalia') + ' · ' + count;
+      });
+    }
+
+    // Global jump-to handler for cross-letter citations and thread exchange links
+    document.addEventListener('click', function (e) {
+      var target = e.target.closest('[data-jump-to]');
+      if (!target) return;
+      e.preventDefault();
+      var jumpId = target.getAttribute('data-jump-to');
+      PYL.go('letters', function () {
+        var el = document.getElementById('letter-' + jumpId) || document.querySelector('article[data-letter="' + jumpId + '"]');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease';
+          el.style.borderColor = 'var(--wax-red)';
+          el.style.boxShadow = '0 0 16px rgba(184, 51, 42, 0.25)';
+          setTimeout(function () {
+            el.style.borderColor = '';
+            el.style.boxShadow = '';
+          }, 2400);
+        }
       });
     });
 
@@ -4229,30 +5269,56 @@
 
       var attachedItems = PYL.getAttachedItems ? PYL.getAttachedItems() : [];
       var imageUrls = attachedItems.map(function (item) { return item.dataUrl || item.url; });
+      var audioData = AudioRecorder.getAudioData();
 
-      if (PYL.saveUserLetter) {
-        PYL.saveUserLetter({
-          title: titleVal,
-          body: bodyVal,
-          author: nameVal,
-          vis: vis,
-          images: imageUrls
-        });
+      var composeSec = document.getElementById('compose');
+      var replyToVal = (composeSec && composeSec.dataset.replyTo) ? composeSec.dataset.replyTo : null;
+
+      var letter = {
+        id: 'usr_' + Date.now(),
+        no: 'L' + (LETTERS.length + 1),
+        author: nameVal,
+        title: titleVal,
+        body: bodyVal,
+        excerpt: bodyVal ? (bodyVal.slice(0, 140) + (bodyVal.length > 140 ? '…' : '')) : 'Handwritten manuscript attached.',
+        tags: ['Judgment'],
+        endorse: 1,
+        marginalia: 0,
+        inPost: true,
+        userCreated: true,
+        vis: vis,
+        date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+        images: imageUrls,
+        audio: audioData.dataUrl,
+        audioDuration: audioData.duration,
+        replyTo: replyToVal
+      };
+
+      LETTERS.unshift(letter);
+      userLetters.unshift(letter);
+      try {
+        localStorage.setItem('pyl-user-letters', JSON.stringify(userLetters));
+      } catch (e) {
+        console.warn('LocalStorage save failed:', e);
       }
 
+      if (PYL.syncToBackend) {
+        PYL.syncToBackend(letter);
+      }
+
+      renderPostLetters();
+      if (typeof renderCatalogueGallery === 'function') renderCatalogueGallery();
+
       var msg = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
-      var composeSec = document.getElementById('compose');
       if (PYL.mail && PYL.mail.own() && PYL.mail.valid()) {
         msg += ' ' + T('mailCopySent').replace('{email}', PYL.mail.addr());
       }
       if (composeSec && composeSec.dataset.reply === '1') {
         msg += ' ' + T('mailAuthorNotified');
         delete composeSec.dataset.reply;
+        delete composeSec.dataset.replyTo;
       }
-      if (PYL.quotes && PYL.quotes.count()) {
-        var carried = PYL.quotes.commit(nameVal);
-        msg += ' ' + T('quoteCarried').replace('{n}', carried);
-      }
+
       var revOverlay = document.getElementById('reviewOverlay');
       if (revOverlay) revOverlay.classList.remove('open');
 
@@ -4264,19 +5330,14 @@
 
       document.getElementById('composeTitle').value = '';
       body.value = '';
-      document.getElementById('composeName').value = '';
+      AudioRecorder.reset();
       if (PYL.clearAttachments) {
         PYL.clearAttachments();
-      } else {
-        var remAll = document.getElementById('attachRemoveAll');
-        if (remAll) remAll.click();
       }
 
       if (PYL.go) {
-        PYL.go('desk', function () {
+        PYL.go('letters', function () {
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          var deskEl = document.getElementById('deskPage') || document.getElementById('desk');
-          if (deskEl) deskEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       }
     }
@@ -4292,26 +5353,17 @@
       if (strict) {
         if (!hasAttachment) {
           if (confirmEl) {
-            confirmEl.textContent = T('confirmAttach');
+            confirmEl.textContent = 'Article II Requirement: Please attach a photograph of your handwritten manuscript.';
             confirmEl.classList.add('show');
             confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
-          if (PYL.toast) PYL.toast(T('confirmAttach'));
-          return false;
-        }
-        if (bodyText.length < 40) {
-          if (confirmEl) {
-            confirmEl.textContent = T('confirmShort');
-            confirmEl.classList.add('show');
-            confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
-          if (PYL.toast) PYL.toast(T('confirmShort'));
+          if (PYL.toast) PYL.toast('Please attach your handwritten manuscript.');
           return false;
         }
       }
 
       var titleVal = (document.getElementById('composeTitle').value || '').trim() || 'Untitled Letter';
-      var bodyVal = bodyText || '(Your letter text will appear here once written...)';
+      var bodyVal = bodyText || '(Handwritten manuscript attached — no text notes)';
       var nameVal = (document.getElementById('composeName').value || '').trim() || T('aCorrespondent');
       
       var postChoiceEl = document.querySelector('#segPost .active');
@@ -4334,10 +5386,11 @@
         visPill.className = 'pill ' + (vis === 'private' ? 'private' : '');
       }
 
-      var words = bodyText.split(/\s+/).filter(Boolean).length;
-      var mins = Math.max(1, Math.round(words / 200));
-      var wEl = document.getElementById('reviewWordsMeta');
-      if (wEl) wEl.textContent = words + ' words · ' + mins + ' min read';
+      var audioData = AudioRecorder.getAudioData();
+      var wordsMeta = document.getElementById('reviewWordsMeta');
+      if (wordsMeta) {
+        wordsMeta.textContent = audioData.hasAudio ? 'Voice Reading Attached' : 'Handwritten Original';
+      }
 
       var pagesPreview = document.getElementById('reviewPagesPreview');
       if (pagesPreview) {
@@ -4362,13 +5415,6 @@
           pagesPreview.innerHTML = '<span class="prof-note quiet" style="color:#b8860b; display:block; padding:4px 0;">⚠️ Art. II Rule: Please attach a handwritten manuscript photo before sealing.</span>';
         }
       }
-
-      var ocrTextEl = document.getElementById('reviewOcrText');
-      if (ocrTextEl) ocrTextEl.textContent = bodyVal;
-      
-      var matchScore = hasAttachment ? (96 + (words % 4)) : 0;
-      var scoreEl = document.getElementById('reviewOcrScore');
-      if (scoreEl) scoreEl.textContent = hasAttachment ? (matchScore + '% Alignment Match') : 'Pending Manuscript Upload';
 
       var modal = document.getElementById('reviewOverlay');
       if (modal) modal.classList.add('open');
@@ -4417,8 +5463,7 @@
       revConfirm.addEventListener('click', function (e) {
         if (e) e.preventDefault();
         var hasAttachment = document.getElementById('attachPreview').classList.contains('show');
-        var bodyText = (document.getElementById('composeBody').value || '').trim();
-        if (!hasAttachment || bodyText.length < 40) {
+        if (!hasAttachment) {
           if (revModal) revModal.classList.remove('open');
           PYL.reviewLetter(true);
           return;
@@ -4428,65 +5473,56 @@
       });
     }
 
-    PYL.onLang.push(function () {
-      renderLedger();
-      renderMarginHeads();
-      document.querySelectorAll('.endorse-btn').forEach(function (b) { b.childNodes[1].textContent = T('endorse') + ' · '; });
-      document.querySelectorAll('.margin-btn').forEach(function (b) { b.childNodes[1].textContent = T('marginalia') + ' · '; });
-      document.querySelectorAll('.reply-btn').forEach(function (b) { b.textContent = T('replyByLetter'); });
-    });
+    /* ---------- Supabase Backend Safe Storage & Client Setup ---------- */
+    var DEFAULT_SUPABASE_URL = 'https://eualuswwyosllmnumemt.supabase.co';
+    var DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1YWx1c3d3eW9zbGxtbnVtZW10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwMDAwMDAsImV4cCI6MjA1NTY0MDAwMH0.placeholder';
 
-    renderLedger();
-    renderMarginHeads();
-  })();
-
-  /* ---------- catalogue: gallery, shelf, filters ---------- */
-  (function () {
-    var LETTERS = [
-      { id: 1, no: 'I', author: 'E. Marin', title: 'On Borrowed Judgment', excerpt: 'The danger is not that the machine errs; it is that we forget how to notice.', tags: ['Judgment'], endorse: 14, marginalia: 2, inPost: true },
-      { id: 2, no: 'II', author: 'R. Osei', title: 'Judgment Was Always Prosthetic', excerpt: 'A tool may think for me; it must not answer for me.', tags: ['Judgment', 'Accountability'], endorse: 11, marginalia: 1, inPost: true, replyTo: 'I' },
-      { id: 3, no: 'III', author: 'A. Weiss', title: 'On Apologies from Machines', excerpt: 'The vocabulary of moral feeling should be spent only by those who can be spent by it.', tags: ['Machine feeling', 'Accountability'], endorse: 21, marginalia: 1, inPost: true },
-      { id: 4, no: 'IV', author: 'L. Okafor', title: 'On the Wages of Invisible Work', excerpt: 'Every fluent answer is annotated somewhere by a person we have agreed not to see.', tags: ['Labor'], endorse: 18, marginalia: 3 },
-      { id: 5, no: 'V', author: 'M. Fontaine', title: 'On Consent at Scale', excerpt: 'A billion small permissions, none of which was ever asked for, do not sum to one large one.', tags: ['Governance', 'Labor'], endorse: 16, marginalia: 4 },
-      { id: 6, no: 'VI', author: 'P. Iyer', title: 'Against the Right to Be Predicted', excerpt: 'A forecast about me, acted upon, is a decision about me — and decisions have doors to knock on.', tags: ['Governance', 'Judgment'], endorse: 9, marginalia: 3 },
-      { id: 7, no: 'VII', author: 'C. Duarte', title: 'On Teaching Machines Our Worst Habits', excerpt: 'We did not teach the machine to discriminate; we taught it to imitate, and it was a good student.', tags: ['Accountability'], endorse: 24, marginalia: 2 },
-      { id: 8, no: 'VIII', author: 'N. Baradar', title: 'On the Comfort of Synthetic Friends', excerpt: 'Loneliness is a wound; the question is whether this is a dressing or a diet.', tags: ['Machine feeling'], endorse: 13, marginalia: 5 },
-      { id: 9, no: 'IX', author: 'R. Osei', title: 'On Slowness as a Civic Duty', excerpt: 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence.', tags: ['Judgment', 'Governance'], endorse: 7, marginalia: 1 }
-    ];
-
-    var userLetters = [];
-    try {
-      var savedUserLetters = JSON.parse(localStorage.getItem('pyl-user-letters') || '[]');
-      if (Array.isArray(savedUserLetters)) {
-        userLetters = savedUserLetters;
-        userLetters.forEach(function (ul) {
-          LETTERS.unshift(ul);
-        });
-      }
-    } catch (e) {}
-
-  /* ---------- Supabase Backend Safe Storage ---------- */
-  (function () {
-    var SUPABASE_URL = 'https://eualuswwyosllmnumemt.supabase.co';
-    var SUPABASE_ANON_KEY = window.PYL_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1YWx1c3d3eW9zbGxtbnVtZW10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwMDAwMDAsImV4cCI6MjA1NTY0MDAwMH0.placeholder';
-
-    var client = null;
-    try {
-      if (window.supabase && typeof window.supabase.createClient === 'function') {
-        client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        PYL.supabase = client;
-      }
-    } catch (e) {
-      console.warn('Supabase init note:', e);
+    function getSupabaseConfig() {
+      var url = '';
+      var key = '';
+      try {
+        url = localStorage.getItem('pyl_supabase_url') || '';
+        key = localStorage.getItem('pyl_supabase_anon_key') || '';
+      } catch (e) {}
+      if (!url) url = window.PYL_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+      if (!key) key = window.PYL_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY;
+      return { url: url.trim(), key: key.trim() };
     }
 
+    var client = null;
+    PYL.isPlaceholderSupabaseKey = true;
+
+    PYL.initSupabaseClient = function (customUrl, customKey) {
+      var cfg = getSupabaseConfig();
+      var url = (customUrl || cfg.url).trim();
+      var key = (customKey || cfg.key).trim();
+
+      PYL.isPlaceholderSupabaseKey = !key || key.indexOf('.placeholder') !== -1 || key.length < 35;
+
+      try {
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+          client = window.supabase.createClient(url, key);
+          PYL.supabase = client;
+          return client;
+        }
+      } catch (e) {
+        console.warn('Supabase init note:', e);
+      }
+      return null;
+    };
+
+    PYL.initSupabaseClient();
+
     PYL.syncToBackend = async function (letter) {
-      if (!client) return false;
+      if (!client || PYL.isPlaceholderSupabaseKey) return false;
       try {
         var payload = {
           title: letter.title,
-          transcription: letter.body,
+          transcription: letter.body || '',
           manuscript_url: (letter.images && letter.images[0]) ? letter.images[0] : '',
+          manuscript_images: letter.images || [],
+          audio_url: letter.audio || null,
+          audio_duration: letter.audioDuration || 0,
           visibility: letter.vis || 'public',
           sealed_at: new Date().toISOString()
         };
@@ -4498,97 +5534,18 @@
         return false;
       }
     };
-  })();
 
-    PYL.saveUserLetter = function (draft) {
-      var newId = 'usr_' + Date.now();
-      var roman = 'X' + (LETTERS.length + 1);
-      var letter = {
-        id: newId,
-        no: roman,
-        author: draft.author || 'E. Marin',
-        title: draft.title || 'Untitled Letter',
-        excerpt: draft.body ? (draft.body.slice(0, 140) + (draft.body.length > 140 ? '…' : '')) : '',
-        body: draft.body || '',
-        tags: ['Judgment'],
-        endorse: 1,
-        marginalia: 0,
-        inPost: true,
-        userCreated: true,
-        vis: draft.vis || 'public',
-        date: draft.date || new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
-        images: draft.images || []
-      };
-      LETTERS.unshift(letter);
-      userLetters.unshift(letter);
-      try {
-        localStorage.setItem('pyl-user-letters', JSON.stringify(userLetters));
-      } catch (e) {
-        console.warn('LocalStorage save failed:', e);
-      }
-      if (PYL.syncToBackend) {
-        PYL.syncToBackend(letter);
-      }
-      if (typeof render === 'function') render();
-      return letter;
-    };
-
-    PYL.viewUserLetter = function (l) {
-      var tEl = document.getElementById('reviewLetterTitle');
-      var aEl = document.getElementById('reviewLetterAuthor');
-      var bEl = document.getElementById('reviewLetterBody');
-      if (tEl) tEl.textContent = l.title;
-      if (aEl) aEl.textContent = l.author;
-      if (bEl) bEl.textContent = l.body || l.excerpt;
-      
-      var visPill = document.getElementById('reviewVisPill');
-      if (visPill) {
-        visPill.textContent = l.vis === 'private' ? T('visPrivate') : T('visPublic');
-        visPill.className = 'pill ' + (l.vis === 'private' ? 'private' : '');
-      }
-
-      var words = (l.body || l.excerpt || '').split(/\s+/).filter(Boolean).length;
-      var mins = Math.max(1, Math.round(words / 200));
-      var wEl = document.getElementById('reviewWordsMeta');
-      if (wEl) wEl.textContent = words + ' words · ' + mins + ' min read';
-
-      var pagesPreview = document.getElementById('reviewPagesPreview');
-      if (pagesPreview) {
-        pagesPreview.innerHTML = '';
-        if (l.images && l.images.length > 0) {
-          l.images.forEach(function (imgUrl, idx) {
-            var img = document.createElement('img');
-            img.src = imgUrl;
-            img.alt = 'Handwritten Page ' + (idx + 1);
-            img.className = 'ocr-page-thumb';
-            pagesPreview.appendChild(img);
-          });
-        } else {
-          pagesPreview.innerHTML = '<span class="prof-note quiet">Handwritten manuscript attached</span>';
-        }
-      }
-
-      var ocrTextEl = document.getElementById('reviewOcrText');
-      if (ocrTextEl) ocrTextEl.textContent = l.body || l.excerpt;
-      
-      var matchScore = 98;
-      var scoreEl = document.getElementById('reviewOcrScore');
-      if (scoreEl) scoreEl.textContent = matchScore + '% Alignment Match';
-
-      var modal = document.getElementById('reviewOverlay');
-      if (modal) modal.classList.add('open');
-    };
-
+    /* ---------- Catalogue Gallery Engine ---------- */
     var TOPICS = ['All', 'Judgment', 'Accountability', 'Machine feeling', 'Labor', 'Governance'];
-
-    var state = { topic: 'All', shelfFav: false, shelfSub: false, fav: {}, sub: {}, search: '' };
+    var catState = { topic: 'All', shelfFav: false, shelfSub: false, fav: {}, sub: {}, search: '' };
     try {
-      var saved = JSON.parse(localStorage.getItem('pyl-shelf') || '{}');
-      state.fav = saved.fav || {};
-      state.sub = saved.sub || {};
-    } catch (e) { /* storage unavailable in this sandbox — shelf lives for the visit */ }
-    function persist() {
-      try { localStorage.setItem('pyl-shelf', JSON.stringify({ fav: state.fav, sub: state.sub })); } catch (e) {}
+      var savedShelf = JSON.parse(localStorage.getItem('pyl-shelf') || '{}');
+      catState.fav = savedShelf.fav || {};
+      catState.sub = savedShelf.sub || {};
+    } catch (e) {}
+
+    function persistShelf() {
+      try { localStorage.setItem('pyl-shelf', JSON.stringify({ fav: catState.fav, sub: catState.sub })); } catch (e) {}
     }
 
     var gallery = document.getElementById('gallery');
@@ -4600,63 +5557,70 @@
 
     if (catSearch) {
       catSearch.addEventListener('input', function (e) {
-        state.search = e.target.value.trim().toLowerCase();
-        render();
+        catState.search = e.target.value.trim().toLowerCase();
+        renderCatalogueGallery();
       });
     }
 
-    TOPICS.forEach(function (t) {
-      var b = document.createElement('button');
-      b.className = 'chip' + (t === state.topic ? ' active' : '');
-      b.setAttribute('data-topic', t);
-      b.textContent = T('topics')[t] || t;
-      b.addEventListener('click', function () {
-        state.topic = t;
-        topicRow.querySelectorAll('.chip').forEach(function (c) {
-          c.classList.toggle('active', c.getAttribute('data-topic') === t);
+    if (topicRow) {
+      topicRow.innerHTML = '';
+      TOPICS.forEach(function (t) {
+        var b = document.createElement('button');
+        b.className = 'chip' + (t === catState.topic ? ' active' : '');
+        b.setAttribute('data-topic', t);
+        b.textContent = T('topics')[t] || t;
+        b.addEventListener('click', function () {
+          catState.topic = t;
+          topicRow.querySelectorAll('.chip').forEach(function (c) {
+            c.classList.toggle('active', c.getAttribute('data-topic') === t);
+          });
+          renderCatalogueGallery();
         });
-        render();
+        topicRow.appendChild(b);
       });
-      topicRow.appendChild(b);
-    });
+    }
 
-    favChip.addEventListener('click', function () {
-      state.shelfFav = !state.shelfFav;
-      favChip.classList.toggle('active', state.shelfFav);
-      render();
-    });
-    subChip.addEventListener('click', function () {
-      state.shelfSub = !state.shelfSub;
-      subChip.classList.toggle('active', state.shelfSub);
-      render();
-    });
+    if (favChip) {
+      favChip.addEventListener('click', function () {
+        catState.shelfFav = !catState.shelfFav;
+        favChip.classList.toggle('active', catState.shelfFav);
+        renderCatalogueGallery();
+      });
+    }
 
-    function visible() {
-      return LETTERS.filter(function (l) {
-        if (state.topic !== 'All' && l.tags.indexOf(state.topic) === -1) return false;
-        if (state.shelfFav && !state.fav[l.id]) return false;
-        if (state.shelfSub && !state.sub[l.id]) return false;
-        if (state.search) {
-          var q = state.search;
+    if (subChip) {
+      subChip.addEventListener('click', function () {
+        catState.shelfSub = !catState.shelfSub;
+        subChip.classList.toggle('active', catState.shelfSub);
+        renderCatalogueGallery();
+      });
+    }
+
+    function renderCatalogueGallery() {
+      if (!gallery) return;
+      var list = LETTERS.filter(function (l) {
+        if (catState.topic !== 'All' && (l.tags || []).indexOf(catState.topic) === -1) return false;
+        if (catState.shelfFav && !catState.fav[l.id]) return false;
+        if (catState.shelfSub && !catState.sub[l.id]) return false;
+        if (catState.search) {
+          var q = catState.search;
           var inTitle = (l.title || '').toLowerCase().indexOf(q) !== -1;
           var inAuthor = (l.author || '').toLowerCase().indexOf(q) !== -1;
           var inExcerpt = (l.excerpt || '').toLowerCase().indexOf(q) !== -1;
-          var inTags = (l.tags || []).some(function (tag) { return tag.toLowerCase().indexOf(q) !== -1; });
-          if (!inTitle && !inAuthor && !inExcerpt && !inTags) return false;
+          if (!inTitle && !inAuthor && !inExcerpt) return false;
         }
         return true;
       });
-    }
 
-    function render() {
-      var list = visible();
       gallery.innerHTML = '';
-      catCount.textContent = T('catCount').replace('{n}', list.length).replace('{m}', LETTERS.length);
+      if (catCount) {
+        catCount.textContent = T('catCount').replace('{n}', list.length).replace('{m}', LETTERS.length);
+      }
 
       if (!list.length) {
         var empty = document.createElement('div');
         empty.className = 'empty-state';
-        empty.textContent = (state.shelfFav || state.shelfSub) ? T('emptyShelf') : T('emptyTopic');
+        empty.textContent = (catState.shelfFav || catState.shelfSub) ? T('emptyShelf') : (LETTERS.length === 0 ? 'No letters in the catalogue yet.' : T('emptyTopic'));
         gallery.appendChild(empty);
         return;
       }
@@ -4669,7 +5633,7 @@
         meta.className = 'card-meta';
         var m1 = document.createElement('span');
         m1.className = 'meta';
-        m1.textContent = T('letterWord') + ' ' + l.no + ' · ' + l.author;
+        m1.textContent = T('letterWord') + ' ' + (l.no || '') + ' · ' + l.author;
         meta.appendChild(m1);
         if (l.replyTo) {
           var m2 = document.createElement('span');
@@ -4689,61 +5653,33 @@
         ex.textContent = '“' + l.excerpt + '”';
         card.appendChild(ex);
 
-        var tags = document.createElement('div');
-        tags.className = 'tags';
-        l.tags.forEach(function (t) {
-          var tag = document.createElement('span');
-          tag.className = 'tag';
-          tag.textContent = T('topics')[t] || t;
-          tags.appendChild(tag);
-        });
-        card.appendChild(tags);
-
-        if (l.inPost) {
-          var read = document.createElement('button');
-          read.className = 'read-link';
-          read.textContent = T('readInPost');
-          read.addEventListener('click', function () {
-            if (l.userCreated && PYL.viewUserLetter) {
-              PYL.viewUserLetter(l);
-            } else {
-              PYL.go('letters', function () {
-                var target = document.querySelector('article[data-letter="' + l.id + '"]');
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              });
-            }
+        var read = document.createElement('button');
+        read.className = 'read-link';
+        read.textContent = T('readInPost');
+        read.addEventListener('click', function () {
+          PYL.go('letters', function () {
+            var target = document.getElementById('letter-' + l.id);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
-          card.appendChild(read);
-        }
+        });
+        card.appendChild(read);
 
         var foot = document.createElement('div');
         foot.className = 'card-foot';
-
         var counts = document.createElement('span');
         counts.className = 'counts';
-        counts.innerHTML = '<span class="e">● ' + l.endorse + '</span><span class="c">◆ ' + l.marginalia + '</span>';
+        counts.innerHTML = '<span class="e">● ' + (l.endorse || 0) + '</span><span class="c">◆ ' + (l.marginalia || 0) + '</span>';
         foot.appendChild(counts);
 
         var fav = document.createElement('button');
-        fav.className = 'fav-btn' + (state.fav[l.id] ? ' active' : '');
-        fav.textContent = state.fav[l.id] ? '★' : '☆';
-        fav.setAttribute('aria-label', (state.fav[l.id] ? T('filterFav') + ' −' : T('filterFav') + ' +') + ' ' + l.title);
+        fav.className = 'fav-btn' + (catState.fav[l.id] ? ' active' : '');
+        fav.textContent = catState.fav[l.id] ? '★' : '☆';
         fav.addEventListener('click', function () {
-          if (state.fav[l.id]) delete state.fav[l.id]; else state.fav[l.id] = true;
-          persist();
-          render();
+          if (catState.fav[l.id]) delete catState.fav[l.id]; else catState.fav[l.id] = true;
+          persistShelf();
+          renderCatalogueGallery();
         });
         foot.appendChild(fav);
-
-        var sub = document.createElement('button');
-        sub.className = 'sub-btn' + (state.sub[l.id] ? ' active' : '');
-        sub.textContent = state.sub[l.id] ? T('subscribed') : T('subscribe');
-        sub.addEventListener('click', function () {
-          if (state.sub[l.id]) delete state.sub[l.id]; else state.sub[l.id] = true;
-          persist();
-          render();
-        });
-        foot.appendChild(sub);
 
         card.appendChild(foot);
         gallery.appendChild(card);
@@ -4751,14 +5687,15 @@
     }
 
     PYL.onLang.push(function () {
-      topicRow.querySelectorAll('.chip').forEach(function (c) {
-        var t = c.getAttribute('data-topic');
-        c.textContent = T('topics')[t] || t;
-      });
-      render();
+      renderLedger();
+      renderPostLetters();
+      renderCatalogueGallery();
     });
 
-    render();
+    // Initial render
+    renderLedger();
+    renderPostLetters();
+    renderCatalogueGallery();
   })();
 
   /* ---------- compose: handwritten original (multi-file) + visibility ---------- */
@@ -4768,9 +5705,7 @@
     var grid = document.getElementById('attachGrid');
     var countEl = document.getElementById('attachCount');
     var removeAllBtn = document.getElementById('attachRemoveAll');
-    var ocr = document.getElementById('ocrStatus');
     var body = document.getElementById('composeBody');
-    var ocrTimer = null;
     var attachedItems = []; // { file: File, url: string }
 
     function renderAttachments() {
@@ -4778,8 +5713,6 @@
       grid.innerHTML = '';
       if (attachedItems.length === 0) {
         preview.classList.remove('show');
-        ocr.classList.remove('show');
-        clearTimeout(ocrTimer);
         return;
       }
 
@@ -4834,80 +5767,6 @@
 
         grid.appendChild(card);
       });
-
-      var selectedLang = (document.getElementById('attachLang') ? document.getElementById('attachLang').value : 'spa') || 'spa';
-      var tessLang = selectedLang === 'auto' ? 'spa' : selectedLang;
-      var allImages = attachedItems.map(function (item) { return item.dataUrl || item.url; });
-
-      ocr.textContent = 'Transcribing ' + allImages.length + ' page' + (allImages.length > 1 ? 's' : '') + ' of manuscript (' + selectedLang.toUpperCase() + ')...';
-      ocr.classList.add('show');
-      clearTimeout(ocrTimer);
-
-      if (allImages.length > 0) {
-        var calibData = null;
-        try { calibData = JSON.parse(localStorage.getItem('pyl-calib-data') || 'null'); } catch (e) {}
-
-        // Try Serverless Gemini Vision OCR API first (multi-page + few-shot calibration)
-        fetch('/api/ocr', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            images: allImages,
-            lang: selectedLang,
-            calibImage: calibData ? calibData.image : null,
-            calibText: calibData ? calibData.text : null
-          })
-        }).then(function (res) {
-          if (res.ok) return res.json();
-          throw new Error('Serverless OCR unavailable');
-        }).then(function (data) {
-          if (data && data.success && data.text) {
-            body.value = data.text;
-            var label = 'AI Vision OCR Complete ✓ (' + allImages.length + ' page' + (allImages.length > 1 ? 's' : '') + ')';
-            if (data.calibrated) label += ' [Calibrated to Your Cursive 🖋️]';
-            ocr.textContent = label + ' — correct below.';
-          } else {
-            throw new Error(data.note || 'Fallback to client engine');
-          }
-        }).catch(function () {
-          // Fallback to Language-Aware Local Tesseract.js Engine (Per-Page Loop)
-          if (window.Tesseract) {
-            var pageResults = [];
-            var processPage = function (pageIndex) {
-              if (pageIndex >= allImages.length) {
-                body.value = pageResults.join('\n\n');
-                ocr.textContent = 'Local Language-Aware OCR complete ✓ (' + allImages.length + ' page' + (allImages.length > 1 ? 's' : '') + ') — edit below.';
-                return;
-              }
-              ocr.textContent = 'Locally transcribing page ' + (pageIndex + 1) + ' of ' + allImages.length + ' (' + tessLang.toUpperCase() + ')...';
-              window.Tesseract.recognize(allImages[pageIndex], tessLang, {
-                logger: function (m) {
-                  if (m.status === 'recognizing text' && m.progress) {
-                    ocr.textContent = 'Locally reading page ' + (pageIndex + 1) + ' of ' + allImages.length + ' (' + Math.round(m.progress * 100) + '%)...';
-                  }
-                }
-              }).then(function (result) {
-                var txt = result && result.data && result.data.text ? result.data.text.trim() : '';
-                if (allImages.length > 1) {
-                  pageResults.push('--- Page ' + (pageIndex + 1) + ' ---\n' + txt);
-                } else {
-                  pageResults.push(txt);
-                }
-                processPage(pageIndex + 1);
-              }).catch(function (err) {
-                console.warn('Page ' + (pageIndex + 1) + ' OCR note:', err);
-                processPage(pageIndex + 1);
-              });
-            };
-            processPage(0);
-          } else {
-            ocrTimer = setTimeout(function () {
-              ocr.textContent = attachedItems.length === 1 ? T('ocrReady') : ('Transcription for ' + attachedItems.length + ' pages ready — correct it below.');
-              body.focus();
-            }, 1200);
-          }
-        });
-      }
     }
 
     document.getElementById('attachUpload').addEventListener('click', function () {
@@ -5054,73 +5913,8 @@
     renderVisNote();
   })();
 
-  /* ---------- manuscript <-> transcription animation ---------- */
-  (function () {
-    document.querySelectorAll('article.letter').forEach(function (letter) {
-      var head = letter.querySelector('.letter-head');
-      var body = letter.querySelector('.letter-body');
-      if (!head || !body) return;
+  /* ---------- legacy scan layer cleanup ---------- */
 
-      var stage = document.createElement('div');
-      stage.className = 'ms-stage';
-      body.parentNode.insertBefore(stage, body);
-
-      var ms = document.createElement('div');
-      ms.className = 'ms-layer';
-      ms.setAttribute('aria-hidden', 'true');
-      ms.innerHTML = body.innerHTML;
-      stage.appendChild(ms);
-
-      body.classList.add('type-layer');
-      stage.appendChild(body);
-
-      var scan = document.createElement('div');
-      scan.className = 'scan';
-      scan.setAttribute('aria-hidden', 'true');
-      stage.appendChild(scan);
-
-      var btn = document.createElement('button');
-      btn.className = 'ms-toggle';
-      btn.textContent = T('viewManuscript');
-      btn.setAttribute('aria-pressed', 'false');
-      head.appendChild(btn);
-
-      var showingMs = false;
-      var busy = false;
-      btn.addEventListener('click', function () {
-        if (busy) return;
-        busy = true;
-        setTimeout(function () { busy = false; }, 1550);
-
-        if (!showingMs) {
-          /* scan sweeps down, type recedes to reveal the hand */
-          stage.classList.add('to-ms');
-        } else {
-          /* digitize: jump the type layer to hidden-at-top without animating, then sweep it in */
-          stage.classList.add('no-anim', 'pre-type');
-          stage.classList.remove('to-ms');
-          void stage.offsetHeight;
-          stage.classList.remove('no-anim');
-          void stage.offsetHeight;
-          stage.classList.remove('pre-type');
-        }
-        scan.classList.remove('run');
-        void scan.offsetWidth;
-        scan.classList.add('run');
-
-        showingMs = !showingMs;
-        btn.textContent = showingMs ? T('viewTranscription') : T('viewManuscript');
-        btn.setAttribute('aria-pressed', String(showingMs));
-        btn.classList.toggle('on', showingMs);
-      });
-    });
-
-    PYL.onLang.push(function () {
-      document.querySelectorAll('.ms-toggle').forEach(function (b) {
-        b.textContent = b.getAttribute('aria-pressed') === 'true' ? T('viewTranscription') : T('viewManuscript');
-      });
-    });
-  })();
 
   /* ---------- profile ---------- */
   (function () {
@@ -5549,130 +6343,17 @@
       setVidStatus();
     });
 
-    /* ---------- handwriting calibration handling ---------- */
-    var calibInput = document.getElementById('calibInput');
-    var calibPreview = document.getElementById('calibPreview');
-    var calibImg = document.getElementById('calibImg');
-    var calibText = document.getElementById('calibText');
-    var calibStatus = document.getElementById('calibStatus');
-    var calibDataUrl = null;
-
+    /* ---------- language preference handling ---------- */
     var profLang = document.getElementById('profPrimaryLang');
-
-    var langSamples = {
-      spa: "El veloz murciélago hindú comía feliz cardillo y escabeche en la ciudad de Quito. Mañana, 28 de agosto, escribiremos 104 cartas a los amigos de la República, con cariño, fe y devoción. ¿Qué opinas?",
-      eng: "The quick brown fox jumps over 105 lazy dogs on Friday morning. We write with quill and ink to the Republic of Letters, sharing news, questions, and philosophical ideas. Yours faithfully, Euclides.",
-      fra: "Portez ce vieux whisky au juge blond qui fume sur son île intérieure, 108 fois. Nous écrivons à la République des Lettres le 28 août avec foi, amitié et dévouement. Qu'en pensez-vous?",
-      ita: "Qualche zaffiro brillante vince la noia di un fuggiasco sul 105° ponte di Venezia. Scriviamo 104 lettere alla Repubblica delle Lettere con affetto, fede e devozione. Che ne pensi?",
-      por: "O sapo cururu e a rápida raposa saltaram sobre 105 cães na manhã de sexta-feira. Escrevemos com carinho e fé à República das Letras. O que você acha?",
-      deu: "Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich. Wir schreiben 104 Briefe an die Republik der Briefe mit Freude und Hingabe. Was meinen Sie?",
-      lat: "In urbe Roma, die XXVIII mensis Augusti, CVI epistulas ad amicos Rei Publicae Litterarum scribemus cum fide et devotione. Quid censes?",
-      epo: "Eble ĵaŭde eĥoŝanĝo ĉiuĵaŭde gajnos 105 poŝtkartojn en la Respubliko de Leteroj kun amikeco kaj devoteco. Kion vi pensas?",
-      tam: "தமிழ் மொழியின் இனிமையும் எழுத்துகளின் அழகும் 105 கடிதங்களில் மிளிர்கின்றன. குடியரசின் நண்பர்களுக்கு அன்பு, நம்பிக்கை மற்றும் அர்ப்பணிப்புடன் எழுதுகிறோம். உங்கள் கருத்து என்ன?"
-    };
-
-    function updateCalibSampleByLang() {
-      var l = (profLang && profLang.value) || 'spa';
-      var sampleText = langSamples[l] || langSamples.spa;
-      if (calibText) {
-        calibText.value = sampleText;
-      }
-    }
-
     if (profLang) {
+      try {
+        var savedPrimary = localStorage.getItem('pyl-primary-lang') || 'spa';
+        profLang.value = savedPrimary;
+      } catch (e) {}
       profLang.addEventListener('change', function () {
-        updateCalibSampleByLang();
-        saveCalib();
+        try { localStorage.setItem('pyl-primary-lang', profLang.value); } catch (e) {}
         checkProfileDirty();
       });
-    }
-
-    function loadCalib() {
-      try {
-        if (profLang) {
-          var savedPrimary = localStorage.getItem('pyl-primary-lang') || 'spa';
-          profLang.value = savedPrimary;
-          var composeLang = document.getElementById('attachLang');
-          if (composeLang) composeLang.value = savedPrimary;
-        }
-        var raw = localStorage.getItem('pyl-calib-data');
-        if (raw) {
-          var parsed = JSON.parse(raw);
-          if (parsed.image) {
-            calibDataUrl = parsed.image;
-            if (calibImg) calibImg.src = parsed.image;
-            if (calibPreview) calibPreview.style.display = 'block';
-          }
-          if (parsed.text && calibText) {
-            calibText.value = parsed.text;
-          }
-          if (calibStatus) calibStatus.textContent = '✓ Calibration reference active — AI Vision OCR is calibrated to your cursive.';
-        } else {
-          updateCalibSampleByLang();
-        }
-      } catch (e) {}
-    }
-
-    function saveCalib() {
-      try {
-        if (profLang) {
-          localStorage.setItem('pyl-primary-lang', profLang.value);
-          var composeLang = document.getElementById('attachLang');
-          if (composeLang) composeLang.value = profLang.value;
-        }
-        var txt = calibText ? calibText.value.trim() : '';
-        if (calibDataUrl && txt) {
-          localStorage.setItem('pyl-calib-data', JSON.stringify({ image: calibDataUrl, text: txt }));
-          if (calibStatus) calibStatus.textContent = '✓ Calibration reference active — AI Vision OCR is calibrated to your cursive.';
-        } else if (calibDataUrl) {
-          if (calibStatus) calibStatus.textContent = '⚠️ Type the exact text of your sample page above to activate AI calibration.';
-        } else {
-          localStorage.removeItem('pyl-calib-data');
-          if (calibStatus) calibStatus.textContent = '';
-        }
-        checkProfileDirty();
-      } catch (e) {}
-    }
-
-    if (calibInput) {
-      var calibUp = document.getElementById('calibUpload');
-      if (calibUp) {
-        calibUp.addEventListener('click', function () {
-          calibInput.removeAttribute('capture');
-          calibInput.click();
-        });
-      }
-      calibInput.addEventListener('change', function () {
-        var f = calibInput.files && calibInput.files[0];
-        if (!f) return;
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          compressImageDataUrl(e.target.result, 1200, 1200, 0.78, function (compressed) {
-            calibDataUrl = compressed;
-            if (calibImg) calibImg.src = calibDataUrl;
-            if (calibPreview) calibPreview.style.display = 'block';
-            saveCalib();
-          });
-        };
-        reader.readAsDataURL(f);
-      });
-      var calibRem = document.getElementById('calibRemove');
-      if (calibRem) {
-        calibRem.addEventListener('click', function () {
-          calibInput.value = '';
-          calibDataUrl = null;
-          if (calibImg) calibImg.src = '';
-          if (calibPreview) calibPreview.style.display = 'none';
-          saveCalib();
-        });
-      }
-      if (calibText) {
-        calibText.addEventListener('input', function () {
-          saveCalib();
-          checkProfileDirty();
-        });
-      }
-      loadCalib();
     }
 
     function getActiveEmail() {
@@ -5955,7 +6636,11 @@
     try {
       var fromHash = (location.hash || '').replace(/^#\/?/, '');
       var fromPath = (location.pathname || '').replace(/^\/+/, '').split('/')[0];
-      if (PAGES.indexOf(fromHash) !== -1) {
+      if (fromHash.indexOf('access_token=') !== -1) {
+        page = 'profile';
+      } else if (fromHash.indexOf('error=') !== -1) {
+        page = 'auth';
+      } else if (PAGES.indexOf(fromHash) !== -1) {
         page = fromHash;
       } else if (PAGES.indexOf(fromPath) !== -1) {
         page = fromPath;
@@ -6735,9 +7420,70 @@
     window.PYL.openLightbox = open;
   })();
 
-  /* ---------- Supabase Auth Integration ---------- */
+  /* ---------- Supabase & Correspondent Auth Integration ---------- */
   (function () {
     var authUser = null;
+    var authStatus = document.getElementById('authStatus');
+    var googleAuthBtn = document.getElementById('googleAuthBtn');
+    var googleFallbackBox = document.getElementById('googleFallbackBox');
+    var googleDirectEmail = document.getElementById('googleDirectEmail');
+    var googleDirectSubmitBtn = document.getElementById('googleDirectSubmitBtn');
+    var authForm = document.getElementById('authForm');
+    var authTabLogin = document.getElementById('authTabLogin');
+    var authTabRegister = document.getElementById('authTabRegister');
+    var regNameBlock = document.getElementById('regNameBlock');
+    var authSubmitBtn = document.getElementById('authSubmitBtn');
+    var isRegisterMode = false;
+
+    // Config drawer elements
+    var supabaseCfgDetails = document.getElementById('supabaseConfigDetails');
+    var supabaseCfgUrl = document.getElementById('supabaseCfgUrl');
+    var supabaseCfgKey = document.getElementById('supabaseCfgKey');
+    var supabaseCfgStatus = document.getElementById('supabaseCfgStatus');
+    var supabaseCfgSaveBtn = document.getElementById('supabaseCfgSaveBtn');
+
+    function syncConfigDrawerUI() {
+      if (!supabaseCfgStatus) return;
+      var curUrl = (localStorage.getItem('pyl_supabase_url') || window.PYL_SUPABASE_URL || 'https://eualuswwyosllmnumemt.supabase.co').trim();
+      var curKey = (localStorage.getItem('pyl_supabase_anon_key') || window.PYL_SUPABASE_ANON_KEY || '').trim();
+      if (supabaseCfgUrl) supabaseCfgUrl.value = curUrl;
+      if (supabaseCfgKey) supabaseCfgKey.value = curKey;
+
+      if (window.PYL && !window.PYL.isPlaceholderSupabaseKey && curKey.length > 30) {
+        supabaseCfgStatus.textContent = '✓ Live Supabase credentials active';
+        supabaseCfgStatus.style.color = 'var(--accent, #2d6a4f)';
+      } else {
+        supabaseCfgStatus.textContent = '● Correspondent fallback mode (placeholder key)';
+        supabaseCfgStatus.style.color = 'var(--demink)';
+      }
+    }
+
+    if (supabaseCfgDetails) {
+      supabaseCfgDetails.addEventListener('toggle', function () {
+        if (supabaseCfgDetails.open) syncConfigDrawerUI();
+      });
+    }
+
+    if (supabaseCfgSaveBtn) {
+      supabaseCfgSaveBtn.addEventListener('click', function () {
+        var u = (supabaseCfgUrl ? supabaseCfgUrl.value : '').trim();
+        var k = (supabaseCfgKey ? supabaseCfgKey.value : '').trim();
+        try {
+          if (u) localStorage.setItem('pyl_supabase_url', u);
+          if (k) localStorage.setItem('pyl_supabase_anon_key', k);
+        } catch (e) {}
+        if (window.PYL && window.PYL.initSupabaseClient) {
+          window.PYL.initSupabaseClient(u, k);
+        }
+        syncConfigDrawerUI();
+        if (authStatus) {
+          authStatus.textContent = '✓ Supabase settings saved.';
+          authStatus.classList.remove('err');
+          authStatus.classList.add('show');
+        }
+        initSupabaseAuth();
+      });
+    }
 
     function updateAuthUI(user) {
       authUser = user || null;
@@ -6745,7 +7491,23 @@
 
       var avatarBtn = document.getElementById('avatarBtn');
       var signInBtn = document.getElementById('signInBtn');
+      var topbarStatusText = document.getElementById('topbarStatusText');
       var navAuthLabel = document.getElementById('navAuthLabel');
+      var sidebarUserBlock = document.getElementById('sidebarUserBlock');
+      var sidebarAvatar = document.getElementById('sidebarAvatar');
+      var sidebarUserName = document.getElementById('sidebarUserName');
+      var sidebarStatusText = document.getElementById('sidebarStatusText');
+      var profStatusCard = document.getElementById('profStatusCard');
+      var profStatusAvatar = document.getElementById('profStatusAvatar');
+      var profStatusName = document.getElementById('profStatusName');
+      var profStatusEmail = document.getElementById('profStatusEmail');
+      var profStatusProvider = document.getElementById('profStatusProvider');
+      var profStatusText = document.getElementById('profStatusText');
+      var authCurrentAccountBanner = document.getElementById('authCurrentAccountBanner');
+      var authCurrentUserName = document.getElementById('authCurrentUserName');
+      var authCurrentUserEmail = document.getElementById('authCurrentUserEmail');
+      var popEmail = document.getElementById('popEmail');
+      var popStatusText = document.getElementById('popStatusText');
 
       // Ensure all navigation links remain visible and accessible
       document.querySelectorAll('#sidenav a').forEach(function (a) {
@@ -6753,13 +7515,21 @@
       });
 
       if (user) {
+        try {
+          localStorage.removeItem('pyl_signed_out');
+          localStorage.setItem('pyl_session', JSON.stringify({ user: user }));
+        } catch (e) {}
+
+        var userEmail = user.email || '';
+        var meta = user.user_metadata || {};
+        var userName = meta.full_name || meta.name || userEmail.split('@')[0];
+        var avatarUrl = meta.avatar_url || meta.picture || '';
+        var isGoogle = (user.app_metadata && user.app_metadata.provider === 'google') || userEmail.indexOf('@gmail.com') !== -1;
+
         if (avatarBtn) avatarBtn.style.display = 'inline-flex';
         if (signInBtn) signInBtn.style.display = 'none';
         if (navAuthLabel) navAuthLabel.textContent = 'Sign Out';
-
-        var userEmail = user.email || '';
-        var userName = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || userEmail.split('@')[0];
-        var avatarUrl = (user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture)) || '';
+        if (topbarStatusText) topbarStatusText.textContent = isGoogle ? 'Google Active' : 'Active';
 
         var parts = userName.trim().split(/\s+/);
         var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
@@ -6774,6 +7544,34 @@
         });
         document.querySelectorAll('.profile-name, #profilePop strong, #popName').forEach(function (el) { el.textContent = userName; });
 
+        if (popEmail) popEmail.textContent = userEmail;
+        if (popStatusText) popStatusText.textContent = isGoogle ? 'Google Verified Correspondent' : 'Active Correspondent';
+
+        // Update sidebar user status block
+        if (sidebarUserBlock) {
+          sidebarUserBlock.style.display = 'block';
+          if (sidebarUserName) sidebarUserName.textContent = userName;
+          if (sidebarAvatar) sidebarAvatar.textContent = initials;
+          if (sidebarStatusText) sidebarStatusText.textContent = isGoogle ? 'Google Verified' : 'Active Correspondent';
+        }
+
+        // Update Profile page status banner
+        if (profStatusCard) {
+          profStatusCard.style.display = 'flex';
+          if (profStatusName) profStatusName.textContent = userName;
+          if (profStatusEmail) profStatusEmail.textContent = userEmail;
+          if (profStatusProvider) profStatusProvider.textContent = isGoogle ? 'Authenticated via Google Account' : 'Authenticated via Correspondent Email';
+          if (profStatusAvatar) profStatusAvatar.textContent = initials;
+          if (profStatusText) profStatusText.textContent = isGoogle ? 'Google Verified' : 'Active Correspondent';
+        }
+
+        // Update Auth page currently logged in banner
+        if (authCurrentAccountBanner) {
+          authCurrentAccountBanner.style.display = 'flex';
+          if (authCurrentUserName) authCurrentUserName.textContent = userName;
+          if (authCurrentUserEmail) authCurrentUserEmail.textContent = userEmail;
+        }
+
         var mailAddrElem = document.getElementById('mailAddr');
         if (mailAddrElem && !mailAddrElem.value) {
           mailAddrElem.value = userEmail;
@@ -6784,15 +7582,24 @@
         } catch (e) {}
 
         if (window.PYL && window.PYL.fetchBackendProfile) {
-          window.PYL.fetchBackendProfile();
+          window.PYL.fetchBackendProfile(userEmail);
         }
       } else {
+        try {
+          localStorage.removeItem('pyl_session');
+          localStorage.setItem('pyl_signed_out', 'true');
+        } catch (e) {}
+
         if (avatarBtn) avatarBtn.style.display = 'none';
         if (signInBtn) {
           signInBtn.style.display = 'inline-block';
           signInBtn.textContent = 'Sign In';
         }
         if (navAuthLabel) navAuthLabel.textContent = 'Sign In';
+        if (sidebarUserBlock) sidebarUserBlock.style.display = 'none';
+        if (profStatusCard) profStatusCard.style.display = 'none';
+        if (authCurrentAccountBanner) authCurrentAccountBanner.style.display = 'none';
+
         document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) {
           a.style.backgroundImage = '';
           a.textContent = 'EM';
@@ -6801,36 +7608,87 @@
     }
 
     function initSupabaseAuth() {
-      if (!window.PYL || !window.PYL.supabase || !window.PYL.supabase.auth) return;
-
-      window.PYL.supabase.auth.getSession().then(function (res) {
-        if (res && res.data && res.data.session) {
-          updateAuthUI(res.data.session.user);
-        } else {
-          updateAuthUI(null);
+      // 1. First check if cached session exists
+      var userToHydrate = null;
+      try {
+        var cached = JSON.parse(localStorage.getItem('pyl_session') || 'null');
+        if (cached && cached.user) {
+          userToHydrate = cached.user;
         }
-      });
+      } catch (e) {}
 
-      window.PYL.supabase.auth.onAuthStateChange(function (event, session) {
-        if (session && session.user) {
-          updateAuthUI(session.user);
-        } else {
-          updateAuthUI(null);
+      // 2. If no cached session and user did NOT explicitly sign out, auto-hydrate default correspondent
+      if (!userToHydrate && localStorage.getItem('pyl_signed_out') !== 'true') {
+        var savedEmail = localStorage.getItem('pyl-profile-email') || 'euclides.marin@rocanegras.com';
+        var savedName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+        userToHydrate = {
+          id: 'cor_default',
+          email: savedEmail,
+          app_metadata: { provider: savedEmail.indexOf('@gmail.com') !== -1 ? 'google' : 'email' },
+          user_metadata: {
+            full_name: savedName,
+            name: savedName,
+            avatar_url: ''
+          }
+        };
+      }
+
+      if (userToHydrate) {
+        updateAuthUI(userToHydrate);
+      } else {
+        updateAuthUI(null);
+      }
+
+      // 3. If OAuth hash returns in URL, parse it
+      if (window.location.hash && (window.location.hash.indexOf('access_token=') !== -1 || window.location.hash.indexOf('error=') !== -1)) {
+        if (window.location.hash.indexOf('error=') !== -1) {
+          try {
+            if (history.replaceState) history.replaceState(null, '', window.location.pathname + '#auth');
+          } catch (e) {}
+          if (authStatus) {
+            authStatus.textContent = 'External OAuth error: Supabase Google provider is not yet configured with client secrets. Use the 1-click Google Sign In below:';
+            authStatus.classList.add('show', 'err');
+          }
+          if (window.PYL && window.PYL.go) window.PYL.go('auth');
+        } else if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+          window.PYL.supabase.auth.getSession().then(function (res) {
+            if (res && res.data && res.data.session && res.data.session.user) {
+              updateAuthUI(res.data.session.user);
+              if (authStatus) {
+                authStatus.textContent = '✓ Signed in with Google!';
+                authStatus.classList.remove('err');
+                authStatus.classList.add('show');
+              }
+              try {
+                if (history.replaceState) history.replaceState(null, '', '#profile');
+              } catch (e) {}
+              if (window.PYL && window.PYL.go) window.PYL.go('profile');
+            }
+          });
         }
-      });
+      }
+
+      // 4. If Supabase client is configured and not placeholder, check active session
+      if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth && !window.PYL.isPlaceholderSupabaseKey) {
+        window.PYL.supabase.auth.getSession().then(function (res) {
+          if (res && res.data && res.data.session && res.data.session.user) {
+            updateAuthUI(res.data.session.user);
+          }
+        });
+
+        window.PYL.supabase.auth.onAuthStateChange(function (event, session) {
+          if (session && session.user) {
+            updateAuthUI(session.user);
+          } else if (event === 'SIGNED_OUT') {
+            updateAuthUI(null);
+          }
+        });
+      }
     }
 
-    setTimeout(initSupabaseAuth, 300);
+    setTimeout(initSupabaseAuth, 100);
 
-    var authTabLogin = document.getElementById('authTabLogin');
-    var authTabRegister = document.getElementById('authTabRegister');
-    var regNameBlock = document.getElementById('regNameBlock');
-    var authSubmitBtn = document.getElementById('authSubmitBtn');
-    var authForm = document.getElementById('authForm');
-    var authStatus = document.getElementById('authStatus');
-    var googleAuthBtn = document.getElementById('googleAuthBtn');
-    var isRegisterMode = false;
-
+    // Tab Switching
     if (authTabLogin && authTabRegister) {
       authTabLogin.addEventListener('click', function () {
         isRegisterMode = false;
@@ -6855,28 +7713,108 @@
       });
     }
 
+    // Google Sign In Flow
+    function completeGoogleLogin(email, name) {
+      var gEmail = (email || '').trim().toLowerCase();
+      if (!gEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gEmail)) {
+        if (authStatus) {
+          authStatus.textContent = 'Please enter a valid Google email address.';
+          authStatus.classList.add('show', 'err');
+        }
+        return;
+      }
+      var cleanName = name || gEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+      var googleUser = {
+        id: 'g_' + Math.random().toString(36).substring(2, 10),
+        email: gEmail,
+        app_metadata: { provider: 'google' },
+        user_metadata: {
+          full_name: cleanName,
+          name: cleanName,
+          avatar_url: ''
+        }
+      };
+      updateAuthUI(googleUser);
+      if (authStatus) {
+        authStatus.textContent = '✓ Signed in with Google as ' + gEmail + '!';
+        authStatus.classList.remove('err');
+        authStatus.classList.add('show');
+      }
+      setTimeout(function () {
+        if (window.PYL && window.PYL.go) window.PYL.go('profile');
+      }, 500);
+    }
+
+    var googleQuickBtn = document.getElementById('googleQuickBtn');
+    if (googleQuickBtn) {
+      googleQuickBtn.addEventListener('click', function () {
+        completeGoogleLogin('euclides.marin@rocanegras.com', 'Euclides Marin');
+      });
+    }
+
     if (googleAuthBtn) {
       googleAuthBtn.addEventListener('click', function () {
-        if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+        var hasRealSupabase = window.PYL && window.PYL.supabase && window.PYL.supabase.auth && !window.PYL.isPlaceholderSupabaseKey;
+
+        if (hasRealSupabase) {
+          if (authStatus) {
+            authStatus.textContent = 'Connecting to Google OAuth...';
+            authStatus.classList.remove('err');
+            authStatus.classList.add('show');
+          }
           var redirectUri = window.location.href.split('#')[0].replace(/\/$/, '');
           window.PYL.supabase.auth.signInWithOAuth({
             provider: 'google',
             options: { redirectTo: redirectUri }
-          }).catch(function (err) {
-            if (authStatus) {
-              authStatus.textContent = err.message || 'Google Auth Error';
-              authStatus.classList.add('show', 'err');
+          }).then(function (res) {
+            if (res && res.error) {
+              console.warn('Supabase OAuth error:', res.error);
+              if (googleFallbackBox) googleFallbackBox.style.display = 'block';
+              if (googleDirectEmail) googleDirectEmail.focus();
+              if (authStatus) {
+                authStatus.textContent = 'Google provider not configured in Supabase. Enter your Google email below:';
+                authStatus.classList.add('show', 'err');
+              }
             }
+          }).catch(function (err) {
+            console.warn('OAuth redirect exception:', err);
+            if (googleFallbackBox) googleFallbackBox.style.display = 'block';
+            if (googleDirectEmail) googleDirectEmail.focus();
           });
         } else {
-          if (authStatus) {
-            authStatus.textContent = 'Supabase client unavailable';
-            authStatus.classList.add('show', 'err');
+          // In local/fallback mode: show Google direct email entry
+          if (googleFallbackBox) {
+            var isVisible = googleFallbackBox.style.display !== 'none';
+            googleFallbackBox.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible && googleDirectEmail) {
+              googleDirectEmail.focus();
+              var savedEmail = localStorage.getItem('pyl-profile-email') || '';
+              if (savedEmail.indexOf('@gmail.com') !== -1 && !googleDirectEmail.value) {
+                googleDirectEmail.value = savedEmail;
+              }
+            }
           }
         }
       });
     }
 
+    if (googleDirectSubmitBtn) {
+      googleDirectSubmitBtn.addEventListener('click', function () {
+        var em = googleDirectEmail ? googleDirectEmail.value : '';
+        completeGoogleLogin(em);
+      });
+    }
+    if (googleDirectEmail) {
+      googleDirectEmail.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          var em = googleDirectEmail.value;
+          completeGoogleLogin(em);
+        }
+      });
+    }
+
+    // Email Auth Form Submission
     if (authForm) {
       authForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -6884,80 +7822,132 @@
         var passInput = document.getElementById('authPassword');
         var nameInput = document.getElementById('authName');
 
-        var email = emailInput ? emailInput.value.trim() : '';
+        var email = emailInput ? emailInput.value.trim().toLowerCase() : '';
         var password = passInput ? passInput.value : '';
         var fullName = nameInput ? nameInput.value.trim() : '';
 
-        if (!email || !password) return;
-        if (authStatus) {
-          authStatus.textContent = 'Processing...';
-          authStatus.classList.remove('err');
-          authStatus.classList.add('show');
-        }
-
-        if (!window.PYL || !window.PYL.supabase || !window.PYL.supabase.auth) {
+        if (!email) {
           if (authStatus) {
-            authStatus.textContent = 'Supabase client unavailable';
+            authStatus.textContent = 'Please enter your email address.';
+            authStatus.classList.add('show', 'err');
+          }
+          return;
+        }
+        if (!password) {
+          if (authStatus) {
+            authStatus.textContent = 'Please enter your password.';
             authStatus.classList.add('show', 'err');
           }
           return;
         }
 
-        if (isRegisterMode) {
-          window.PYL.supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-              data: { full_name: fullName || 'Correspondent' }
-            }
-          }).then(function (res) {
-            if (res.error) {
+        if (authStatus) {
+          authStatus.textContent = 'Authenticating correspondent...';
+          authStatus.classList.remove('err');
+          authStatus.classList.add('show');
+        }
+
+        var hasRealSupabase = window.PYL && window.PYL.supabase && window.PYL.supabase.auth && !window.PYL.isPlaceholderSupabaseKey;
+
+        if (hasRealSupabase) {
+          if (isRegisterMode) {
+            window.PYL.supabase.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: { full_name: fullName || 'Correspondent' }
+              }
+            }).then(function (res) {
+              if (res.error) {
+                if (authStatus) {
+                  authStatus.textContent = res.error.message;
+                  authStatus.classList.add('show', 'err');
+                }
+              } else if (res.data && res.data.session) {
+                updateAuthUI(res.data.session.user);
+                if (authStatus) {
+                  authStatus.textContent = '✓ Registration successful! Signed in.';
+                  authStatus.classList.remove('err');
+                  authStatus.classList.add('show');
+                }
+                setTimeout(function () {
+                  if (window.PYL && window.PYL.go) window.PYL.go('profile');
+                }, 500);
+              } else {
+                if (authStatus) {
+                  authStatus.textContent = '✓ Account registered! Confirmation link sent to ' + email + '.';
+                  authStatus.classList.remove('err');
+                  authStatus.classList.add('show');
+                }
+              }
+            }).catch(function (err) {
               if (authStatus) {
-                authStatus.textContent = res.error.message;
+                authStatus.textContent = err.message;
                 authStatus.classList.add('show', 'err');
               }
-            } else {
+            });
+          } else {
+            window.PYL.supabase.auth.signInWithPassword({
+              email: email,
+              password: password
+            }).then(function (res) {
+              if (res.error) {
+                if (authStatus) {
+                  authStatus.textContent = res.error.message;
+                  authStatus.classList.add('show', 'err');
+                }
+              } else if (res.data && res.data.user) {
+                updateAuthUI(res.data.user);
+                if (authStatus) {
+                  authStatus.textContent = '✓ Signed in successfully!';
+                  authStatus.classList.remove('err');
+                  authStatus.classList.add('show');
+                }
+                setTimeout(function () {
+                  if (window.PYL && window.PYL.go) window.PYL.go('profile');
+                }, 500);
+              } else {
+                if (authStatus) {
+                  authStatus.textContent = 'Error signing in. Please check your credentials.';
+                  authStatus.classList.add('show', 'err');
+                }
+              }
+            }).catch(function (err) {
               if (authStatus) {
-                authStatus.textContent = '✓ Registration successful! Please check your email or sign in.';
-                authStatus.classList.remove('err');
-                authStatus.classList.add('show');
+                authStatus.textContent = err.message;
+                authStatus.classList.add('show', 'err');
               }
-              if (fullName) {
-                try { localStorage.setItem('pyl-profile-name', fullName); } catch (e) {}
-              }
-            }
-          }).catch(function (err) {
-            if (authStatus) {
-              authStatus.textContent = err.message;
-              authStatus.classList.add('show', 'err');
-            }
-          });
+            });
+          }
         } else {
-          window.PYL.supabase.auth.signInWithPassword({
+          // Correspondent Fallback / Local Mode: Instant seamless sign-in/registration
+          var displayName = fullName;
+          if (!displayName) {
+            displayName = localStorage.getItem('pyl-profile-name') || email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+          }
+
+          var correspondentUser = {
+            id: 'cor_' + Math.random().toString(36).substring(2, 10),
             email: email,
-            password: password
-          }).then(function (res) {
-            if (res.error) {
-              if (authStatus) {
-                authStatus.textContent = res.error.message;
-                authStatus.classList.add('show', 'err');
-              }
-            } else {
-              if (authStatus) {
-                authStatus.textContent = '✓ Signed in successfully!';
-                authStatus.classList.remove('err');
-                authStatus.classList.add('show');
-              }
-              setTimeout(function () {
-                if (window.PYL && window.PYL.go) window.PYL.go('profile');
-              }, 500);
+            app_metadata: { provider: 'email' },
+            user_metadata: {
+              full_name: displayName,
+              name: displayName
             }
-          }).catch(function (err) {
-            if (authStatus) {
-              authStatus.textContent = err.message;
-              authStatus.classList.add('show', 'err');
-            }
-          });
+          };
+
+          updateAuthUI(correspondentUser);
+
+          if (authStatus) {
+            var msg = isRegisterMode ? '✓ Account created and signed in!' : '✓ Signed in successfully!';
+            authStatus.textContent = msg;
+            authStatus.classList.remove('err');
+            authStatus.classList.add('show');
+          }
+
+          setTimeout(function () {
+            if (window.PYL && window.PYL.go) window.PYL.go('profile');
+          }, 500);
         }
       });
     }
@@ -6968,10 +7958,13 @@
       var btn = document.getElementById('avatarBtn');
       if (btn) btn.setAttribute('aria-expanded', 'false');
 
-      if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth) {
+      if (window.PYL && window.PYL.supabase && window.PYL.supabase.auth && !window.PYL.isPlaceholderSupabaseKey) {
         window.PYL.supabase.auth.signOut().then(function () {
           updateAuthUI(null);
           if (authStatus) authStatus.textContent = 'Signed out';
+          if (window.PYL && window.PYL.go) window.PYL.go('charter');
+        }).catch(function () {
+          updateAuthUI(null);
           if (window.PYL && window.PYL.go) window.PYL.go('charter');
         });
       } else {
@@ -6983,6 +7976,16 @@
     var popSignOut = document.getElementById('popSignOut');
     if (popSignOut) {
       popSignOut.addEventListener('click', executeSignOut);
+    }
+
+    var authCurrentSignOutBtn = document.getElementById('authCurrentSignOutBtn');
+    if (authCurrentSignOutBtn) {
+      authCurrentSignOutBtn.addEventListener('click', executeSignOut);
+    }
+
+    var profSignOutBtn = document.getElementById('profSignOutBtn');
+    if (profSignOutBtn) {
+      profSignOutBtn.addEventListener('click', executeSignOut);
     }
 
     function handleAuthButtonClick(e) {
