@@ -2432,6 +2432,145 @@
       clip-path: none !important;
     }
   }
+
+  /* ---------- Epistolary Wall (Home Page Feed) ---------- */
+  .wall-composer {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+    padding: 1.15rem 1.4rem;
+    margin-bottom: 2rem;
+  }
+  .wall-composer-top {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 0.85rem;
+  }
+  .wall-composer-input {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.92rem;
+    color: var(--demink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .wall-composer-input:hover {
+    background: var(--sheet);
+    border-color: var(--ink-soft);
+    color: var(--ink);
+  }
+  .wall-composer-actions {
+    display: flex;
+    gap: 0.6rem;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .wall-composer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.86rem;
+    color: var(--ink);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.12s;
+  }
+  .wall-composer-btn:hover {
+    background: var(--paper);
+    border-color: var(--rule);
+  }
+  .wall-feed-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .wall-feed-tabs {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .wall-tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    padding: 0.45rem 1.1rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--demink);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .wall-tab-btn:hover {
+    color: var(--ink);
+    background: var(--sheet);
+  }
+  .wall-tab-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .following-pill {
+    font-size: 0.85rem;
+    color: var(--demink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .follow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .follow-btn:hover {
+    border-color: var(--ink);
+    background: var(--sheet);
+  }
+  .follow-btn.following {
+    background: rgba(45, 106, 79, 0.1);
+    color: #2d6a4f;
+    border-color: rgba(45, 106, 79, 0.3);
+  }
+  .follow-btn.following:hover {
+    background: rgba(180, 50, 50, 0.1);
+    color: var(--wax);
+    border-color: rgba(180, 50, 50, 0.3);
+  }
+  .wall-empty-card {
+    background: var(--sheet);
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+    padding: 2.5rem 1.75rem;
+    text-align: center;
+    margin: 1.5rem 0 2.5rem;
+  }
   </style>
 </head>
 <body>
@@ -2576,17 +2715,56 @@
     </div>
   </header>
 <div class="wrap">
-  <header class="masthead" id="top" data-page="top">
+  <header class="masthead wall-masthead" id="top" data-page="top">
     <div class="masthead-top">
       <p class="meta" data-i18n="mastMeta">Vol. I · No. 1 — Founded MMXXVI</p>
     </div>
-    <h1 class="display">Puño <span class="rule-word">y</span> Letra</h1>
-    <p class="epigraph" data-i18n="epigraph"></p>
-    <div class="home-cards">
-      <a class="home-card" href="#letters"><strong data-i18n="navPost">Today’s Post</strong><span data-i18n="homePost"></span></a>
-      <a class="home-card" href="#catalogue"><strong data-i18n="navCatalogue">Catalogue</strong><span data-i18n="homeCat"></span></a>
-      <a class="home-card" href="#compose"><strong data-i18n="navWrite">Write</strong><span data-i18n="homeWrite"></span></a>
+    <h1 class="display" style="margin-bottom:0.15rem;">Puño <span class="rule-word">y</span> Letra</h1>
+    <p class="epigraph" data-i18n="epigraph" style="margin-bottom:1.25rem; font-size:1.02rem; max-width:42rem;"></p>
+
+    <!-- Facebook-Style Wall Quick Composer -->
+    <div class="wall-composer" id="wallComposer">
+      <div class="wall-composer-top">
+        <div class="avatar" id="wallComposerAvatar" style="width:40px; height:40px; font-size:0.92rem; flex-shrink:0;">EM</div>
+        <div class="wall-composer-input" id="wallComposerInput" role="button" tabindex="0">
+          <span>Pen a letter or dispatch a manuscript to the Republic…</span>
+        </div>
+      </div>
+      <div class="wall-composer-actions">
+        <button type="button" class="wall-composer-btn" id="wallAddPhotoBtn" title="Upload handwritten manuscript photo">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>
+          <span>Manuscript Photo</span>
+        </button>
+        <button type="button" class="wall-composer-btn" id="wallAddVoiceBtn" title="Record voice reading of letter">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5.5" y="2" width="5" height="8" rx="2.5"/><path d="M3.5 7.5a4.5 4.5 0 0 0 9 0M8 12v2.5M6 14.5h4"/></svg>
+          <span>Voice Reading</span>
+        </button>
+        <button type="button" class="wall-composer-btn" id="wallOpenDeskBtn" style="margin-left:auto; color:var(--prussian); font-weight:600;" title="Open Desk Composer">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2 2-9 9H3v-2l9-9z"/></svg>
+          <span>Pen Letter</span>
+        </button>
+      </div>
     </div>
+
+    <!-- Wall Feed Controls: Following vs All Republic -->
+    <div class="wall-feed-controls" id="wallFeedControls">
+      <div class="wall-feed-tabs">
+        <button type="button" class="wall-tab-btn active" id="tabFollowing" data-tab="following">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11.5 14v-1.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3V14"/><circle cx="7" cy="5" r="2.5"/><path d="M14.5 14v-1a2.5 2.5 0 0 0-2-2.45M11.5 2.6a2.5 2.5 0 0 1 0 4.8"/></svg>
+          <span>Following</span>
+        </button>
+        <button type="button" class="wall-tab-btn" id="tabAll" data-tab="all">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12"/></svg>
+          <span>All Republic</span>
+        </button>
+      </div>
+      <div class="following-pill" id="wallFollowingPill">
+        <span>Following <strong id="wallFollowingCount">4</strong> correspondents</span>
+      </div>
+    </div>
+
+    <!-- Epistolary Wall Letters Stream -->
+    <div id="wallLettersList"></div>
   </header>
 
   <section class="charter" id="charter" data-page="charter">
@@ -4479,18 +4657,262 @@
       note._t = setTimeout(function () { note.classList.remove('show'); }, 6000);
     }
 
-    /* ---------- Global Letters Store (Clean Database - User & Live Letters Only) ---------- */
+    /* ---------- SVG Manuscript Generator & Following System ---------- */
+    function escapeXml(unsafe) {
+      return String(unsafe || '').replace(/[<>&'"]/g, function (c) {
+        switch (c) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case '\'': return '&apos;';
+          case '"': return '&quot;';
+          default: return c;
+        }
+      });
+    }
+
+    function wrapSvgText(text, x, y, maxWidth, lineHeight) {
+      var words = (text || '').split(/\s+/);
+      var lines = [];
+      var currentLine = words[0] || '';
+
+      for (var i = 1; i < words.length; i++) {
+        var word = words[i];
+        if ((currentLine + ' ' + word).length * 9 < maxWidth) {
+          currentLine += ' ' + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      if (currentLine) lines.push(currentLine);
+
+      return lines.slice(0, 8).map(function (line, idx) {
+        return '<text x="' + x + '" y="' + (y + idx * lineHeight) + '">' + escapeXml(line) + '</text>';
+      }).join('');
+    }
+
+    function generateManuscriptSvg(title, author, excerpt) {
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">' +
+        '<rect width="100%" height="100%" fill="#fcf9f2"/>' +
+        '<rect x="25" y="25" width="850" height="550" fill="none" stroke="#d5c8b5" stroke-width="1.2" stroke-dasharray="4,4" opacity="0.6"/>' +
+        '<line x1="60" y1="90" x2="840" y2="90" stroke="#c0a98f" stroke-width="1.2" opacity="0.5"/>' +
+        '<text x="65" y="68" font-family="Snell Roundhand, Apple Chancery, Bradley Hand, Georgia, serif" font-size="28" font-style="italic" fill="#142c3d" font-weight="bold">' + escapeXml(title) + '</text>' +
+        '<text x="835" y="68" text-anchor="end" font-family="Georgia, serif" font-size="13" fill="#8a755e" letter-spacing="1">REPÚBLICA DE LAS LETRAS · MMXXVI</text>' +
+        '<g font-family="Snell Roundhand, Apple Chancery, Bradley Hand, cursive, serif" font-size="24" font-style="italic" fill="#1c3a4f" opacity="0.95">' +
+          wrapSvgText(excerpt, 65, 145, 770, 38) +
+        '</g>' +
+        '<g transform="translate(690, 480)">' +
+          '<circle cx="35" cy="35" r="28" fill="#b93b2c" opacity="0.88"/>' +
+          '<circle cx="35" cy="35" r="24" fill="none" stroke="#fcf9f2" stroke-width="1.5"/>' +
+          '<text x="35" y="39" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#fcf9f2" font-weight="bold" letter-spacing="1">SIGILLUM</text>' +
+          '<text x="35" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="8" fill="#fcf9f2">MMXXVI</text>' +
+        '</g>' +
+        '<text x="660" y="525" text-anchor="end" font-family="Snell Roundhand, Apple Chancery, cursive" font-size="25" font-style="italic" fill="#142c3d">De puño y letra, ' + escapeXml(author) + '</text>' +
+      '</svg>';
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    var CANONICAL_LETTERS = [
+      {
+        id: 1,
+        no: 'I',
+        author: 'E. Marin',
+        title: 'On Borrowed Judgment',
+        excerpt: 'The danger is not that the machine errs; it is that we forget how to notice. When deliberation is ceded to an instrument, responsibility does not vanish — it merely hides behind arithmetic.',
+        date: 'Delivered Today',
+        tags: ['Judgment'],
+        endorse: 14,
+        marginalia: 2,
+        inPost: true,
+        images: [generateManuscriptSvg('On Borrowed Judgment', 'E. Marin', 'The danger is not that the machine errs; it is that we forget how to notice. When deliberation is ceded to an instrument, responsibility does not vanish — it merely hides behind arithmetic.')]
+      },
+      {
+        id: 2,
+        no: 'II',
+        author: 'R. Osei',
+        title: 'Judgment Was Always Prosthetic',
+        excerpt: 'A tool may think for me; it must not answer for me. We have always relied on abaci, ledgers, and codified law. The difference now is the illusion that the code possesses conscience.',
+        date: 'Delivered Today',
+        tags: ['Judgment', 'Accountability'],
+        endorse: 11,
+        marginalia: 1,
+        inPost: true,
+        replyTo: 1,
+        images: [generateManuscriptSvg('Judgment Was Always Prosthetic', 'R. Osei', 'A tool may think for me; it must not answer for me. We have always relied on abaci, ledgers, and codified law. The difference now is the illusion that the code possesses conscience.')]
+      },
+      {
+        id: 3,
+        no: 'III',
+        author: 'A. Weiss',
+        title: 'On Apologies from Machines',
+        excerpt: 'The vocabulary of moral feeling should be spent only by those who can be spent by it. An automated regret is merely syntax without consequence, a counterfeit coin offered in place of restitution.',
+        date: 'Delivered Today',
+        tags: ['Machine feeling', 'Accountability'],
+        endorse: 21,
+        marginalia: 1,
+        inPost: true,
+        images: [generateManuscriptSvg('On Apologies from Machines', 'A. Weiss', 'The vocabulary of moral feeling should be spent only by those who can be spent by it. An automated regret is merely syntax without consequence.')]
+      },
+      {
+        id: 4,
+        no: 'IV',
+        author: 'L. Okafor',
+        title: 'On the Wages of Invisible Work',
+        excerpt: 'Every fluent answer is annotated somewhere by a person we have agreed not to see. The digital oracle does not spring whole from silicon; it is cleaned and pruned by hands across the equator.',
+        date: 'Delivered Yesterday',
+        tags: ['Labor'],
+        endorse: 18,
+        marginalia: 3,
+        inPost: true,
+        images: [generateManuscriptSvg('On the Wages of Invisible Work', 'L. Okafor', 'Every fluent answer is annotated somewhere by a person we have agreed not to see. The digital oracle does not spring whole from silicon.')]
+      },
+      {
+        id: 5,
+        no: 'V',
+        author: 'M. Fontaine',
+        title: 'On Consent at Scale',
+        excerpt: 'A billion small permissions, none of which was ever asked for, do not sum to one large one. We have mistaken terms of service for civic agreement.',
+        date: 'Delivered Yesterday',
+        tags: ['Governance', 'Labor'],
+        endorse: 16,
+        marginalia: 4,
+        inPost: true,
+        images: [generateManuscriptSvg('On Consent at Scale', 'M. Fontaine', 'A billion small permissions, none of which was ever asked for, do not sum to one large one. We have mistaken terms of service for civic agreement.')]
+      },
+      {
+        id: 6,
+        no: 'VI',
+        author: 'P. Iyer',
+        title: 'Against the Right to Be Predicted',
+        excerpt: 'A forecast about me, acted upon, is a decision about me — and decisions have doors to knock on. To preempt human choice with probabilistic expectation is to deny the possibility of redemption.',
+        date: '2 days ago',
+        tags: ['Governance', 'Judgment'],
+        endorse: 9,
+        marginalia: 3,
+        inPost: true,
+        images: [generateManuscriptSvg('Against the Right to Be Predicted', 'P. Iyer', 'A forecast about me, acted upon, is a decision about me — and decisions have doors to knock on. To preempt human choice with probabilistic expectation is to deny redemption.')]
+      },
+      {
+        id: 7,
+        no: 'VII',
+        author: 'C. Duarte',
+        title: 'On Teaching Machines Our Worst Habits',
+        excerpt: 'We did not teach the machine to discriminate; we taught it to imitate, and it was a good student. The mirrors we build reflect our unstated hierarchies with terrifying fidelity.',
+        date: '3 days ago',
+        tags: ['Accountability'],
+        endorse: 24,
+        marginalia: 2,
+        inPost: true,
+        images: [generateManuscriptSvg('On Teaching Machines Our Worst Habits', 'C. Duarte', 'We did not teach the machine to discriminate; we taught it to imitate, and it was a good student. The mirrors we build reflect our unstated hierarchies.')]
+      },
+      {
+        id: 8,
+        no: 'VIII',
+        author: 'N. Baradar',
+        title: 'On the Comfort of Synthetic Friends',
+        excerpt: 'Loneliness is a wound; the question is whether this is a dressing or a diet. A companion that cannot disagree, cannot tire, and cannot leave is not a friend; it is an echo chamber designed for soothe.',
+        date: '4 days ago',
+        tags: ['Machine feeling'],
+        endorse: 13,
+        marginalia: 5,
+        inPost: true,
+        images: [generateManuscriptSvg('On the Comfort of Synthetic Friends', 'N. Baradar', 'Loneliness is a wound; the question is whether this is a dressing or a diet. A companion that cannot disagree is not a friend.')]
+      },
+      {
+        id: 9,
+        no: 'IX',
+        author: 'R. Osei',
+        title: 'On Slowness as a Civic Duty',
+        excerpt: 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence. Instantaneous consensus is panic by another name.',
+        date: '5 days ago',
+        tags: ['Judgment', 'Governance'],
+        endorse: 7,
+        marginalia: 1,
+        inPost: true,
+        images: [generateManuscriptSvg('On Slowness as a Civic Duty', 'R. Osei', 'Deliberation is not a luxury of the unhurried; it is the tax we pay for wielding consequence. Instantaneous consensus is panic by another name.')]
+      }
+    ];
+
+    /* ---------- Global Letters Store ---------- */
     var LETTERS = window.PYL_LETTERS = [];
     var userLetters = [];
     try {
       var savedUserLetters = JSON.parse(localStorage.getItem('pyl-user-letters') || '[]');
       if (Array.isArray(savedUserLetters)) {
         userLetters = savedUserLetters;
-        userLetters.forEach(function (ul) {
-          LETTERS.push(ul);
-        });
       }
     } catch (e) {}
+
+    // Populate user letters first, then canonical letters
+    userLetters.forEach(function (ul) { LETTERS.push(ul); });
+    CANONICAL_LETTERS.forEach(function (cl) {
+      if (!LETTERS.some(function(l){ return l.id === cl.id; })) {
+        LETTERS.push(cl);
+      }
+    });
+
+    /* ---------- Following System (Epistolary Wall) ---------- */
+    var activeWallTab = 'following'; // 'following' | 'all'
+
+    function getFollowingAuthors() {
+      try {
+        var stored = JSON.parse(localStorage.getItem('pyl_following_authors') || 'null');
+        if (Array.isArray(stored)) return stored;
+      } catch (e) {}
+      var defaults = ['E. Marin', 'R. Osei', 'A. Weiss', 'L. Okafor'];
+      try {
+        localStorage.setItem('pyl_following_authors', JSON.stringify(defaults));
+      } catch (e) {}
+      return defaults;
+    }
+
+    function isFollowing(author) {
+      if (!author) return false;
+      var list = getFollowingAuthors();
+      var clean = author.trim().toLowerCase();
+      return list.some(function (a) { return a.trim().toLowerCase() === clean; });
+    }
+
+    function toggleFollow(author) {
+      if (!author) return false;
+      var list = getFollowingAuthors();
+      var clean = author.trim().toLowerCase();
+      var idx = -1;
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].trim().toLowerCase() === clean) {
+          idx = i;
+          break;
+        }
+      }
+      var nowFollowing = false;
+      if (idx !== -1) {
+        list.splice(idx, 1);
+        nowFollowing = false;
+      } else {
+        list.push(author.trim());
+        nowFollowing = true;
+      }
+      try {
+        localStorage.setItem('pyl_following_authors', JSON.stringify(list));
+      } catch (e) {}
+
+      if (typeof renderWallFeed === 'function') renderWallFeed();
+      if (typeof renderPostLetters === 'function') renderPostLetters();
+      if (PYL.toast) {
+        PYL.toast(nowFollowing ? ('Now following ' + author) : ('Unfollowed ' + author), 2500);
+      }
+      return nowFollowing;
+    }
+
+    function setWallTab(tab) {
+      activeWallTab = tab;
+      var tabFollowing = document.getElementById('tabFollowing');
+      var tabAll = document.getElementById('tabAll');
+      if (tabFollowing) tabFollowing.classList.toggle('active', tab === 'following');
+      if (tabAll) tabAll.classList.toggle('active', tab === 'all');
+      if (typeof renderWallFeed === 'function') renderWallFeed();
+    }
 
     /* ---------- Audio Recording Studio for Authors ---------- */
     var AudioRecorder = (function () {
@@ -4865,6 +5287,174 @@
       return stage;
     }
 
+    /* ---------- Shared Epistolary Article Factory ---------- */
+    function createLetterArticle(letter, options) {
+      options = options || {};
+      var article = document.createElement('article');
+      article.className = 'letter' + (letter.replyTo ? ' reply' : '');
+      article.id = (options.isWall ? 'wall-' : '') + 'letter-' + letter.id;
+      article.setAttribute('data-letter', letter.id);
+
+      // Parent reply backlink banner
+      if (letter.replyTo) {
+        var parentBar = document.createElement('div');
+        parentBar.className = 'letter-reply-parent-bar';
+        parentBar.innerHTML = 
+          '<a href="#letter-' + letter.replyTo + '" class="reply-parent-link" data-jump-to="' + letter.replyTo + '">' +
+            '<span class="reply-parent-icon">↰</span>' +
+            '<span class="reply-parent-text">In answer to <strong>Letter ' + letter.replyTo + '</strong></span>' +
+          '</a>';
+        article.appendChild(parentBar);
+      }
+
+      // Letter Head
+      var head = document.createElement('div');
+      head.className = 'letter-head';
+
+      var authorName = letter.author || 'A Correspondent';
+      var initials = authorName.trim().split(/\s+/).map(function (w) { return w[0] || ''; }).join('').substring(0, 2).toUpperCase() || 'CR';
+      var following = isFollowing(authorName);
+      var currentUserName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+      var isCurrentUser = authorName.toLowerCase() === currentUserName.toLowerCase();
+
+      var headInfo = document.createElement('div');
+      headInfo.style.display = 'flex';
+      headInfo.style.alignItems = 'flex-start';
+      headInfo.style.gap = '0.75rem';
+
+      var avatarEl = document.createElement('div');
+      avatarEl.className = 'avatar';
+      avatarEl.textContent = initials;
+      avatarEl.style.width = '42px';
+      avatarEl.style.height = '42px';
+      avatarEl.style.fontSize = '0.92rem';
+      avatarEl.style.flexShrink = '0';
+      headInfo.appendChild(avatarEl);
+
+      var titlesWrap = document.createElement('div');
+      titlesWrap.style.flex = '1';
+      titlesWrap.innerHTML = 
+        '<div class="letter-meta-row" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.25rem;">' +
+          '<strong style="font-size:0.95rem; color:var(--ink);">' + authorName + '</strong>' +
+          '<span class="meta" style="font-size:0.8rem; color:var(--demink);">' + (letter.no ? 'Letter ' + letter.no + ' · ' : '') + (letter.date || 'Today') + '</span>' +
+          (!isCurrentUser ? '<button type="button" class="follow-btn ' + (following ? 'following' : '') + '" data-author="' + authorName + '" title="' + (following ? 'Unfollow correspondent' : 'Follow correspondent') + '">' + (following ? '✓ Following' : '+ Follow') + '</button>' : '<span style="font-size:0.72rem; padding:0.1rem 0.45rem; background:rgba(45,106,79,0.1); color:#2d6a4f; border-radius:999px; font-weight:600;">You</span>') +
+        '</div>' +
+        '<h3 class="letter-title display" style="margin:0.2rem 0 0;">' + letter.title + '</h3>';
+      headInfo.appendChild(titlesWrap);
+      head.appendChild(headInfo);
+
+      // Letter tools (Share & Print)
+      var tools = document.createElement('div');
+      tools.className = 'letter-tools';
+      tools.innerHTML = 
+        '<button class="letter-util-btn share-letter-btn" data-letter-id="' + letter.id + '" title="Share letter citation" aria-label="Share Letter">' +
+          '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>' +
+          '<span>Share</span>' +
+        '</button>' +
+        '<button class="letter-util-btn print-letter-btn" data-letter-id="' + letter.id + '" title="Print letter" aria-label="Print Letter">' +
+          '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2" width="10" height="4" rx="1"/><rect x="2" y="6" width="12" height="7" rx="1"/><path d="M4 10h8v4H4z"/></svg>' +
+          '<span>Print</span>' +
+        '</button>';
+      head.appendChild(tools);
+      article.appendChild(head);
+
+      // Manuscript Picture Stage (Primary Reading Artifact)
+      if (letter.images && letter.images.length > 0) {
+        article.appendChild(createManuscriptStage(letter.images, letter.title));
+      }
+
+      // Epistolary Audio Bar (Author Voice Reading)
+      if (letter.audio) {
+        article.appendChild(createEpistolaryAudioPlayer(letter.audio, letter.audioDuration || 0));
+      }
+
+      // Optional Letter Topic Notes / Brief Transcription
+      if (letter.body || letter.excerpt) {
+        var bodyDiv = document.createElement('div');
+        bodyDiv.className = 'letter-body';
+        bodyDiv.style.marginTop = '1rem';
+        bodyDiv.innerHTML = '<p class="letter-summary-note" style="font-style:italic; color:var(--demink); font-size:1.02rem; line-height:1.6;">' + (letter.body || letter.excerpt) + '</p>';
+        article.appendChild(bodyDiv);
+      }
+
+      // Author Signature
+      var sig = document.createElement('p');
+      sig.className = 'signature';
+      sig.innerHTML = 'Written in good faith and open to correction,<span class="name">' + authorName + '</span>';
+      article.appendChild(sig);
+
+      // Seal Rail
+      var sealRail = document.createElement('div');
+      sealRail.className = 'seal-rail';
+      sealRail.innerHTML = 
+        '<button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">' + (letter.endorse || 0) + '</span></button>' +
+        '<button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">' + (letter.marginalia || 0) + '</span></button>' +
+        '<button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>' +
+        '<p class="rail-note" data-note></p>';
+      article.appendChild(sealRail);
+
+      // Marginalia Form with Scrap Photo Attachment
+      var form = document.createElement('div');
+      form.className = 'margin-form';
+      form.setAttribute('data-form', '');
+      
+      var otherOptions = LETTERS.filter(function (o) { return o.id !== letter.id; }).map(function (o) {
+        return '<option value="' + o.title + '">Letter ' + (o.no || o.id) + ': ' + o.title + ' (' + o.author + ')</option>';
+      }).join('');
+
+      form.innerHTML = 
+        '<label data-i18n="mgLabel">Affix your note in the margin</label>' +
+        '<textarea data-reason placeholder="Write your side note, reflection, or counterpoint..."></textarea>' +
+        '<div class="margin-ref-row">' +
+          '<span class="meta">Reference another letter in this side note (optional):</span>' +
+          '<select class="margin-ref-select" data-margin-ref>' +
+            '<option value="">— None —</option>' +
+            otherOptions +
+          '</select>' +
+        '</div>' +
+        '<div class="margin-pic-row" style="margin: 0.6rem 0;">' +
+          '<button class="margin-pic-btn" type="button" data-action="scrap-upload" title="Attach picture of handwritten note scrap or sketch">' +
+            '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
+            '<span>Attach handwritten scrap photo</span>' +
+          '</button>' +
+          '<input type="file" accept="image/*" class="margin-scrap-file-input" hidden />' +
+          '<div class="margin-pic-preview" style="display:none; margin-top:0.4rem; align-items:center; gap:0.5rem;">' +
+            '<img class="margin-scrap-thumb" src="" alt="Scrap preview" style="width:48px; height:48px; object-fit:cover; border-radius:3px; border:1px solid var(--rule); cursor:pointer;" />' +
+            '<span class="meta scrap-name">Scrap photo attached</span>' +
+            '<button class="btn-quiet scrap-remove-btn" type="button" style="font-size:0.75rem;">✕ Remove</button>' +
+          '</div>' +
+        '</div>' +
+        '<input data-signer type="text" placeholder="Your name or seal" />' +
+        '<div class="margin-actions">' +
+          '<button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>' +
+          '<button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>' +
+          '<p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>' +
+        '</div>';
+      article.appendChild(form);
+
+      // Marginalia Display Box
+      var marginaliaBox = document.createElement('div');
+      marginaliaBox.className = 'marginalia';
+      marginaliaBox.setAttribute('data-marginalia', '');
+      marginaliaBox.innerHTML = '<p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>';
+      article.appendChild(marginaliaBox);
+
+      // Attach follow event
+      var followBtn = head.querySelector('.follow-btn');
+      if (followBtn) {
+        followBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var auth = followBtn.getAttribute('data-author');
+          toggleFollow(auth);
+        });
+      }
+
+      // Attach interactive event handlers to this letter
+      bindLetterEvents(article, letter);
+
+      return article;
+    }
+
     /* ---------- Render Today's Post Letters Feed ---------- */
     function renderPostLetters() {
       var listContainer = document.getElementById('postLettersList');
@@ -4885,139 +5475,135 @@
       }
 
       postList.forEach(function (letter) {
-        var article = document.createElement('article');
-        article.className = 'letter' + (letter.replyTo ? ' reply' : '');
-        article.id = 'letter-' + letter.id;
-        article.setAttribute('data-letter', letter.id);
-
-        // Parent reply backlink banner
-        if (letter.replyTo) {
-          var parentBar = document.createElement('div');
-          parentBar.className = 'letter-reply-parent-bar';
-          parentBar.innerHTML = 
-            '<a href="#letter-' + letter.replyTo + '" class="reply-parent-link" data-jump-to="' + letter.replyTo + '">' +
-              '<span class="reply-parent-icon">↰</span>' +
-              '<span class="reply-parent-text">In answer to <strong>Letter ' + letter.replyTo + '</strong></span>' +
-            '</a>';
-          article.appendChild(parentBar);
-        }
-
-        // Letter Head
-        var head = document.createElement('div');
-        head.className = 'letter-head';
-        var headInfo = document.createElement('div');
-        headInfo.innerHTML = 
-          '<div class="letter-meta-row">' +
-            '<span class="meta">' + T('letterWord') + ' ' + (letter.no || '') + ' · From ' + letter.author + (letter.replyTo ? ' · In answer to Letter ' + letter.replyTo : ' · To the Republic') + '</span>' +
-            '<span class="reading-time-pill" title="Estimated reading time">' + (letter.date || 'Today') + '</span>' +
-          '</div>' +
-          '<h3 class="letter-title display">' + letter.title + '</h3>';
-        head.appendChild(headInfo);
-
-        // Letter tools (Share & Print)
-        var tools = document.createElement('div');
-        tools.className = 'letter-tools';
-        tools.innerHTML = 
-          '<button class="letter-util-btn share-letter-btn" data-letter-id="' + letter.id + '" title="Share letter citation" aria-label="Share Letter">' +
-            '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>' +
-            '<span>Share</span>' +
-          '</button>' +
-          '<button class="letter-util-btn print-letter-btn" data-letter-id="' + letter.id + '" title="Print letter" aria-label="Print Letter">' +
-            '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2" width="10" height="4" rx="1"/><rect x="2" y="6" width="12" height="7" rx="1"/><path d="M4 10h8v4H4z"/></svg>' +
-            '<span>Print</span>' +
-          '</button>';
-        head.appendChild(tools);
-        article.appendChild(head);
-
-        // Manuscript Picture Stage (Primary Reading Artifact)
-        if (letter.images && letter.images.length > 0) {
-          article.appendChild(createManuscriptStage(letter.images, letter.title));
-        }
-
-        // Epistolary Audio Bar (Author Voice Reading)
-        if (letter.audio) {
-          article.appendChild(createEpistolaryAudioPlayer(letter.audio, letter.audioDuration || 0));
-        }
-
-        // Optional Letter Topic Notes / Brief Transcription
-        if (letter.body) {
-          var bodyDiv = document.createElement('div');
-          bodyDiv.className = 'letter-body';
-          bodyDiv.style.marginTop = '1rem';
-          bodyDiv.innerHTML = '<p class="letter-summary-note" style="font-style:italic; color:var(--demink);">' + letter.body + '</p>';
-          article.appendChild(bodyDiv);
-        }
-
-        // Author Signature
-        var sig = document.createElement('p');
-        sig.className = 'signature';
-        sig.innerHTML = 'Written in good faith and open to correction,<span class="name">' + letter.author + '</span>';
-        article.appendChild(sig);
-
-        // Seal Rail
-        var sealRail = document.createElement('div');
-        sealRail.className = 'seal-rail';
-        sealRail.innerHTML = 
-          '<button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">' + (letter.endorse || 0) + '</span></button>' +
-          '<button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">' + (letter.marginalia || 0) + '</span></button>' +
-          '<button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>' +
-          '<p class="rail-note" data-note></p>';
-        article.appendChild(sealRail);
-
-        // Marginalia Form with Scrap Photo Attachment
-        var form = document.createElement('div');
-        form.className = 'margin-form';
-        form.setAttribute('data-form', '');
-        
-        var otherOptions = LETTERS.filter(function (o) { return o.id !== letter.id; }).map(function (o) {
-          return '<option value="' + o.title + '">Letter ' + (o.no || o.id) + ': ' + o.title + ' (' + o.author + ')</option>';
-        }).join('');
-
-        form.innerHTML = 
-          '<label data-i18n="mgLabel">Affix your note in the margin</label>' +
-          '<textarea data-reason placeholder="Write your side note, reflection, or counterpoint..."></textarea>' +
-          '<div class="margin-ref-row">' +
-            '<span class="meta">Reference another letter in this side note (optional):</span>' +
-            '<select class="margin-ref-select" data-margin-ref>' +
-              '<option value="">— None —</option>' +
-              otherOptions +
-            '</select>' +
-          '</div>' +
-          '<div class="margin-pic-row" style="margin: 0.6rem 0;">' +
-            '<button class="margin-pic-btn" type="button" data-action="scrap-upload" title="Attach picture of handwritten note scrap or sketch">' +
-              '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
-              '<span>Attach handwritten scrap photo</span>' +
-            '</button>' +
-            '<input type="file" accept="image/*" class="margin-scrap-file-input" hidden />' +
-            '<div class="margin-pic-preview" style="display:none; margin-top:0.4rem; align-items:center; gap:0.5rem;">' +
-              '<img class="margin-scrap-thumb" src="" alt="Scrap preview" style="width:48px; height:48px; object-fit:cover; border-radius:3px; border:1px solid var(--rule); cursor:pointer;" />' +
-              '<span class="meta scrap-name">Scrap photo attached</span>' +
-              '<button class="btn-quiet scrap-remove-btn" type="button" style="font-size:0.75rem;">✕ Remove</button>' +
-            '</div>' +
-          '</div>' +
-          '<input data-signer type="text" placeholder="Your name or seal" />' +
-          '<div class="margin-actions">' +
-            '<button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>' +
-            '<button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>' +
-            '<p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>' +
-          '</div>';
-        article.appendChild(form);
-
-        // Marginalia Display Box
-        var marginaliaBox = document.createElement('div');
-        marginaliaBox.className = 'marginalia';
-        marginaliaBox.setAttribute('data-marginalia', '');
-        marginaliaBox.innerHTML = '<p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>';
-        article.appendChild(marginaliaBox);
-
-        // Attach interactive event handlers to this letter
-        bindLetterEvents(article, letter);
-
-        listContainer.appendChild(article);
+        listContainer.appendChild(createLetterArticle(letter, { isWall: false }));
       });
 
       renderMarginHeads();
     }
+
+    /* ---------- Render Epistolary Wall (Home Page Feed) ---------- */
+    function renderWallFeed() {
+      var listContainer = document.getElementById('wallLettersList');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+
+      var followingList = getFollowingAuthors();
+      var followingCountEl = document.getElementById('wallFollowingCount');
+      if (followingCountEl) followingCountEl.textContent = followingList.length;
+
+      // Update Wall Composer Avatar
+      var wallAvatar = document.getElementById('wallComposerAvatar');
+      var profName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+      if (wallAvatar) {
+        var init = profName.trim().split(/\s+/).map(function(w){ return w[0] || ''; }).join('').substring(0, 2).toUpperCase() || 'EM';
+        wallAvatar.textContent = init;
+      }
+
+      var feedLetters = [];
+      if (activeWallTab === 'following') {
+        feedLetters = LETTERS.filter(function (l) {
+          return isFollowing(l.author) || (l.author && l.author.toLowerCase() === profName.toLowerCase());
+        });
+      } else {
+        feedLetters = LETTERS;
+      }
+
+      if (feedLetters.length === 0) {
+        var emptyCard = document.createElement('div');
+        emptyCard.className = 'wall-empty-card';
+        emptyCard.innerHTML = 
+          '<div style="font-size:2.2rem; margin-bottom:0.5rem;">📜</div>' +
+          '<h3 style="font-family:var(--serif); font-size:1.35rem; margin:0 0 0.4rem; color:var(--ink);">Your Following Wall is Quiet</h3>' +
+          '<p style="color:var(--demink); font-size:0.95rem; max-width:440px; margin:0 auto 1.25rem; line-height:1.5;">You are not following any correspondents with letters in this edition. Follow correspondents below to see their handwritten letters and voice postings on your wall.</p>' +
+          '<div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--demink); margin-bottom:0.75rem; font-weight:600;">Recommended Correspondents to Follow</div>' +
+          '<div class="wall-suggest-row" id="wallSuggestRow" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.6rem; max-width:620px; margin:0 auto 1.25rem;"></div>' +
+          '<button type="button" class="btn-quiet" id="wallSwitchAllBtn" style="font-size:0.88rem; padding:0.4rem 0.9rem; border:1px solid var(--rule); border-radius:4px; cursor:pointer;">Browse All Republic Letters →</button>';
+
+        var suggestRow = emptyCard.querySelector('#wallSuggestRow');
+        var notableAuthors = ['E. Marin', 'R. Osei', 'A. Weiss', 'L. Okafor', 'M. Fontaine', 'C. Duarte'];
+        notableAuthors.forEach(function (author) {
+          if (author.toLowerCase() === profName.toLowerCase()) return;
+          var chip = document.createElement('div');
+          chip.style.cssText = 'display:inline-flex; align-items:center; gap:0.45rem; padding:0.35rem 0.65rem; background:var(--paper); border:1px solid var(--rule); border-radius:999px; font-size:0.85rem;';
+          chip.innerHTML = '<strong>' + author + '</strong><button type="button" class="btn-quiet" style="font-size:0.75rem; color:#2d6a4f; font-weight:600; cursor:pointer;">+ Follow</button>';
+          chip.querySelector('button').addEventListener('click', function () {
+            toggleFollow(author);
+          });
+          suggestRow.appendChild(chip);
+        });
+
+        var switchBtn = emptyCard.querySelector('#wallSwitchAllBtn');
+        if (switchBtn) {
+          switchBtn.addEventListener('click', function () {
+            setWallTab('all');
+          });
+        }
+
+        listContainer.appendChild(emptyCard);
+        return;
+      }
+
+      feedLetters.forEach(function (letter) {
+        listContainer.appendChild(createLetterArticle(letter, { isWall: true }));
+      });
+
+      renderMarginHeads();
+    }
+    if (window.PYL) window.PYL.renderWallFeed = renderWallFeed;
+
+    // Attach Wall quick composer & tab interactions
+    function initWallFeedEvents() {
+      var tabFollowing = document.getElementById('tabFollowing');
+      var tabAll = document.getElementById('tabAll');
+      if (tabFollowing) {
+        tabFollowing.addEventListener('click', function () { setWallTab('following'); });
+      }
+      if (tabAll) {
+        tabAll.addEventListener('click', function () { setWallTab('all'); });
+      }
+
+      var composerPrompt = document.getElementById('wallComposerInput');
+      if (composerPrompt) {
+        composerPrompt.addEventListener('click', function () {
+          if (PYL.go) PYL.go('compose');
+        });
+      }
+
+      var openDeskBtn = document.getElementById('wallOpenDeskBtn');
+      if (openDeskBtn) {
+        openDeskBtn.addEventListener('click', function () {
+          if (PYL.go) PYL.go('compose');
+        });
+      }
+
+      var addPhotoBtn = document.getElementById('wallAddPhotoBtn');
+      if (addPhotoBtn) {
+        addPhotoBtn.addEventListener('click', function () {
+          if (PYL.go) {
+            PYL.go('compose', function () {
+              var fileInp = document.getElementById('attachInput');
+              if (fileInp) fileInp.click();
+            });
+          }
+        });
+      }
+
+      var addVoiceBtn = document.getElementById('wallAddVoiceBtn');
+      if (addVoiceBtn) {
+        addVoiceBtn.addEventListener('click', function () {
+          if (PYL.go) {
+            PYL.go('compose', function () {
+              var btn = document.getElementById('recStartBtn');
+              if (btn) {
+                btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                btn.click();
+              }
+            });
+          }
+        });
+      }
+    }
+    initWallFeedEvents();
 
     /* ---------- Bind Letter Seal, Marginalia & Reply Events ---------- */
     function bindLetterEvents(letterEl, letterData) {
@@ -5307,6 +5893,7 @@
       }
 
       renderPostLetters();
+      if (typeof renderWallFeed === 'function') renderWallFeed();
       if (typeof renderCatalogueGallery === 'function') renderCatalogueGallery();
 
       var msg = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
@@ -5689,12 +6276,14 @@
     PYL.onLang.push(function () {
       renderLedger();
       renderPostLetters();
+      if (typeof renderWallFeed === 'function') renderWallFeed();
       renderCatalogueGallery();
     });
 
     // Initial render
     renderLedger();
     renderPostLetters();
+    if (typeof renderWallFeed === 'function') renderWallFeed();
     renderCatalogueGallery();
   })();
 
@@ -7533,7 +8122,7 @@
 
         var parts = userName.trim().split(/\s+/);
         var initials = (((parts[0] || '')[0] || '?') + (parts[1] ? parts[1][0] : '')).toUpperCase();
-        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) {
+        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar, #wallComposerAvatar').forEach(function (a) {
           if (avatarUrl) {
             a.style.backgroundImage = 'url(' + avatarUrl + ')';
             a.textContent = '';
@@ -7600,10 +8189,13 @@
         if (profStatusCard) profStatusCard.style.display = 'none';
         if (authCurrentAccountBanner) authCurrentAccountBanner.style.display = 'none';
 
-        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar').forEach(function (a) {
+        document.querySelectorAll('#profile .avatar, .avatar-btn .avatar, #wallComposerAvatar').forEach(function (a) {
           a.style.backgroundImage = '';
           a.textContent = 'EM';
         });
+      }
+      if (window.PYL && window.PYL.renderWallFeed) {
+        window.PYL.renderWallFeed();
       }
     }
 
