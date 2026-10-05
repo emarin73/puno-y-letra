@@ -2434,27 +2434,32 @@
   }
 
   /* ---------- Epistolary Wall (Home Page Feed) ---------- */
+  .wall-masthead {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-top: 1rem;
+  }
   .wall-composer {
     background: var(--sheet);
     border: 1px solid var(--rule);
-    border-radius: 6px;
-    box-shadow: var(--shadow-sm);
-    padding: 1.15rem 1.4rem;
-    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
   }
   .wall-composer-top {
     display: flex;
     align-items: center;
-    gap: 0.9rem;
+    gap: 0.85rem;
     margin-bottom: 0.85rem;
   }
   .wall-composer-input {
     flex: 1;
     background: var(--paper);
     border: 1px solid var(--rule);
-    border-radius: 20px;
-    padding: 0.65rem 1.1rem;
-    font-size: 0.92rem;
+    border-radius: 24px;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.94rem;
     color: var(--demink);
     cursor: pointer;
     transition: all 0.15s ease;
@@ -2479,8 +2484,8 @@
     gap: 0.45rem;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
     font-size: 0.86rem;
     color: var(--ink);
     cursor: pointer;
@@ -2493,24 +2498,29 @@
   }
   .wall-feed-controls {
     display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.9rem;
+  }
+  .wall-feed-row-main {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.75rem;
     flex-wrap: wrap;
     gap: 0.75rem;
   }
   .wall-feed-tabs {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.45rem;
   }
   .wall-tab-btn {
     background: transparent;
     border: 1px solid transparent;
     border-radius: 20px;
-    padding: 0.45rem 1.1rem;
-    font-size: 0.92rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--demink);
     cursor: pointer;
@@ -2528,8 +2538,37 @@
     color: var(--paper);
     border-color: var(--ink);
   }
+  .wall-tags-bar {
+    display: flex;
+    gap: 0.45rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scrollbar-width: thin;
+  }
+  .wall-tag-chip {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 0.22rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .wall-tag-chip:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .wall-tag-chip.active {
+    background: var(--prussian-tint);
+    border-color: var(--prussian);
+    color: var(--prussian);
+    font-weight: 600;
+  }
   .following-pill {
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     color: var(--demink);
     display: inline-flex;
     align-items: center;
@@ -2563,10 +2602,227 @@
     color: var(--wax);
     border-color: rgba(180, 50, 50, 0.3);
   }
+  #wallLettersList {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  #wallLettersList article.letter {
+    margin-bottom: 0;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    padding: 1.35rem 1.5rem 1.15rem;
+    transition: box-shadow 0.15s ease;
+  }
+  #wallLettersList article.letter:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  #wallLettersList article.letter.reply {
+    margin-left: 1.75rem;
+    border-left: 3.5px solid var(--prussian);
+    background: color-mix(in srgb, var(--sheet) 97%, var(--prussian));
+  }
+  /* Modern Social Rail for Facebook Feel */
+  .wall-social-rail {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+    margin-top: 1.25rem;
+    padding: 0.25rem 0;
+    gap: 0.25rem;
+  }
+  .wall-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0.55rem 0.4rem;
+    font-size: 0.88rem;
+    color: var(--demink);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .wall-action-btn:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .wall-action-btn.active.endorse-btn {
+    color: var(--prussian);
+    font-weight: 600;
+    background: var(--prussian-tint);
+  }
+  .wall-action-btn.active.margin-btn {
+    color: var(--wax);
+    font-weight: 600;
+    background: var(--wax-tint);
+  }
+  /* Modern Inline Marginalia Section (Facebook Comments) */
+  .wall-marginalia-section {
+    margin-top: 0.85rem;
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .wall-marginalia-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .wall-comment-bubble {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+  .wall-comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--rule-soft);
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--rule);
+  }
+  .wall-comment-body {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 12px;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .wall-comment-author {
+    font-weight: 600;
+    color: var(--ink);
+    margin-right: 0.4rem;
+    font-size: 0.85rem;
+  }
+  .wall-comment-scrap-thumb {
+    max-width: 120px;
+    max-height: 85px;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    margin-top: 0.4rem;
+    display: block;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.15s;
+  }
+  .wall-comment-scrap-thumb:hover {
+    transform: scale(1.03);
+    border-color: var(--wax);
+  }
+  .wall-inline-composer-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-top: 0.5rem;
+  }
+  .wall-inline-input-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 0.45rem 0.75rem;
+    transition: border-color 0.15s;
+  }
+  .wall-inline-input-wrap:focus-within {
+    border-color: var(--prussian);
+    background: var(--sheet);
+  }
+  .wall-inline-textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    resize: none;
+    font: inherit;
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    min-height: 2rem;
+    max-height: 8rem;
+    line-height: 1.4;
+  }
+  .wall-inline-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.25rem;
+    border-top: 1px dashed var(--rule-soft);
+  }
+  .wall-inline-btn-scrap {
+    background: transparent;
+    border: none;
+    color: var(--demink);
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+  }
+  .wall-inline-btn-scrap:hover {
+    background: var(--rule-soft);
+    color: var(--ink);
+  }
+  .wall-inline-btn-submit {
+    background: var(--wax);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .wall-inline-btn-submit:hover {
+    background: var(--wax-hover);
+  }
+  /* Inline Quick Reply Drawer */
+  .wall-reply-drawer {
+    display: none;
+    margin-top: 0.85rem;
+    background: var(--paper);
+    border: 1px solid var(--prussian-tint);
+    border-left: 3px solid var(--prussian);
+    border-radius: 6px;
+    padding: 1rem 1.15rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .wall-reply-drawer.open {
+    display: flex;
+    animation: slideDownFade 0.2s ease-out forwards;
+  }
+  @keyframes slideDownFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   .wall-empty-card {
     background: var(--sheet);
     border: 1px dashed var(--rule);
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 2.5rem 1.75rem;
     text-align: center;
     margin: 1.5rem 0 2.5rem;
@@ -2746,20 +3002,34 @@
       </div>
     </div>
 
-    <!-- Wall Feed Controls: Following vs All Republic -->
+    <!-- Wall Feed Controls: Following vs All Republic vs Top Endorsed + Topic Filters -->
     <div class="wall-feed-controls" id="wallFeedControls">
-      <div class="wall-feed-tabs">
-        <button type="button" class="wall-tab-btn active" id="tabFollowing" data-tab="following">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11.5 14v-1.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3V14"/><circle cx="7" cy="5" r="2.5"/><path d="M14.5 14v-1a2.5 2.5 0 0 0-2-2.45M11.5 2.6a2.5 2.5 0 0 1 0 4.8"/></svg>
-          <span>Following</span>
-        </button>
-        <button type="button" class="wall-tab-btn" id="tabAll" data-tab="all">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12"/></svg>
-          <span>All Republic</span>
-        </button>
+      <div class="wall-feed-row-main">
+        <div class="wall-feed-tabs">
+          <button type="button" class="wall-tab-btn active" id="tabFollowing" data-tab="following">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11.5 14v-1.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3V14"/><circle cx="7" cy="5" r="2.5"/><path d="M14.5 14v-1a2.5 2.5 0 0 0-2-2.45M11.5 2.6a2.5 2.5 0 0 1 0 4.8"/></svg>
+            <span>Following</span>
+          </button>
+          <button type="button" class="wall-tab-btn" id="tabAll" data-tab="all">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12"/></svg>
+            <span>All Republic</span>
+          </button>
+          <button type="button" class="wall-tab-btn" id="tabTop" data-tab="top">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 1.5l2 4 4.5.7-3.3 3.2.8 4.6L8 11.8l-4 2.2.8-4.6L1.5 6.2l4.5-.7L8 1.5z"/></svg>
+            <span>Top Endorsed</span>
+          </button>
+        </div>
+        <div class="following-pill" id="wallFollowingPill">
+          <span>Following <strong id="wallFollowingCount">4</strong> correspondents</span>
+        </div>
       </div>
-      <div class="following-pill" id="wallFollowingPill">
-        <span>Following <strong id="wallFollowingCount">4</strong> correspondents</span>
+      <div class="wall-tags-bar" id="wallTagsBar">
+        <button type="button" class="wall-tag-chip active" data-tag="all">All Topics</button>
+        <button type="button" class="wall-tag-chip" data-tag="Judgment">⚖️ Judgment</button>
+        <button type="button" class="wall-tag-chip" data-tag="Governance">🏛️ Governance</button>
+        <button type="button" class="wall-tag-chip" data-tag="Labor">🤝 Labor</button>
+        <button type="button" class="wall-tag-chip" data-tag="Machine feeling">🧠 Machine Feeling</button>
+        <button type="button" class="wall-tag-chip" data-tag="Accountability">📜 Accountability</button>
       </div>
     </div>
 
@@ -4905,12 +5175,25 @@
       return nowFollowing;
     }
 
+    var activeWallTag = 'all';
+
     function setWallTab(tab) {
       activeWallTab = tab;
       var tabFollowing = document.getElementById('tabFollowing');
       var tabAll = document.getElementById('tabAll');
+      var tabTop = document.getElementById('tabTop');
       if (tabFollowing) tabFollowing.classList.toggle('active', tab === 'following');
       if (tabAll) tabAll.classList.toggle('active', tab === 'all');
+      if (tabTop) tabTop.classList.toggle('active', tab === 'top');
+      if (typeof renderWallFeed === 'function') renderWallFeed();
+    }
+
+    function setWallTag(tag) {
+      activeWallTag = tag;
+      var chips = document.querySelectorAll('.wall-tag-chip');
+      chips.forEach(function (c) {
+        c.classList.toggle('active', (c.getAttribute('data-tag') || 'all').toLowerCase() === tag.toLowerCase());
+      });
       if (typeof renderWallFeed === 'function') renderWallFeed();
     }
 
@@ -5383,61 +5666,135 @@
       sig.innerHTML = 'Written in good faith and open to correction,<span class="name">' + authorName + '</span>';
       article.appendChild(sig);
 
-      // Seal Rail
+      // Seal Rail / Modern Facebook Social Rail
       var sealRail = document.createElement('div');
-      sealRail.className = 'seal-rail';
-      sealRail.innerHTML = 
-        '<button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">' + (letter.endorse || 0) + '</span></button>' +
-        '<button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">' + (letter.marginalia || 0) + '</span></button>' +
-        '<button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>' +
-        '<p class="rail-note" data-note></p>';
-      article.appendChild(sealRail);
-
-      // Marginalia Form with Scrap Photo Attachment
-      var form = document.createElement('div');
-      form.className = 'margin-form';
-      form.setAttribute('data-form', '');
-      
-      var otherOptions = LETTERS.filter(function (o) { return o.id !== letter.id; }).map(function (o) {
-        return '<option value="' + o.title + '">Letter ' + (o.no || o.id) + ': ' + o.title + ' (' + o.author + ')</option>';
-      }).join('');
-
-      form.innerHTML = 
-        '<label data-i18n="mgLabel">Affix your note in the margin</label>' +
-        '<textarea data-reason placeholder="Write your side note, reflection, or counterpoint..."></textarea>' +
-        '<div class="margin-ref-row">' +
-          '<span class="meta">Reference another letter in this side note (optional):</span>' +
-          '<select class="margin-ref-select" data-margin-ref>' +
-            '<option value="">— None —</option>' +
-            otherOptions +
-          '</select>' +
-        '</div>' +
-        '<div class="margin-pic-row" style="margin: 0.6rem 0;">' +
-          '<button class="margin-pic-btn" type="button" data-action="scrap-upload" title="Attach picture of handwritten note scrap or sketch">' +
-            '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
-            '<span>Attach handwritten scrap photo</span>' +
+      if (options.isWall) {
+        sealRail.className = 'wall-social-rail';
+        sealRail.innerHTML = 
+          '<button class="wall-action-btn endorse-btn" data-action="endorse" title="Endorse this letter">' +
+            '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>' +
+            '<span>Endorse</span> · <span class="count">' + (letter.endorse || 0) + '</span>' +
           '</button>' +
-          '<input type="file" accept="image/*" class="margin-scrap-file-input" hidden />' +
-          '<div class="margin-pic-preview" style="display:none; margin-top:0.4rem; align-items:center; gap:0.5rem;">' +
-            '<img class="margin-scrap-thumb" src="" alt="Scrap preview" style="width:48px; height:48px; object-fit:cover; border-radius:3px; border:1px solid var(--rule); cursor:pointer;" />' +
-            '<span class="meta scrap-name">Scrap photo attached</span>' +
-            '<button class="btn-quiet scrap-remove-btn" type="button" style="font-size:0.75rem;">✕ Remove</button>' +
-          '</div>' +
-        '</div>' +
-        '<input data-signer type="text" placeholder="Your name or seal" />' +
-        '<div class="margin-actions">' +
-          '<button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>' +
-          '<button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>' +
-          '<p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>' +
-        '</div>';
-      article.appendChild(form);
+          '<button class="wall-action-btn margin-btn" data-action="margin" title="View or affix marginal notes">' +
+            '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2h5A2.5 2.5 0 0 1 13 4.5v5a2.5 2.5 0 0 1-2.5 2.5H7l-3.5 3v-3A2.5 2.5 0 0 1 1 9.5v-5A2.5 2.5 0 0 1 3.5 2"/></svg>' +
+            '<span>Marginalia</span> · <span class="count">' + (letter.marginalia || 0) + '</span>' +
+          '</button>' +
+          '<button class="wall-action-btn reply-btn" data-action="reply" title="Reply by letter">' +
+            '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3L2 7l4 4"/><path d="M2 7h9a3 3 0 0 1 3 3v3"/></svg>' +
+            '<span>Reply</span>' +
+          '</button>' +
+          '<button class="wall-action-btn share-letter-btn" data-letter-id="' + letter.id + '" title="Share citation">' +
+            '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="m6 7 4-2M6 9l4 2"/></svg>' +
+            '<span>Share</span>' +
+          '</button>';
+        article.appendChild(sealRail);
 
-      // Marginalia Display Box
-      var marginaliaBox = document.createElement('div');
-      marginaliaBox.className = 'marginalia';
-      marginaliaBox.setAttribute('data-marginalia', '');
-      marginaliaBox.innerHTML = '<p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>';
-      article.appendChild(marginaliaBox);
+        // Wall Inline Marginalia Section
+        var userInits = currentUserName.trim().split(/\s+/).map(function(w){ return w[0] || ''; }).join('').substring(0, 2).toUpperCase() || 'EM';
+        var wallMarginalia = document.createElement('div');
+        wallMarginalia.className = 'wall-marginalia-section';
+        wallMarginalia.setAttribute('data-marginalia-section', '');
+        wallMarginalia.innerHTML = 
+          '<div class="wall-marginalia-list" data-marginalia-list></div>' +
+          '<div class="wall-inline-composer-row">' +
+            '<div class="wall-comment-avatar">' + userInits + '</div>' +
+            '<div class="wall-inline-input-wrap">' +
+              '<textarea class="wall-inline-textarea" placeholder="Affix a marginal note or reflection to this letter..." rows="1"></textarea>' +
+              '<div class="margin-pic-preview" style="display:none; align-items:center; gap:0.5rem; margin-top:0.35rem;">' +
+                '<img class="margin-scrap-thumb" src="" alt="Scrap preview" style="width:44px; height:44px; object-fit:cover; border-radius:3px; border:1px solid var(--rule); cursor:pointer;" />' +
+                '<span class="meta scrap-name" style="font-size:0.75rem;">Scrap photo attached</span>' +
+                '<button class="btn-quiet scrap-remove-btn" type="button" style="font-size:0.75rem;">✕ Remove</button>' +
+              '</div>' +
+              '<div class="wall-inline-actions">' +
+                '<button type="button" class="wall-inline-btn-scrap" data-action="scrap-upload" title="Attach handwritten scrap photo">' +
+                  '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
+                  '<span>Attach Scrap Photo</span>' +
+                '</button>' +
+                '<input type="file" accept="image/*" class="margin-scrap-file-input" hidden />' +
+                '<button type="button" class="wall-inline-btn-submit" data-action="submit-inline-margin">Affix Note</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        article.appendChild(wallMarginalia);
+
+        // Wall Inline Reply Drawer
+        var replyDrawer = document.createElement('div');
+        replyDrawer.className = 'wall-reply-drawer';
+        replyDrawer.setAttribute('data-reply-drawer', '');
+        replyDrawer.innerHTML = 
+          '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+            '<strong style="font-size:0.92rem; color:var(--ink);">Reply to ' + (letter.no ? 'Letter ' + letter.no + ': ' : '') + letter.title + '</strong>' +
+            '<button type="button" class="btn-quiet" data-action="close-reply-drawer" style="font-size:0.8rem; cursor:pointer;">✕ Close</button>' +
+          '</div>' +
+          '<input type="text" class="wall-reply-title" placeholder="Reply Title" value="In answer to: ' + letter.title + '" style="width:100%; border:1px solid var(--rule); border-radius:4px; padding:0.45rem 0.65rem; font-size:0.9rem; background:var(--sheet); color:var(--ink);" />' +
+          '<textarea class="wall-reply-body" placeholder="Write your letter reflections, thesis, or counterpoint..." rows="2" style="width:100%; border:1px solid var(--rule); border-radius:4px; padding:0.45rem 0.65rem; font-size:0.9rem; background:var(--sheet); color:var(--ink); resize:vertical;"></textarea>' +
+          '<div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">' +
+            '<button type="button" class="wall-composer-btn" data-action="reply-photo-btn" style="border:1px solid var(--rule); background:var(--sheet);">' +
+              '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
+              '<span>Attach Manuscript Photo</span>' +
+            '</button>' +
+            '<input type="file" accept="image/*" class="wall-reply-file-input" hidden />' +
+            '<div class="wall-reply-photo-preview" style="display:none; align-items:center; gap:0.4rem;">' +
+              '<img class="wall-reply-thumb" src="" style="width:36px; height:36px; object-fit:cover; border-radius:3px; border:1px solid var(--rule);" />' +
+              '<span style="font-size:0.75rem; color:var(--demink);">Manuscript attached</span>' +
+            '</div>' +
+            '<button type="button" class="btn-post" data-action="dispatch-wall-reply" style="margin-left:auto; font-size:0.85rem; padding:0.35rem 0.85rem;">Dispatch Reply</button>' +
+          '</div>';
+        article.appendChild(replyDrawer);
+      } else {
+        sealRail.innerHTML = 
+          '<button class="seal-btn endorse-btn" data-action="endorse"><span class="dot"></span>Endorse · <span class="count">' + (letter.endorse || 0) + '</span></button>' +
+          '<button class="seal-btn margin-btn" data-action="margin"><span class="dot"></span>Marginalia · <span class="count">' + (letter.marginalia || 0) + '</span></button>' +
+          '<button class="seal-btn reply-btn" data-action="reply">Reply by letter</button>' +
+          '<p class="rail-note" data-note></p>';
+        article.appendChild(sealRail);
+
+        // Marginalia Form with Scrap Photo Attachment
+        var form = document.createElement('div');
+        form.className = 'margin-form';
+        form.setAttribute('data-form', '');
+        
+        var otherOptions = LETTERS.filter(function (o) { return o.id !== letter.id; }).map(function (o) {
+          return '<option value="' + o.title + '">Letter ' + (o.no || o.id) + ': ' + o.title + ' (' + o.author + ')</option>';
+        }).join('');
+
+        form.innerHTML = 
+          '<label data-i18n="mgLabel">Affix your note in the margin</label>' +
+          '<textarea data-reason placeholder="Write your side note, reflection, or counterpoint..."></textarea>' +
+          '<div class="margin-ref-row">' +
+            '<span class="meta">Reference another letter in this side note (optional):</span>' +
+            '<select class="margin-ref-select" data-margin-ref>' +
+              '<option value="">— None —</option>' +
+              otherOptions +
+            '</select>' +
+          '</div>' +
+          '<div class="margin-pic-row" style="margin: 0.6rem 0;">' +
+            '<button class="margin-pic-btn" type="button" data-action="scrap-upload" title="Attach picture of handwritten note scrap or sketch">' +
+              '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="4.5" width="13" height="9" rx="1"/><circle cx="8" cy="9" r="2.4"/></svg>' +
+              '<span>Attach handwritten scrap photo</span>' +
+            '</button>' +
+            '<input type="file" accept="image/*" class="margin-scrap-file-input" hidden />' +
+            '<div class="margin-pic-preview" style="display:none; margin-top:0.4rem; align-items:center; gap:0.5rem;">' +
+              '<img class="margin-scrap-thumb" src="" alt="Scrap preview" style="width:48px; height:48px; object-fit:cover; border-radius:3px; border:1px solid var(--rule); cursor:pointer;" />' +
+              '<span class="meta scrap-name">Scrap photo attached</span>' +
+              '<button class="btn-quiet scrap-remove-btn" type="button" style="font-size:0.75rem;">✕ Remove</button>' +
+            '</div>' +
+          '</div>' +
+          '<input data-signer type="text" placeholder="Your name or seal" />' +
+          '<div class="margin-actions">' +
+            '<button class="btn-primary-wax" data-action="submit-margin" data-i18n="mgSubmit">Affix marginal seal</button>' +
+            '<button class="btn-quiet" data-action="cancel-margin" data-i18n="mgCancel">Withdraw</button>' +
+            '<p class="form-hint" data-i18n="mgHint">Published in the margin under your name.</p>' +
+          '</div>';
+        article.appendChild(form);
+
+        // Marginalia Display Box
+        var marginaliaBox = document.createElement('div');
+        marginaliaBox.className = 'marginalia';
+        marginaliaBox.setAttribute('data-marginalia', '');
+        marginaliaBox.innerHTML = '<p class="meta" data-margin-head style="margin:0.5rem 0 0;"></p>';
+        article.appendChild(marginaliaBox);
+      }
 
       // Attach follow event
       var followBtn = head.querySelector('.follow-btn');
@@ -5450,7 +5807,7 @@
       }
 
       // Attach interactive event handlers to this letter
-      bindLetterEvents(article, letter);
+      bindLetterEvents(article, letter, options);
 
       return article;
     }
@@ -5504,37 +5861,55 @@
         feedLetters = LETTERS.filter(function (l) {
           return isFollowing(l.author) || (l.author && l.author.toLowerCase() === profName.toLowerCase());
         });
+      } else if (activeWallTab === 'top') {
+        feedLetters = LETTERS.slice().sort(function (a, b) {
+          return (b.endorse || 0) - (a.endorse || 0);
+        });
       } else {
-        feedLetters = LETTERS;
+        feedLetters = LETTERS.slice();
+      }
+
+      // Filter by activeWallTag if selected
+      if (activeWallTag && activeWallTag !== 'all') {
+        feedLetters = feedLetters.filter(function (l) {
+          if (!l.tags || !l.tags.length) return false;
+          return l.tags.some(function (t) {
+            return t.toLowerCase().indexOf(activeWallTag.toLowerCase()) !== -1;
+          });
+        });
       }
 
       if (feedLetters.length === 0) {
         var emptyCard = document.createElement('div');
         emptyCard.className = 'wall-empty-card';
+        var isTagFilter = activeWallTag && activeWallTag !== 'all';
         emptyCard.innerHTML = 
           '<div style="font-size:2.2rem; margin-bottom:0.5rem;">📜</div>' +
-          '<h3 style="font-family:var(--serif); font-size:1.35rem; margin:0 0 0.4rem; color:var(--ink);">Your Following Wall is Quiet</h3>' +
-          '<p style="color:var(--demink); font-size:0.95rem; max-width:440px; margin:0 auto 1.25rem; line-height:1.5;">You are not following any correspondents with letters in this edition. Follow correspondents below to see their handwritten letters and voice postings on your wall.</p>' +
-          '<div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--demink); margin-bottom:0.75rem; font-weight:600;">Recommended Correspondents to Follow</div>' +
-          '<div class="wall-suggest-row" id="wallSuggestRow" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.6rem; max-width:620px; margin:0 auto 1.25rem;"></div>' +
-          '<button type="button" class="btn-quiet" id="wallSwitchAllBtn" style="font-size:0.88rem; padding:0.4rem 0.9rem; border:1px solid var(--rule); border-radius:4px; cursor:pointer;">Browse All Republic Letters →</button>';
+          '<h3 style="font-family:var(--serif); font-size:1.35rem; margin:0 0 0.4rem; color:var(--ink);">' + (isTagFilter ? 'No Letters in Topic: ' + activeWallTag : 'Your Following Wall is Quiet') + '</h3>' +
+          '<p style="color:var(--demink); font-size:0.95rem; max-width:440px; margin:0 auto 1.25rem; line-height:1.5;">' + (isTagFilter ? 'There are currently no letters tagged with this topic in the active feed.' : 'You are not following any correspondents with letters in this edition. Follow correspondents below to see their handwritten letters and voice postings on your wall.') + '</p>' +
+          (!isTagFilter ? '<div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--demink); margin-bottom:0.75rem; font-weight:600;">Recommended Correspondents to Follow</div>' +
+          '<div class="wall-suggest-row" id="wallSuggestRow" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.6rem; max-width:620px; margin:0 auto 1.25rem;"></div>' : '') +
+          '<button type="button" class="btn-quiet" id="wallResetFeedBtn" style="font-size:0.88rem; padding:0.4rem 0.9rem; border:1px solid var(--rule); border-radius:4px; cursor:pointer;">Browse All Republic Letters →</button>';
 
-        var suggestRow = emptyCard.querySelector('#wallSuggestRow');
-        var notableAuthors = ['E. Marin', 'R. Osei', 'A. Weiss', 'L. Okafor', 'M. Fontaine', 'C. Duarte'];
-        notableAuthors.forEach(function (author) {
-          if (author.toLowerCase() === profName.toLowerCase()) return;
-          var chip = document.createElement('div');
-          chip.style.cssText = 'display:inline-flex; align-items:center; gap:0.45rem; padding:0.35rem 0.65rem; background:var(--paper); border:1px solid var(--rule); border-radius:999px; font-size:0.85rem;';
-          chip.innerHTML = '<strong>' + author + '</strong><button type="button" class="btn-quiet" style="font-size:0.75rem; color:#2d6a4f; font-weight:600; cursor:pointer;">+ Follow</button>';
-          chip.querySelector('button').addEventListener('click', function () {
-            toggleFollow(author);
+        if (!isTagFilter) {
+          var suggestRow = emptyCard.querySelector('#wallSuggestRow');
+          var notableAuthors = ['E. Marin', 'R. Osei', 'A. Weiss', 'L. Okafor', 'M. Fontaine', 'C. Duarte'];
+          notableAuthors.forEach(function (author) {
+            if (author.toLowerCase() === profName.toLowerCase()) return;
+            var chip = document.createElement('div');
+            chip.style.cssText = 'display:inline-flex; align-items:center; gap:0.45rem; padding:0.35rem 0.65rem; background:var(--paper); border:1px solid var(--rule); border-radius:999px; font-size:0.85rem;';
+            chip.innerHTML = '<strong>' + author + '</strong><button type="button" class="btn-quiet" style="font-size:0.75rem; color:#2d6a4f; font-weight:600; cursor:pointer;">+ Follow</button>';
+            chip.querySelector('button').addEventListener('click', function () {
+              toggleFollow(author);
+            });
+            suggestRow.appendChild(chip);
           });
-          suggestRow.appendChild(chip);
-        });
+        }
 
-        var switchBtn = emptyCard.querySelector('#wallSwitchAllBtn');
-        if (switchBtn) {
-          switchBtn.addEventListener('click', function () {
+        var resetBtn = emptyCard.querySelector('#wallResetFeedBtn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function () {
+            activeWallTag = 'all';
             setWallTab('all');
           });
         }
@@ -5555,12 +5930,24 @@
     function initWallFeedEvents() {
       var tabFollowing = document.getElementById('tabFollowing');
       var tabAll = document.getElementById('tabAll');
+      var tabTop = document.getElementById('tabTop');
       if (tabFollowing) {
         tabFollowing.addEventListener('click', function () { setWallTab('following'); });
       }
       if (tabAll) {
         tabAll.addEventListener('click', function () { setWallTab('all'); });
       }
+      if (tabTop) {
+        tabTop.addEventListener('click', function () { setWallTab('top'); });
+      }
+
+      var tagChips = document.querySelectorAll('.wall-tag-chip');
+      tagChips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var tag = chip.getAttribute('data-tag') || 'all';
+          setWallTag(tag);
+        });
+      });
 
       var composerPrompt = document.getElementById('wallComposerInput');
       if (composerPrompt) {
@@ -5606,206 +5993,511 @@
     initWallFeedEvents();
 
     /* ---------- Bind Letter Seal, Marginalia & Reply Events ---------- */
-    function bindLetterEvents(letterEl, letterData) {
+    function bindLetterEvents(letterEl, letterData, options) {
+      options = options || {};
+      var isWall = !!options.isWall;
       var endorseBtn = letterEl.querySelector('[data-action="endorse"]');
       var marginBtn = letterEl.querySelector('[data-action="margin"]');
       var replyBtn = letterEl.querySelector('[data-action="reply"]');
-      var form = letterEl.querySelector('[data-form]');
-      var reason = form.querySelector('[data-reason]');
-      var signer = form.querySelector('[data-signer]');
-      var marginaliaBox = letterEl.querySelector('[data-marginalia]');
-      var scrapBtn = form.querySelector('[data-action="scrap-upload"]');
-      var scrapInput = form.querySelector('.margin-scrap-file-input');
-      var scrapPreview = form.querySelector('.margin-pic-preview');
-      var scrapThumb = form.querySelector('.margin-scrap-thumb');
-      var scrapRemoveBtn = form.querySelector('.scrap-remove-btn');
+      var shareBtn = letterEl.querySelector('.share-letter-btn');
 
-      var attachedScrapDataUrl = null;
-
-      if (scrapBtn && scrapInput) {
-        scrapBtn.addEventListener('click', function () { scrapInput.click(); });
-        scrapInput.addEventListener('change', function () {
-          var file = scrapInput.files && scrapInput.files[0];
-          if (!file) return;
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            attachedScrapDataUrl = e.target.result;
-            scrapThumb.src = attachedScrapDataUrl;
-            scrapPreview.style.display = 'flex';
-          };
-          reader.readAsDataURL(file);
+      // Endorse Action
+      if (endorseBtn) {
+        endorseBtn.addEventListener('click', function () {
+          if (endorseBtn.classList.contains('active')) {
+            endorseBtn.classList.remove('active');
+            bump(endorseBtn, -1);
+            endorsements -= 1;
+            renderLedger();
+            return;
+          }
+          if (owed() >= 1) {
+            showNote(letterEl, T('noteUnbalanced'));
+            return;
+          }
+          endorseBtn.classList.add('active');
+          bump(endorseBtn, 1);
+          endorsements += 1;
+          renderLedger();
         });
       }
 
-      if (scrapRemoveBtn) {
-        scrapRemoveBtn.addEventListener('click', function () {
-          attachedScrapDataUrl = null;
-          scrapInput.value = '';
-          scrapPreview.style.display = 'none';
-        });
-      }
-
-      if (scrapThumb) {
-        scrapThumb.addEventListener('click', function () {
-          if (attachedScrapDataUrl && window.PYL && window.PYL.openLightbox) {
-            window.PYL.openLightbox(attachedScrapDataUrl, 'Marginalia Scrap Note');
+      // Share Action
+      if (shareBtn) {
+        shareBtn.addEventListener('click', function () {
+          var shareUrl = window.location.origin + window.location.pathname + '#letter-' + letterData.id;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl).then(function () {
+              if (PYL.toast) PYL.toast('Letter citation link copied to clipboard!', 2500);
+            }).catch(function () {
+              if (PYL.toast) PYL.toast('Citation: ' + letterData.title + ' by ' + letterData.author, 3000);
+            });
+          } else if (PYL.toast) {
+            PYL.toast('Citation: ' + letterData.title + ' by ' + letterData.author, 3000);
           }
         });
       }
 
-      endorseBtn.addEventListener('click', function () {
-        if (endorseBtn.classList.contains('active')) {
-          endorseBtn.classList.remove('active');
-          bump(endorseBtn, -1);
-          endorsements -= 1;
-          renderLedger();
-          return;
-        }
-        if (owed() >= 1) {
-          showNote(letterEl, T('noteUnbalanced'));
-          return;
-        }
-        endorseBtn.classList.add('active');
-        bump(endorseBtn, 1);
-        endorsements += 1;
-        renderLedger();
-      });
+      if (isWall) {
+        // --- Facebook Wall Interactions ---
+        var marginaliaSection = letterEl.querySelector('[data-marginalia-section]');
+        var marginaliaList = letterEl.querySelector('[data-marginalia-list]');
+        var inlineTextarea = letterEl.querySelector('.wall-inline-textarea');
+        var inlineSubmitBtn = letterEl.querySelector('[data-action="submit-inline-margin"]');
+        var scrapBtn = letterEl.querySelector('[data-action="scrap-upload"]');
+        var scrapInput = letterEl.querySelector('.margin-scrap-file-input');
+        var scrapPreview = letterEl.querySelector('.margin-pic-preview');
+        var scrapThumb = letterEl.querySelector('.margin-scrap-thumb');
+        var scrapRemoveBtn = letterEl.querySelector('.scrap-remove-btn');
+        var attachedScrapDataUrl = null;
 
-      marginBtn.addEventListener('click', function () {
-        if (marginBtn.classList.contains('active')) return;
-        form.classList.toggle('open');
-        if (form.classList.contains('open')) reason.focus();
-      });
+        var replyDrawer = letterEl.querySelector('[data-reply-drawer]');
+        var replyTitleInput = replyDrawer ? replyDrawer.querySelector('.wall-reply-title') : null;
+        var replyBodyInput = replyDrawer ? replyDrawer.querySelector('.wall-reply-body') : null;
+        var replyPhotoBtn = replyDrawer ? replyDrawer.querySelector('[data-action="reply-photo-btn"]') : null;
+        var replyFileInput = replyDrawer ? replyDrawer.querySelector('.wall-reply-file-input') : null;
+        var replyPhotoPreview = replyDrawer ? replyDrawer.querySelector('.wall-reply-photo-preview') : null;
+        var replyPhotoThumb = replyDrawer ? replyDrawer.querySelector('.wall-reply-thumb') : null;
+        var closeReplyBtn = replyDrawer ? replyDrawer.querySelector('[data-action="close-reply-drawer"]') : null;
+        var dispatchReplyBtn = replyDrawer ? replyDrawer.querySelector('[data-action="dispatch-wall-reply"]') : null;
+        var attachedReplyPhotoUrl = null;
 
-      form.querySelector('[data-action="cancel-margin"]').addEventListener('click', function () {
-        form.classList.remove('open');
-      });
-
-      form.querySelector('[data-action="submit-margin"]').addEventListener('click', function () {
-        var text = reason.value.trim();
-        var name = signer.value.trim() || T('aCorrespondent');
-        if (text.length < 5 && !attachedScrapDataUrl) {
-          showNote(letterEl, T('noteNeedsReason') || 'Please enter a note or attach a handwritten scrap.');
-          return;
-        }
-        var refSelect = form.querySelector('[data-margin-ref]');
-        var refVal = refSelect ? refSelect.value : '';
-
-        var item = document.createElement('div');
-        item.className = 'marginalia-item';
-        if (text) {
-          item.innerHTML = '“' + text + '” ';
-        }
-
-        // Attached scrap picture
-        if (attachedScrapDataUrl) {
-          var scrapImg = document.createElement('img');
-          scrapImg.className = 'marginalia-scrap-img';
-          scrapImg.src = attachedScrapDataUrl;
-          scrapImg.alt = 'Handwritten scrap note';
-          scrapImg.title = 'Click to view high-resolution scrap';
-          (function (srcUrl) {
-            scrapImg.addEventListener('click', function () {
-              if (window.PYL && window.PYL.openLightbox) {
-                window.PYL.openLightbox(srcUrl, 'Handwritten Marginal Scrap by ' + name);
-              }
-            });
-          })(attachedScrapDataUrl);
-          item.appendChild(scrapImg);
-        }
-
-        var who = document.createElement('span');
-        who.className = 'who';
-        who.textContent = ' — ' + name;
-        item.appendChild(who);
-
-        if (refVal) {
-          var citeLink = document.createElement('span');
-          citeLink.className = 'marginalia-cite';
-          citeLink.textContent = ' ↳ Re: ' + refVal;
-          item.appendChild(citeLink);
-        }
-
-        marginaliaBox.appendChild(item);
-        renderMarginHeads();
-
-        // Persist to local storage
-        var letterKey = 'letter-' + letterData.id;
-        try {
-          var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
-          if (!savedMarginalia[letterKey]) savedMarginalia[letterKey] = [];
-          savedMarginalia[letterKey].push({
-            text: text,
-            name: name,
-            refVal: refVal,
-            image: attachedScrapDataUrl
+        // Toggle / Focus Inline Comment Box on Marginalia button click
+        if (marginBtn && inlineTextarea) {
+          marginBtn.addEventListener('click', function () {
+            inlineTextarea.focus();
+            inlineTextarea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           });
-          localStorage.setItem('pyl-custom-marginalia', JSON.stringify(savedMarginalia));
-        } catch (e) {}
+        }
 
-        marginBtn.classList.add('active');
-        bump(marginBtn, 1);
-        notes += 1;
-        form.classList.remove('open');
-        reason.value = '';
-        if (refSelect) refSelect.value = '';
-        if (scrapRemoveBtn) scrapRemoveBtn.click();
-        renderLedger();
-        showNote(letterEl, T('noteMarginSealed'));
-      });
+        // Inline Scrap Upload
+        if (scrapBtn && scrapInput) {
+          scrapBtn.addEventListener('click', function () { scrapInput.click(); });
+          scrapInput.addEventListener('change', function () {
+            var file = scrapInput.files && scrapInput.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              attachedScrapDataUrl = e.target.result;
+              if (scrapThumb) scrapThumb.src = attachedScrapDataUrl;
+              if (scrapPreview) scrapPreview.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+          });
+        }
 
-      replyBtn.addEventListener('click', function () {
-        var composeSec = document.getElementById('compose');
-        composeSec.dataset.reply = '1';
-        composeSec.dataset.replyTo = String(letterData.id);
-        PYL.go('compose', function () {
-          var input = document.getElementById('composeTitle');
-          input.value = T('inAnswerTo').replace('{title}', letterData.title);
-          var b = document.getElementById('composeBody');
-          if (b) b.focus();
-        });
-      });
+        if (scrapRemoveBtn) {
+          scrapRemoveBtn.addEventListener('click', function () {
+            attachedScrapDataUrl = null;
+            if (scrapInput) scrapInput.value = '';
+            if (scrapPreview) scrapPreview.style.display = 'none';
+          });
+        }
 
-      // Restore saved marginalia for this letter
-      try {
-        var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
-        var letterKey = 'letter-' + letterData.id;
-        if (savedMarginalia[letterKey]) {
-          savedMarginalia[letterKey].forEach(function (m) {
-            var item = document.createElement('div');
-            item.className = 'marginalia-item';
-            if (m.text) {
-              item.innerHTML = '“' + m.text + '” ';
+        if (scrapThumb) {
+          scrapThumb.addEventListener('click', function () {
+            if (attachedScrapDataUrl && window.PYL && window.PYL.openLightbox) {
+              window.PYL.openLightbox(attachedScrapDataUrl, 'Marginalia Scrap Note');
             }
-            if (m.image) {
-              var scrapImg = document.createElement('img');
-              scrapImg.className = 'marginalia-scrap-img';
-              scrapImg.src = m.image;
-              scrapImg.alt = 'Handwritten scrap note';
-              scrapImg.title = 'Click to view scrap';
-              scrapImg.addEventListener('click', function () {
-                if (window.PYL && window.PYL.openLightbox) {
-                  window.PYL.openLightbox(m.image, 'Handwritten Marginal Scrap by ' + m.name);
-                }
+          });
+        }
+
+        // Inline Marginalia Submit
+        if (inlineSubmitBtn && inlineTextarea) {
+          inlineSubmitBtn.addEventListener('click', function () {
+            var text = inlineTextarea.value.trim();
+            var name = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+            if (text.length < 3 && !attachedScrapDataUrl) {
+              if (PYL.toast) PYL.toast('Please write a reflection or attach a handwritten scrap photo.', 3000);
+              return;
+            }
+
+            var bubble = document.createElement('div');
+            bubble.className = 'wall-comment-bubble';
+
+            var inits = name.trim().split(/\s+/).map(function(w){ return w[0] || ''; }).join('').substring(0, 2).toUpperCase() || 'CR';
+            var avatar = document.createElement('div');
+            avatar.className = 'wall-comment-avatar';
+            avatar.textContent = inits;
+            bubble.appendChild(avatar);
+
+            var body = document.createElement('div');
+            body.className = 'wall-comment-body';
+            body.innerHTML = 
+              '<div class="wall-comment-author">' + name + ' <span class="wall-comment-time">· Just now</span></div>' +
+              (text ? '<div class="wall-comment-text">' + text + '</div>' : '');
+
+            if (attachedScrapDataUrl) {
+              var sImg = document.createElement('img');
+              sImg.className = 'wall-comment-scrap-thumb';
+              sImg.src = attachedScrapDataUrl;
+              sImg.alt = 'Attached scrap note';
+              sImg.title = 'Click to open high-res manuscript scrap';
+              (function (src) {
+                sImg.addEventListener('click', function () {
+                  if (window.PYL && window.PYL.openLightbox) {
+                    window.PYL.openLightbox(src, 'Handwritten Marginal Scrap by ' + name);
+                  }
+                });
+              })(attachedScrapDataUrl);
+              body.appendChild(sImg);
+            }
+
+            bubble.appendChild(body);
+            marginaliaList.appendChild(bubble);
+
+            // Persist to local storage
+            var letterKey = 'letter-' + letterData.id;
+            try {
+              var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
+              if (!savedMarginalia[letterKey]) savedMarginalia[letterKey] = [];
+              savedMarginalia[letterKey].push({
+                text: text,
+                name: name,
+                image: attachedScrapDataUrl
               });
-              item.appendChild(scrapImg);
-            }
-            var who = document.createElement('span');
-            who.className = 'who';
-            who.textContent = ' — ' + m.name;
-            item.appendChild(who);
-            if (m.refVal) {
-              var citeLink = document.createElement('span');
-              citeLink.className = 'marginalia-cite';
-              citeLink.textContent = ' ↳ Re: ' + m.refVal;
-              item.appendChild(citeLink);
-            }
-            marginaliaBox.appendChild(item);
+              localStorage.setItem('pyl-custom-marginalia', JSON.stringify(savedMarginalia));
+            } catch (e) {}
+
             bump(marginBtn, 1);
             notes += 1;
+            renderLedger();
+
+            inlineTextarea.value = '';
+            if (scrapRemoveBtn) scrapRemoveBtn.click();
+            if (PYL.toast) PYL.toast('Marginal note affixed to letter.', 2500);
           });
         }
-      } catch (e) {}
+
+        // Inline Reply Drawer Toggle
+        if (replyBtn && replyDrawer) {
+          replyBtn.addEventListener('click', function () {
+            replyDrawer.classList.toggle('open');
+            if (replyDrawer.classList.contains('open') && replyBodyInput) {
+              replyBodyInput.focus();
+            }
+          });
+        }
+
+        if (closeReplyBtn && replyDrawer) {
+          closeReplyBtn.addEventListener('click', function () {
+            replyDrawer.classList.remove('open');
+          });
+        }
+
+        // Reply Photo Attachment
+        if (replyPhotoBtn && replyFileInput) {
+          replyPhotoBtn.addEventListener('click', function () { replyFileInput.click(); });
+          replyFileInput.addEventListener('change', function () {
+            var file = replyFileInput.files && replyFileInput.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              attachedReplyPhotoUrl = e.target.result;
+              if (replyPhotoThumb) replyPhotoThumb.src = attachedReplyPhotoUrl;
+              if (replyPhotoPreview) replyPhotoPreview.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        // Dispatch Quick Reply Directly into Feed
+        if (dispatchReplyBtn && replyDrawer) {
+          dispatchReplyBtn.addEventListener('click', function () {
+            var repTitle = (replyTitleInput ? replyTitleInput.value.trim() : '') || ('In answer to: ' + letterData.title);
+            var repBody = (replyBodyInput ? replyBodyInput.value.trim() : '') || '';
+            var authorName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
+
+            if (!repBody && !attachedReplyPhotoUrl) {
+              if (PYL.toast) PYL.toast('Please write your reply or attach a manuscript photo.', 3000);
+              return;
+            }
+
+            var repImage = attachedReplyPhotoUrl;
+            if (!repImage && typeof generateManuscriptSvg === 'function') {
+              repImage = generateManuscriptSvg(repTitle, authorName, repBody);
+            }
+
+            var newLetter = {
+              id: Date.now(),
+              author: authorName,
+              title: repTitle,
+              excerpt: repBody,
+              body: repBody,
+              date: 'Just now',
+              replyTo: letterData.id,
+              endorse: 0,
+              marginalia: 0,
+              images: repImage ? [repImage] : [],
+              inPost: true,
+              tags: letterData.tags || ['Correspondence']
+            };
+
+            LETTERS.unshift(newLetter);
+            try {
+              var uList = JSON.parse(localStorage.getItem('pyl-user-letters') || '[]');
+              uList.unshift(newLetter);
+              localStorage.setItem('pyl-user-letters', JSON.stringify(uList));
+            } catch (e) {}
+
+            // Instantiate article and insert directly under current card
+            var newArticle = createLetterArticle(newLetter, { isWall: true });
+            newArticle.style.animation = 'pulseNote 0.8s ease';
+            if (letterEl.nextSibling) {
+              letterEl.parentNode.insertBefore(newArticle, letterEl.nextSibling);
+            } else {
+              letterEl.parentNode.appendChild(newArticle);
+            }
+
+            replyDrawer.classList.remove('open');
+            if (replyBodyInput) replyBodyInput.value = '';
+            attachedReplyPhotoUrl = null;
+            if (replyFileInput) replyFileInput.value = '';
+            if (replyPhotoPreview) replyPhotoPreview.style.display = 'none';
+
+            letters += 1;
+            renderLedger();
+
+            newArticle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (PYL.toast) PYL.toast('Your reply letter has been affixed to the Republic wall!', 3500);
+          });
+        }
+
+        // Restore saved marginalia for wall card
+        try {
+          var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
+          var letterKey = 'letter-' + letterData.id;
+          if (savedMarginalia[letterKey] && marginaliaList) {
+            savedMarginalia[letterKey].forEach(function (m) {
+              var bubble = document.createElement('div');
+              bubble.className = 'wall-comment-bubble';
+
+              var mName = m.name || 'A Correspondent';
+              var inits = mName.trim().split(/\s+/).map(function(w){ return w[0] || ''; }).join('').substring(0, 2).toUpperCase() || 'CR';
+              var avatar = document.createElement('div');
+              avatar.className = 'wall-comment-avatar';
+              avatar.textContent = inits;
+              bubble.appendChild(avatar);
+
+              var body = document.createElement('div');
+              body.className = 'wall-comment-body';
+              body.innerHTML = 
+                '<div class="wall-comment-author">' + mName + ' <span class="wall-comment-time">· Note affixed</span></div>' +
+                (m.text ? '<div class="wall-comment-text">' + m.text + '</div>' : '');
+
+              if (m.image) {
+                var sImg = document.createElement('img');
+                sImg.className = 'wall-comment-scrap-thumb';
+                sImg.src = m.image;
+                sImg.alt = 'Attached scrap note';
+                sImg.title = 'Click to view manuscript scrap';
+                (function (src) {
+                  sImg.addEventListener('click', function () {
+                    if (window.PYL && window.PYL.openLightbox) {
+                      window.PYL.openLightbox(src, 'Handwritten Marginal Scrap by ' + mName);
+                    }
+                  });
+                })(m.image);
+                body.appendChild(sImg);
+              }
+
+              bubble.appendChild(body);
+              marginaliaList.appendChild(bubble);
+              bump(marginBtn, 1);
+            });
+          }
+        } catch (e) {}
+
+      } else {
+        // --- Classic Desk Card Interactions ---
+        var form = letterEl.querySelector('[data-form]');
+        var reason = form ? form.querySelector('[data-reason]') : null;
+        var signer = form ? form.querySelector('[data-signer]') : null;
+        var marginaliaBox = letterEl.querySelector('[data-marginalia]');
+        var scrapBtn = form ? form.querySelector('[data-action="scrap-upload"]') : null;
+        var scrapInput = form ? form.querySelector('.margin-scrap-file-input') : null;
+        var scrapPreview = form ? form.querySelector('.margin-pic-preview') : null;
+        var scrapThumb = form ? form.querySelector('.margin-scrap-thumb') : null;
+        var scrapRemoveBtn = form ? form.querySelector('.scrap-remove-btn') : null;
+        var attachedScrapDataUrl = null;
+
+        if (scrapBtn && scrapInput) {
+          scrapBtn.addEventListener('click', function () { scrapInput.click(); });
+          scrapInput.addEventListener('change', function () {
+            var file = scrapInput.files && scrapInput.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              attachedScrapDataUrl = e.target.result;
+              if (scrapThumb) scrapThumb.src = attachedScrapDataUrl;
+              if (scrapPreview) scrapPreview.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        if (scrapRemoveBtn) {
+          scrapRemoveBtn.addEventListener('click', function () {
+            attachedScrapDataUrl = null;
+            if (scrapInput) scrapInput.value = '';
+            if (scrapPreview) scrapPreview.style.display = 'none';
+          });
+        }
+
+        if (scrapThumb) {
+          scrapThumb.addEventListener('click', function () {
+            if (attachedScrapDataUrl && window.PYL && window.PYL.openLightbox) {
+              window.PYL.openLightbox(attachedScrapDataUrl, 'Marginalia Scrap Note');
+            }
+          });
+        }
+
+        if (marginBtn && form) {
+          marginBtn.addEventListener('click', function () {
+            if (marginBtn.classList.contains('active')) return;
+            form.classList.toggle('open');
+            if (form.classList.contains('open') && reason) reason.focus();
+          });
+        }
+
+        var cancelBtn = form ? form.querySelector('[data-action="cancel-margin"]') : null;
+        if (cancelBtn) {
+          cancelBtn.addEventListener('click', function () {
+            form.classList.remove('open');
+          });
+        }
+
+        var submitBtn = form ? form.querySelector('[data-action="submit-margin"]') : null;
+        if (submitBtn) {
+          submitBtn.addEventListener('click', function () {
+            var text = reason ? reason.value.trim() : '';
+            var name = (signer ? signer.value.trim() : '') || T('aCorrespondent');
+            if (text.length < 5 && !attachedScrapDataUrl) {
+              showNote(letterEl, T('noteNeedsReason') || 'Please enter a note or attach a handwritten scrap.');
+              return;
+            }
+            var refSelect = form.querySelector('[data-margin-ref]');
+            var refVal = refSelect ? refSelect.value : '';
+
+            var item = document.createElement('div');
+            item.className = 'marginalia-item';
+            if (text) {
+              item.innerHTML = '“' + text + '” ';
+            }
+
+            if (attachedScrapDataUrl) {
+              var scrapImg = document.createElement('img');
+              scrapImg.className = 'marginalia-scrap-img';
+              scrapImg.src = attachedScrapDataUrl;
+              scrapImg.alt = 'Handwritten scrap note';
+              scrapImg.title = 'Click to view high-resolution scrap';
+              (function (srcUrl) {
+                scrapImg.addEventListener('click', function () {
+                  if (window.PYL && window.PYL.openLightbox) {
+                    window.PYL.openLightbox(srcUrl, 'Handwritten Marginal Scrap by ' + name);
+                  }
+                });
+              })(attachedScrapDataUrl);
+              item.appendChild(scrapImg);
+            }
+
+            var who = document.createElement('span');
+            who.className = 'who';
+            who.textContent = ' — ' + name;
+            item.appendChild(who);
+
+            if (refVal) {
+              var citeLink = document.createElement('span');
+              citeLink.className = 'marginalia-cite';
+              citeLink.textContent = ' ↳ Re: ' + refVal;
+              item.appendChild(citeLink);
+            }
+
+            if (marginaliaBox) marginaliaBox.appendChild(item);
+            renderMarginHeads();
+
+            var letterKey = 'letter-' + letterData.id;
+            try {
+              var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
+              if (!savedMarginalia[letterKey]) savedMarginalia[letterKey] = [];
+              savedMarginalia[letterKey].push({
+                text: text,
+                name: name,
+                refVal: refVal,
+                image: attachedScrapDataUrl
+              });
+              localStorage.setItem('pyl-custom-marginalia', JSON.stringify(savedMarginalia));
+            } catch (e) {}
+
+            marginBtn.classList.add('active');
+            bump(marginBtn, 1);
+            notes += 1;
+            form.classList.remove('open');
+            if (reason) reason.value = '';
+            if (refSelect) refSelect.value = '';
+            if (scrapRemoveBtn) scrapRemoveBtn.click();
+            renderLedger();
+            showNote(letterEl, T('noteMarginSealed'));
+          });
+        }
+
+        if (replyBtn) {
+          replyBtn.addEventListener('click', function () {
+            var composeSec = document.getElementById('compose');
+            if (composeSec) {
+              composeSec.dataset.reply = '1';
+              composeSec.dataset.replyTo = String(letterData.id);
+            }
+            PYL.go('compose', function () {
+              var input = document.getElementById('composeTitle');
+              if (input) input.value = T('inAnswerTo').replace('{title}', letterData.title);
+              var b = document.getElementById('composeBody');
+              if (b) b.focus();
+            });
+          });
+        }
+
+        // Restore saved marginalia for classic card
+        try {
+          var savedMarginalia = JSON.parse(localStorage.getItem('pyl-custom-marginalia') || '{}');
+          var letterKey = 'letter-' + letterData.id;
+          if (savedMarginalia[letterKey] && marginaliaBox) {
+            savedMarginalia[letterKey].forEach(function (m) {
+              var item = document.createElement('div');
+              item.className = 'marginalia-item';
+              if (m.text) {
+                item.innerHTML = '“' + m.text + '” ';
+              }
+              if (m.image) {
+                var scrapImg = document.createElement('img');
+                scrapImg.className = 'marginalia-scrap-img';
+                scrapImg.src = m.image;
+                scrapImg.alt = 'Handwritten scrap note';
+                scrapImg.title = 'Click to view scrap';
+                scrapImg.addEventListener('click', function () {
+                  if (window.PYL && window.PYL.openLightbox) {
+                    window.PYL.openLightbox(m.image, 'Handwritten Marginal Scrap by ' + m.name);
+                  }
+                });
+                item.appendChild(scrapImg);
+              }
+              var who = document.createElement('span');
+              who.className = 'who';
+              who.textContent = ' — ' + m.name;
+              item.appendChild(who);
+              if (m.refVal) {
+                var citeLink = document.createElement('span');
+                citeLink.className = 'marginalia-cite';
+                citeLink.textContent = ' ↳ Re: ' + m.refVal;
+                item.appendChild(citeLink);
+              }
+              marginaliaBox.appendChild(item);
+              bump(marginBtn, 1);
+              notes += 1;
+            });
+          }
+        } catch (e) {}
+      }
     }
 
     function renderMarginHeads() {
