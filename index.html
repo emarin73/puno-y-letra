@@ -6532,11 +6532,37 @@
 
     function executePostSequence() {
       var body = document.getElementById('composeBody');
-      var titleVal = (document.getElementById('composeTitle').value || '').trim() || 'Untitled Letter';
-      var bodyVal = (body.value || '').trim();
-      var nameVal = (document.getElementById('composeName').value || '').trim() || T('aCorrespondent');
+      var titleInput = document.getElementById('composeTitle');
+      var titleVal = (titleInput ? titleInput.value : '').trim();
+      var bodyVal = (body ? body.value : '').trim();
+      var nameVal = localStorage.getItem('pyl-profile-name') || (document.getElementById('composeName') ? document.getElementById('composeName').value : '') || 'Euclides Marin';
       var confirmEl = document.getElementById('postedConfirm');
       if (confirmEl) confirmEl.classList.remove('show');
+
+      var attachedItems = (typeof PYL.getAttachedItems === 'function') ? PYL.getAttachedItems() : [];
+
+      // Validation: must have either handwritten manuscript attached OR text
+      if (attachedItems.length === 0 && !bodyVal) {
+        if (confirmEl) {
+          confirmEl.textContent = 'Please attach a photograph of your handwritten manuscript or write your letter reflections.';
+          confirmEl.classList.add('show');
+          confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        if (PYL.toast) PYL.toast('Please attach a handwritten manuscript photo or write your reflections.', 3500);
+        return false;
+      }
+
+      if (!titleVal) {
+        if (attachedItems.length > 0 && attachedItems[0].file && attachedItems[0].file.name) {
+          titleVal = 'Manuscript: ' + attachedItems[0].file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+        } else {
+          titleVal = 'Letter from ' + nameVal;
+        }
+      }
+
+      if (!bodyVal) {
+        bodyVal = 'Handwritten manuscript attached.';
+      }
 
       var postChoiceEl = document.querySelector('#segPost .active');
       var postChoice = postChoiceEl ? postChoiceEl.getAttribute('data-v') : 'default';
@@ -6545,9 +6571,16 @@
         ? (defChoiceEl ? defChoiceEl.getAttribute('data-v') : 'public')
         : postChoice;
 
-      var attachedItems = PYL.getAttachedItems ? PYL.getAttachedItems() : [];
-      var imageUrls = attachedItems.map(function (item) { return item.dataUrl || item.url; });
-      var audioData = AudioRecorder.getAudioData();
+      var imageUrls = attachedItems.map(function (item) { return item.dataUrl || item.url; }).filter(Boolean);
+
+      // If no photo attached but text written, synthesize an authentic manuscript SVG
+      if (imageUrls.length === 0 && typeof generateManuscriptSvg === 'function') {
+        imageUrls = [generateManuscriptSvg(titleVal, nameVal, bodyVal)];
+      }
+
+      var audioData = (window.AudioRecorder && typeof AudioRecorder.getAudioData === 'function')
+        ? AudioRecorder.getAudioData()
+        : { hasAudio: false, dataUrl: null, duration: 0 };
 
       var composeSec = document.getElementById('compose');
       var replyToVal = (composeSec && composeSec.dataset.replyTo) ? composeSec.dataset.replyTo : null;
@@ -6558,14 +6591,14 @@
         author: nameVal,
         title: titleVal,
         body: bodyVal,
-        excerpt: bodyVal ? (bodyVal.slice(0, 140) + (bodyVal.length > 140 ? '…' : '')) : 'Handwritten manuscript attached.',
+        excerpt: bodyVal.slice(0, 160) + (bodyVal.length > 160 ? '…' : ''),
         tags: ['Judgment'],
         endorse: 1,
         marginalia: 0,
         inPost: true,
         userCreated: true,
         vis: vis,
-        date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+        date: 'Today',
         images: imageUrls,
         audio: audioData.dataUrl,
         audioDuration: audioData.duration,
@@ -6574,18 +6607,50 @@
 
       LETTERS.unshift(letter);
       userLetters.unshift(letter);
+
+      // Safe local storage save (handling quota limits gracefully)
       try {
         localStorage.setItem('pyl-user-letters', JSON.stringify(userLetters));
       } catch (e) {
-        console.warn('LocalStorage save failed:', e);
+        try {
+          var safeList = userLetters.map(function (l) {
+            return {
+              id: l.id,
+              no: l.no,
+              author: l.author,
+              title: l.title,
+              body: l.body,
+              excerpt: l.excerpt,
+              tags: l.tags,
+              endorse: l.endorse,
+              marginalia: l.marginalia,
+              inPost: l.inPost,
+              userCreated: l.userCreated,
+              vis: l.vis,
+              date: l.date,
+              replyTo: l.replyTo,
+              images: (l.images && l.images[0] && l.images[0].indexOf('data:image/svg') === 0) ? l.images : []
+            };
+          });
+          localStorage.setItem('pyl-user-letters', JSON.stringify(safeList));
+        } catch (err2) {
+          console.warn('LocalStorage save quota note:', err2);
+        }
       }
 
       if (PYL.syncToBackend) {
         PYL.syncToBackend(letter);
       }
 
+      // Reset filters so the new post is immediately visible on the wall
+      activeWallTag = 'all';
+      if (typeof setWallTab === 'function') {
+        setWallTab('following');
+      } else if (typeof renderWallFeed === 'function') {
+        renderWallFeed();
+      }
+
       renderPostLetters();
-      if (typeof renderWallFeed === 'function') renderWallFeed();
       if (typeof renderCatalogueGallery === 'function') renderCatalogueGallery();
 
       var msg = vis === 'private' ? T('confirmPrivate') : T('confirmPublic');
@@ -6605,20 +6670,37 @@
         confirmEl.textContent = msg;
         confirmEl.classList.add('show');
       }
-      if (PYL.toast) PYL.toast(msg, 6000);
 
-      document.getElementById('composeTitle').value = '';
-      body.value = '';
-      AudioRecorder.reset();
+      // Reset compose form fields
+      if (titleInput) titleInput.value = '';
+      if (body) body.value = '';
+      if (window.AudioRecorder && AudioRecorder.reset) AudioRecorder.reset();
       if (PYL.clearAttachments) {
         PYL.clearAttachments();
       }
 
+      if (PYL.toast) PYL.toast('Your letter has been sealed and posted to the Republic Wall!', 4000);
+
+      // Navigate to the Wall immediately and highlight the new post
       if (PYL.go) {
-        PYL.go('letters', function () {
+        PYL.go('top', function () {
           window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(function () {
+            var newCard = document.querySelector('#wallLettersList article.letter');
+            if (newCard) {
+              newCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              newCard.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease';
+              newCard.style.borderColor = 'var(--wax-red)';
+              newCard.style.boxShadow = '0 0 16px rgba(184, 51, 42, 0.3)';
+              setTimeout(function () {
+                newCard.style.borderColor = '';
+                newCard.style.boxShadow = '';
+              }, 3000);
+            }
+          }, 120);
         });
       }
+      return true;
     }
 
     PYL.reviewLetter = function (strict) {
@@ -6626,24 +6708,24 @@
       var confirmEl = document.getElementById('postedConfirm');
       if (confirmEl) confirmEl.classList.remove('show');
       
-      var hasAttachment = document.getElementById('attachPreview').classList.contains('show');
+      var attachedItems = (typeof PYL.getAttachedItems === 'function') ? PYL.getAttachedItems() : [];
       var bodyText = body ? body.value.trim() : '';
 
       if (strict) {
-        if (!hasAttachment) {
+        if (attachedItems.length === 0 && !bodyText) {
           if (confirmEl) {
-            confirmEl.textContent = 'Article II Requirement: Please attach a photograph of your handwritten manuscript.';
+            confirmEl.textContent = 'Please attach a photograph of your handwritten manuscript or write reflections.';
             confirmEl.classList.add('show');
             confirmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
-          if (PYL.toast) PYL.toast('Please attach your handwritten manuscript.');
+          if (PYL.toast) PYL.toast('Please attach your handwritten manuscript photo or write reflections.');
           return false;
         }
       }
 
-      var titleVal = (document.getElementById('composeTitle').value || '').trim() || 'Untitled Letter';
+      var nameVal = localStorage.getItem('pyl-profile-name') || (document.getElementById('composeName') ? document.getElementById('composeName').value : '') || 'Euclides Marin';
+      var titleVal = (document.getElementById('composeTitle').value || '').trim() || ('Letter from ' + nameVal);
       var bodyVal = bodyText || '(Handwritten manuscript attached — no text notes)';
-      var nameVal = (document.getElementById('composeName').value || '').trim() || T('aCorrespondent');
       
       var postChoiceEl = document.querySelector('#segPost .active');
       var postChoice = postChoiceEl ? postChoiceEl.getAttribute('data-v') : 'default';
@@ -6665,7 +6747,9 @@
         visPill.className = 'pill ' + (vis === 'private' ? 'private' : '');
       }
 
-      var audioData = AudioRecorder.getAudioData();
+      var audioData = (window.AudioRecorder && typeof AudioRecorder.getAudioData === 'function')
+        ? AudioRecorder.getAudioData()
+        : { hasAudio: false };
       var wordsMeta = document.getElementById('reviewWordsMeta');
       if (wordsMeta) {
         wordsMeta.textContent = audioData.hasAudio ? 'Voice Reading Attached' : 'Handwritten Original';
@@ -6674,9 +6758,8 @@
       var pagesPreview = document.getElementById('reviewPagesPreview');
       if (pagesPreview) {
         pagesPreview.innerHTML = '';
-        var items = PYL.getAttachedItems ? PYL.getAttachedItems() : [];
-        if (items && items.length > 0) {
-          items.forEach(function (item, idx) {
+        if (attachedItems && attachedItems.length > 0) {
+          attachedItems.forEach(function (item, idx) {
             var img = document.createElement('img');
             img.src = item.url;
             img.alt = 'Handwritten Page ' + (idx + 1);
@@ -6691,7 +6774,7 @@
             pagesPreview.appendChild(img);
           });
         } else {
-          pagesPreview.innerHTML = '<span class="prof-note quiet" style="color:#b8860b; display:block; padding:4px 0;">⚠️ Art. II Rule: Please attach a handwritten manuscript photo before sealing.</span>';
+          pagesPreview.innerHTML = '<span class="prof-note quiet" style="color:#b8860b; display:block; padding:4px 0;">⚠️ Art. II Note: Photographs of handwritten pages form the primary reading of your letter.</span>';
         }
       }
 
@@ -6712,7 +6795,7 @@
     if (postBtn) {
       postBtn.addEventListener('click', function (e) {
         if (e) e.preventDefault();
-        PYL.reviewLetter(true);
+        executePostSequence();
       });
     }
 
@@ -6741,12 +6824,6 @@
     if (revConfirm) {
       revConfirm.addEventListener('click', function (e) {
         if (e) e.preventDefault();
-        var hasAttachment = document.getElementById('attachPreview').classList.contains('show');
-        if (!hasAttachment) {
-          if (revModal) revModal.classList.remove('open');
-          PYL.reviewLetter(true);
-          return;
-        }
         if (revModal) revModal.classList.remove('open');
         executePostSequence();
       });
