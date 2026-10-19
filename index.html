@@ -3246,12 +3246,12 @@
 
         <div style="margin-bottom:1rem;">
           <label class="meta" for="authEmail">Email Address</label>
-          <input type="email" id="authEmail" required autocomplete="email" placeholder="your.email@example.com" value="euclides.marin@rocanegras.com" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
+          <input type="email" id="authEmail" required autocomplete="email" placeholder="your.email@example.com" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
         </div>
 
         <div style="margin-bottom:1.25rem;">
           <label class="meta" for="authPassword">Password</label>
-          <input type="password" id="authPassword" required autocomplete="current-password" placeholder="••••••••" value="correspondent123" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
+          <input type="password" id="authPassword" required autocomplete="current-password" placeholder="••••••••" style="width:100%; padding:0.6rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
         </div>
 
         <button type="button" class="btn-post" id="authSubmitBtn" style="width:100%; padding:0.75rem; font-size:1rem; border-radius:3px; cursor:pointer;">Sign In</button>
@@ -8978,27 +8978,7 @@
         }
       } catch (e) {}
 
-      // 2. Always ensure Euclides Marin is active by default
-      if (!userToHydrate) {
-        var savedEmail = localStorage.getItem('pyl-profile-email') || 'euclides.marin@rocanegras.com';
-        var savedName = localStorage.getItem('pyl-profile-name') || 'Euclides Marin';
-        userToHydrate = {
-          id: 'cor_default',
-          email: savedEmail,
-          app_metadata: { provider: savedEmail.indexOf('@gmail.com') !== -1 ? 'google' : 'email' },
-          user_metadata: {
-            full_name: savedName,
-            name: savedName,
-            avatar_url: ''
-          }
-        };
-        try {
-          localStorage.removeItem('pyl_signed_out');
-          localStorage.setItem('pyl_session', JSON.stringify({ user: userToHydrate }));
-        } catch (e) {}
-      }
-
-      updateAuthUI(userToHydrate);
+      updateAuthUI(userToHydrate || null);
 
       // 3. If OAuth hash returns in URL, parse it
       if (window.location.hash && (window.location.hash.indexOf('access_token=') !== -1 || window.location.hash.indexOf('error=') !== -1)) {
@@ -9149,7 +9129,7 @@
     if (googleQuickBtn) {
       googleQuickBtn.addEventListener('click', function (e) {
         if (e) e.preventDefault();
-        completeGoogleLogin('euclides.marin@rocanegras.com', 'Euclides Marin');
+        if (window.PYL && window.PYL.go) window.PYL.go('auth');
       });
     }
 
@@ -9170,15 +9150,23 @@
           }).then(function (res) {
             if (res && res.error) {
               console.warn('Supabase OAuth error:', res.error);
-              completeGoogleLogin('euclides.marin@rocanegras.com', 'Euclides Marin');
+              if (authStatus) {
+                authStatus.textContent = 'Google sign-in failed: ' + res.error.message;
+                authStatus.classList.add('show', 'err');
+              }
             }
           }).catch(function (err) {
             console.warn('OAuth redirect exception:', err);
-            completeGoogleLogin('euclides.marin@rocanegras.com', 'Euclides Marin');
+            if (authStatus) {
+              authStatus.textContent = 'Google sign-in error: ' + (err.message || 'Please try again.');
+              authStatus.classList.add('show', 'err');
+            }
           });
         } else {
-          // In local/fallback mode: show Google direct email entry or quick sign in
-          completeGoogleLogin('euclides.marin@rocanegras.com', 'Euclides Marin');
+          if (authStatus) {
+            authStatus.textContent = 'Google sign-in requires Supabase credentials. Open "⚙ Supabase Backend Settings" below and enter your project URL and anon key.';
+            authStatus.classList.add('show', 'err');
+          }
         }
       });
     }
@@ -9215,8 +9203,11 @@
       var fullName = nameInput ? nameInput.value.trim() : '';
 
       if (!email) {
-        email = 'euclides.marin@rocanegras.com';
-        if (emailInput) emailInput.value = email;
+        if (authStatus) {
+          authStatus.textContent = 'Please enter your email address.';
+          authStatus.classList.add('show', 'err');
+        }
+        return;
       }
 
       if (authStatus) {
@@ -9238,7 +9229,10 @@
           }).then(function (res) {
             if (res.error) {
               console.warn('Supabase signUp note:', res.error);
-              completeCorrespondentLogin(email, fullName, true);
+              if (authStatus) {
+                authStatus.textContent = res.error.message;
+                authStatus.classList.add('show', 'err');
+              }
             } else if (res.data && res.data.session) {
               updateAuthUI(res.data.session.user);
               if (authStatus) {
@@ -9253,11 +9247,18 @@
                 if (window.PYL && window.PYL.go) window.PYL.go('top');
               }, 400);
             } else {
-              completeCorrespondentLogin(email, fullName, true);
+              if (authStatus) {
+                authStatus.textContent = 'Account created! Check your email to verify your account before signing in.';
+                authStatus.classList.remove('err');
+                authStatus.classList.add('show');
+              }
             }
           }).catch(function (err) {
             console.warn('Supabase signUp catch:', err);
-            completeCorrespondentLogin(email, fullName, true);
+            if (authStatus) {
+              authStatus.textContent = err.message || 'Registration failed. Please try again.';
+              authStatus.classList.add('show', 'err');
+            }
           });
         } else {
           window.PYL.supabase.auth.signInWithPassword({
@@ -9266,7 +9267,10 @@
           }).then(function (res) {
             if (res.error) {
               console.warn('Supabase signIn note:', res.error);
-              completeCorrespondentLogin(email, fullName, false);
+              if (authStatus) {
+                authStatus.textContent = res.error.message;
+                authStatus.classList.add('show', 'err');
+              }
             } else if (res.data && res.data.user) {
               updateAuthUI(res.data.user);
               if (authStatus) {
@@ -9281,15 +9285,24 @@
                 if (window.PYL && window.PYL.go) window.PYL.go('top');
               }, 400);
             } else {
-              completeCorrespondentLogin(email, fullName, false);
+              if (authStatus) {
+                authStatus.textContent = 'Sign in failed. Please check your credentials.';
+                authStatus.classList.add('show', 'err');
+              }
             }
           }).catch(function (err) {
             console.warn('Supabase signIn catch:', err);
-            completeCorrespondentLogin(email, fullName, false);
+            if (authStatus) {
+              authStatus.textContent = err.message || 'Sign in failed. Please try again.';
+              authStatus.classList.add('show', 'err');
+            }
           });
         }
       } else {
-        completeCorrespondentLogin(email, fullName, isRegisterMode);
+        if (authStatus) {
+          authStatus.textContent = 'Authentication requires Supabase credentials. Open "⚙ Supabase Backend Settings" below and enter your project URL and anon key from the Supabase dashboard.';
+          authStatus.classList.add('show', 'err');
+        }
       }
     }
 
@@ -9360,7 +9373,7 @@
       if (authUser) {
         executeSignOut();
       } else {
-        completeCorrespondentLogin('euclides.marin@rocanegras.com', 'Euclides Marin', false);
+        if (window.PYL && window.PYL.go) window.PYL.go('auth');
       }
     }
 
@@ -9368,7 +9381,7 @@
     if (signInBtnTop) {
       signInBtnTop.addEventListener('click', function (e) {
         if (e) e.preventDefault();
-        completeCorrespondentLogin('euclides.marin@rocanegras.com', 'Euclides Marin', false);
+        if (window.PYL && window.PYL.go) window.PYL.go('auth');
       });
     }
 
