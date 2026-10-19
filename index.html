@@ -3215,21 +3215,7 @@
           <span>Sign In with Google</span>
         </div>
 
-        <!-- 1-Click Google Account Option -->
-        <button type="button" id="googleQuickBtn" style="width:100%; display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.85rem; background:var(--paper); border:1px solid var(--rule); border-radius:4px; cursor:pointer; text-align:left; margin-bottom:0.6rem; transition:all 0.15s;">
-          <span class="avatar sm" style="width:2rem; height:2rem; font-size:0.75rem; background:#4285F4; color:#fff;">EM</span>
-          <div style="flex:1; overflow:hidden;">
-            <div style="font-weight:600; font-size:0.85rem; color:var(--ink);">Euclides Marin</div>
-            <div style="font-size:0.75rem; color:var(--demink);">euclides.marin@rocanegras.com · Google Account</div>
-          </div>
-          <span style="font-size:0.78rem; color:#4285F4; font-weight:600; white-space:nowrap;">Sign In →</span>
-        </button>
-
-        <!-- Custom Google Email Input -->
-        <div style="display:flex; gap:0.4rem;">
-          <input type="email" id="googleDirectEmail" placeholder="or enter any Google / Gmail address" style="flex:1; padding:0.5rem; font-size:0.85rem; font-family:var(--serif); border:1px solid var(--rule); border-radius:3px; background:var(--paper);" />
-          <button type="button" id="googleDirectSubmitBtn" class="btn-post" style="padding:0.5rem 0.85rem; font-size:0.82rem; white-space:nowrap;">Google Sign In</button>
-        </div>
+        <button type="button" id="googleAuthBtn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.65rem 0.85rem; background:var(--paper); border:1px solid var(--rule); border-radius:4px; cursor:pointer; font-family:var(--serif); font-size:0.9rem; font-weight:600; color:var(--ink); transition:all 0.15s;">Continue with Google</button>
       </div>
 
       <div style="text-align:center; position:relative; margin:1.5rem 0;">
@@ -8513,7 +8499,8 @@
       var hint = document.createElement('p');
       hint.className = 'quote-hint';
       hint.setAttribute('data-i18n', 'quoteOnlyOriginal');
-      var stage = el.querySelector('.ms-stage');
+      var stage = el.querySelector('.ms-stage') || el.querySelector('.letter-body');
+      if (!stage) return;
       stage.parentNode.insertBefore(hint, stage);
       var L = {
         el: el,
@@ -8783,9 +8770,6 @@
     var authUser = null;
     var authStatus = document.getElementById('authStatus');
     var googleAuthBtn = document.getElementById('googleAuthBtn');
-    var googleFallbackBox = document.getElementById('googleFallbackBox');
-    var googleDirectEmail = document.getElementById('googleDirectEmail');
-    var googleDirectSubmitBtn = document.getElementById('googleDirectSubmitBtn');
     var authForm = document.getElementById('authForm');
     var authTabLogin = document.getElementById('authTabLogin');
     var authTabRegister = document.getElementById('authTabRegister');
@@ -9055,84 +9039,6 @@
       });
     }
 
-    // Google Sign In Flow
-    function completeGoogleLogin(email, name) {
-      var gEmail = (email || '').trim().toLowerCase();
-      if (!gEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gEmail)) {
-        gEmail = 'euclides.marin@rocanegras.com';
-      }
-      var cleanName = name || gEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
-      if (!cleanName || cleanName.toLowerCase() === 'euclides.marin') cleanName = 'Euclides Marin';
-
-      var googleUser = {
-        id: 'g_' + Math.random().toString(36).substring(2, 10),
-        email: gEmail,
-        app_metadata: { provider: 'google' },
-        user_metadata: {
-          full_name: cleanName,
-          name: cleanName,
-          avatar_url: ''
-        }
-      };
-      updateAuthUI(googleUser);
-      if (authStatus) {
-        authStatus.textContent = '✓ Signed in with Google as ' + cleanName + '!';
-        authStatus.classList.remove('err');
-        authStatus.classList.add('show');
-      }
-      if (window.PYL && window.PYL.toast) {
-        window.PYL.toast('✓ Signed in as ' + cleanName);
-      }
-      setTimeout(function () {
-        if (window.PYL && window.PYL.go) window.PYL.go('top');
-      }, 400);
-    }
-
-    function completeCorrespondentLogin(email, fullName, isReg) {
-      var em = (email || '').trim().toLowerCase();
-      if (!em) em = 'euclides.marin@rocanegras.com';
-
-      var displayName = fullName ? fullName.trim() : '';
-      if (!displayName) {
-        displayName = localStorage.getItem('pyl-profile-name') || em.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
-      }
-      if (!displayName || displayName.toLowerCase() === 'euclides.marin') displayName = 'Euclides Marin';
-
-      var correspondentUser = {
-        id: 'cor_' + Math.random().toString(36).substring(2, 10),
-        email: em,
-        app_metadata: { provider: 'email' },
-        user_metadata: {
-          full_name: displayName,
-          name: displayName
-        }
-      };
-
-      updateAuthUI(correspondentUser);
-
-      if (authStatus) {
-        var msg = isReg ? '✓ Account registered and signed in!' : '✓ Signed in successfully!';
-        authStatus.textContent = msg;
-        authStatus.classList.remove('err');
-        authStatus.classList.add('show');
-      }
-      if (window.PYL && window.PYL.toast) {
-        window.PYL.toast('✓ Signed in as ' + displayName);
-      }
-
-      setTimeout(function () {
-        if (window.PYL && window.PYL.go) window.PYL.go('top');
-      }, 400);
-    }
-
-    var googleQuickBtn = document.getElementById('googleQuickBtn');
-    if (googleQuickBtn) {
-      googleQuickBtn.addEventListener('click', function (e) {
-        if (e) e.preventDefault();
-        if (window.PYL && window.PYL.go) window.PYL.go('auth');
-      });
-    }
-
     if (googleAuthBtn) {
       googleAuthBtn.addEventListener('click', function () {
         var hasRealSupabase = window.PYL && window.PYL.supabase && window.PYL.supabase.auth && !window.PYL.isPlaceholderSupabaseKey;
@@ -9167,23 +9073,6 @@
             authStatus.textContent = 'Google sign-in requires Supabase credentials. Open "⚙ Supabase Backend Settings" below and enter your project URL and anon key.';
             authStatus.classList.add('show', 'err');
           }
-        }
-      });
-    }
-
-    if (googleDirectSubmitBtn) {
-      googleDirectSubmitBtn.addEventListener('click', function (e) {
-        if (e) e.preventDefault();
-        var em = googleDirectEmail ? googleDirectEmail.value : '';
-        completeGoogleLogin(em);
-      });
-    }
-    if (googleDirectEmail) {
-      googleDirectEmail.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          var em = googleDirectEmail.value;
-          completeGoogleLogin(em);
         }
       });
     }
