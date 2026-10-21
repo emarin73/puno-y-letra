@@ -1,5 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
-
 export const config = {
   api: {
     bodyParser: {
@@ -15,6 +13,7 @@ export default async function handler(req, res) {
   let supabase = null;
   if (supabaseUrl && supabaseKey) {
     try {
+      const { createClient } = await import('@supabase/supabase-js');
       supabase = createClient(supabaseUrl, supabaseKey);
     } catch (e) {
       console.warn('Supabase client init warning:', e.message);

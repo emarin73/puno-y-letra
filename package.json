@@ -2,6 +2,7 @@
   "name": "puno-y-letra",
   "version": "1.0.0",
   "description": "A slow correspondence platform for AI ethics, in the tradition of the Republic of Letters.",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "npx serve .",
@@ -16,5 +17,8 @@
     "correspondence"
   ],
   "author": "Puño y Letra",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0"
+  }
 }
