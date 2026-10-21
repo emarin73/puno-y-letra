@@ -1,4 +1,4 @@
-# Puño y Letra
+# De Puño y Letra
 
 A slow correspondence platform for AI ethics, in the tradition of the Republic of Letters.
 
